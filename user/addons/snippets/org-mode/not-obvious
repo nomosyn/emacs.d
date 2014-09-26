@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: not-obvious
+# key: nob
+# --
+(<<nob${1:id}>> [[obv$1][note]] ${2:short description})

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: link
+# key: lin
+# --
+[[${1:address}][${2:name}]${3:close}

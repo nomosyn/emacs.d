@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: comment-uuid
+# key: <idc
+# --
+XXX:PH:${1:OK | ?? | KO}:`(shell-command "uuid | cut -c 1-4" t)` $0

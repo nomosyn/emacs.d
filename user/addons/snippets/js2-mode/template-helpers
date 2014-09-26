@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: template-helpers
+# key: temh
+# --
+Template.${1:template}.helpers({$0});

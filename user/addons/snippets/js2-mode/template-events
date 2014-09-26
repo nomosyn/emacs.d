@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: template-events
+# key: teme
+# --
+Template.${1:template}.events({$0});

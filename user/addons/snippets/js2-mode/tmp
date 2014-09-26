@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tmp
+# key: tmp
+# --
+IdeaPath.prototype.${1:txt} = $1;

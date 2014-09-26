@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: function-forward-declaration
+# key: funf
+# --
+${1:return type} ${2:function name}(${3:args});

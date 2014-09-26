@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: div.id
+# key: divi
+# --
+<div id="${1:id}">${2:div}</div>

@@ -1,0 +1,8 @@
+(require 'fill-column-indicator)
+(setq fci-rule-color "base00")
+(setq fci-rule-use-dashes 1)
+(setq fci-dash-pattern 0.1)
+; (add-hook 'js-mode-hook 'fci-mode)
+; (add-hook 'html-mode-hook 'fci-mode)
+; (add-hook 'stylus-mode-hook 'fci-mode)
+; (add-hook 'text-mode-hook 'fci-mode)

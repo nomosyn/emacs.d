@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: reference
+# key: <r
+# --
+\ref{${1:ref}}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: navigation-class
+# key: navc
+# --
+<nav class="${1:class}">$0</nav>

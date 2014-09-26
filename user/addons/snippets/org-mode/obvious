@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: obvious
+# key: obv
+# --
+<<obv${1:id}>> [[nob$1][remark]] ${2:short description}

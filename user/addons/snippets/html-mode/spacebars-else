@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: spacebars-else
+# key: <sel
+# --
+{{ else }}$0

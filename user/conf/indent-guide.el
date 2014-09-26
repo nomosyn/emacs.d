@@ -1,0 +1,6 @@
+(require 'indent-guide)
+;; (indent-guide-global-mode -1)
+;; (set-face-background 'indent-guide-face "dimgray")
+;; (setq indent-guide-delay 0.1)
+;; (setq indent-guide-recursive t)
+;; (setq indent-guide-char ":")

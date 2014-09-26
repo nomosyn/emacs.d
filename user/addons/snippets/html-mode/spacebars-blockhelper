@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: spacebars-blockhelper
+# key: <sb
+# --
+{{#${1:block}}}
+  $0
+{{/$1}}

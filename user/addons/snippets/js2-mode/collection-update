@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: collection-update
+# key: cup
+# --
+${1:collection}.update({ _id: ${2:id} }, ${3:selector} );

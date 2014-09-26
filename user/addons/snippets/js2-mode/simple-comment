@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: simple-comment
+# key: <scom
+# --
+/** ${1:func}(${2:args}) -> ${3:object returned}$0 */

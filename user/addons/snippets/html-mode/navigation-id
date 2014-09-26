@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: navigation-id
+# key: navi
+# --
+<nav id="${1:id}">$0</nav>
