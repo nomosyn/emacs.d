@@ -105,7 +105,7 @@ $ emacs -l /Volumes/usb-drive/init.el")
 (defconst user-data-org-mobile-path (expand-file-name "~/Dropbox/Applications/MobileOrg"))
 (defconst user-data-ids-path (expand-file-name "~/Documents/Bibliothèque/identitees.org"))
 (defconst user-data-org-mobile-files-list (list user-todo-path user-nnotes-tasks-path))
-
+(defconst emacs-color-theme-solarized-path (concat user-addons-path (file-name-as-directory "emacs-color-theme-solarized")))
 
 
 
