@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: itemize
+# key: <ei
+# --
+\begin{itemize}
+    $0
+\end{itemize}

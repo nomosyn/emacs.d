@@ -88,7 +88,7 @@ $ emacs -l /Volumes/usb-drive/init.el")
 
 ;; user-emacs-directory/user/addons/*
 (defconst user-snippets-dir-path (concat user-addons-path (file-name-as-directory "snippets")))
-(defconst user-data-org-mode-path (concat user-addons-path (file-name-as-directory "org-8.2.7c/lisp")))
+(defconst user-data-org-mode-path (concat user-addons-path (file-name-as-directory "org-8.2.8/lisp")))
 
 
 

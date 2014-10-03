@@ -12,3 +12,14 @@
 (TeX-global-PDF-mode t)
 (setq LaTeX-indent-level 4)
 (setq LaTeX-item-indent 0)
+
+(add-hook 'after-save-hook
+          (lambda ()
+            (let ((cur-file-name ""))
+              (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+              (cond
+               ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
+               ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+              )
+            )
+          )

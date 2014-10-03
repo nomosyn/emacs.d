@@ -13,9 +13,9 @@
 (require 'js2-refactor)
 (js2r-add-keybindings-with-prefix "C-c C-m")
 
-(require 'flycheck)
-(add-hook 'js-mode-hook
-          (lambda () (flycheck-mode t)))
+;; (require 'flycheck)
+;; (add-hook 'js2-mode-hook
+;;           (lambda () (flycheck-mode t)))
 
 (defun prettify-js-symbols ()
   (push '("lambda" . ?λ) prettify-symbols-alist)
