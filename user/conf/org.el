@@ -1,4 +1,3 @@
-(add-to-list 'load-path user-data-org-mode-path)
 (require 'org)
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 (global-set-key (kbd "C-c l") 'org-store-link)

@@ -3,5 +3,6 @@
 # key: <ei
 # --
 \begin{itemize}
+    \setlength{\itemsep}{5pt}
     $0
 \end{itemize}
