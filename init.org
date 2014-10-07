@@ -63,6 +63,7 @@
 
 
 * Defines paths in the boot loader
+  <block
 
   #+BEGIN_SRC elisp
     (defconst user-home (file-name-as-directory (expand-file-name "~")))
@@ -76,19 +77,9 @@
     (defconst user-elpa-path (concat user-emacs-directory (file-name-as-directory "elpa")))
     (defconst user-path (concat user-emacs-directory (file-name-as-directory "user")))
     (defconst user-tools-ctags (concat user-elpa-path (file-name-as-directory "ctags-update-0.1.2")))
-    (defconst user-tools-undo-tree (concat user-elpa-path (file-name-as-directory "undo-tree-0.6.3")))
-    ;; (defconst user-addons-path (concat user-path (file-name-as-directory "addons")))
-    (defconst user-conf-path (concat user-path (file-name-as-directory "conf")))
     (defconst user-org-path (concat user-home (file-name-as-directory "org")))
     (defconst user-todo-path (concat user-org-path "me.org"))
-    (defconst user-time-path (concat user-org-path "time.org"))
-    (defconst user-org-mobile-inbox-for-pull-path (concat user-org-path "mobile-notes.org"))
-    ;; (defconst user-tools-ac-dictionnaries (concat user-conf-path (file-name-as-directory "auto-complete-dictionnaries")))
-    ;; (defconst user-snippets-dir-path (concat user-addons-path (file-name-as-directory "snippets")))
     (defconst user-tools-ctags-bin-path "/opt/local/bin/ctags")
-    (defconst user-data-org-mobile-path (expand-file-name "~/Dropbox/Applications/MobileOrg"))
-    (defconst user-data-ids-path (expand-file-name "~/Documents/Bibliothèque/identitees.org"))
-    (defconst user-data-org-mobile-files-list (list user-todo-path user-nnotes-tasks-path))
     (defconst user-local-bin "/usr/local/bin")
   #+END_SRC
 
@@ -284,8 +275,8 @@
 
 
                                  ;; Mobile
-                                 (setq org-mobile-directory user-data-org-mobile-path)
-                                 (setq org-mobile-inbox-for-pull user-org-mobile-inbox-for-pull-path)
+                                 ;; (setq org-mobile-directory user-data-org-mobile-path)
+                                 ;; (setq org-mobile-inbox-for-pull user-org-mobile-inbox-for-pull-path)
 
 
 
@@ -445,7 +436,7 @@
                                  ;; auto-complete using abbreviations
                                  (require 'dropdown-list)
                                  (require 'yasnippet)
-                                 ;; (setq yas-snippet-dirs user-snippets-dir-path)
+                                 (setq yas-snippet-dirs user-snippets-dir-path)
                                  (setq yas-prompt-functions '(yas-ido-prompt
                                                               yas-dropdown-prompt
                                                               yas-completing-prompt))
