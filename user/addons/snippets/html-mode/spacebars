@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: spacebars
-# key: <s
-# --
-{{${1:stuff}}}$0

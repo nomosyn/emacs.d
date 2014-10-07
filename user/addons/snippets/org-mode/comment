@@ -1,5 +1,0 @@
-# -*- mode: snippet; require-final-newline: nil -*-
-# name: comment
-# key: <com
-# --
-XXX:PH:${1:OK | ?? | KO}$0

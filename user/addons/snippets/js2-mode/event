@@ -1,5 +1,0 @@
-# -*- mode: snippet; require-final-newline: nil -*-
-# name: event
-# key: <event
-# --
-'${1:eventtype} ${2:selector}': function(evt, tpt) {$0}

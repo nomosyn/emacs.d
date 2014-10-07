@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: spacebars-each
-# key: <se
-# --
-{{#each ${1:helper}}}
-  $0
-{{/each}}

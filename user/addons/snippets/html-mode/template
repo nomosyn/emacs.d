@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: template
-# key: <template
-# --
-<template name="${1:name}">
-   $0
-</template>

@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: anonymous-function
-# key: <af
-# --
-(function () {
-  $0
-}())${1:;}

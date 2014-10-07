@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: spacebars-comment
-# key: <sc
-# --
-{{! $0 }}

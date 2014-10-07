@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: div
-# key: <div
-# --
-<div>${1:div}</div>$0

@@ -1,9 +1,0 @@
-# -*- mode: snippet; require-final-newline: nil -*-
-# name: spacebars-if-else
-# key: <sie
-# --
-{{#if ${1:cond} }}
-    $2
-{{ else }}
-    $3
-{{/if}}

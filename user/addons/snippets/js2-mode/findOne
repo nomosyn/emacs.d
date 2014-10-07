@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: findOne
-# key: fone
-# --
-${1:collection}.findOne({ _id: ${2:mongo_id} });
