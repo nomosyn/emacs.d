@@ -10,7 +10,7 @@
                                  <<font>>
                                  <<theme>>
                                  <<mac>>
-                                 <<bindings>>
+                                 <<bindings-emacs>>
                                  <<defun>>
                                  <<resources>>
                                  <<global>>
@@ -83,13 +83,49 @@
 
 ** Bindings
 
-   #+NAME: bindings
-   #+BEGIN_SRC elisp
-     (global-set-key (kbd "C-o") 'other-window)
-     (global-set-key (kbd "<f9>") 'magit-status)
-     (require 'expand-region)
-     (global-set-key (kbd "C-=") 'er/expand-region)
-   #+END_SRC
+*** Vim style
+    Because configuring vim means installing Emacs + [[https://gitorious.org/evil/pages/Home][Evil]]
+
+    Borrowed from [[https://github.com/echosa/emacs.d][echosa]].
+
+    #+NAME: bindings-vim
+    #+BEGIN_SRC elisp
+      (evil-mode 1)
+      (setq evil-default-cursor '(t))
+
+      (key-chord-mode 1)
+      (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+      (key-chord-define evil-motion-state-map "jk" 'evil-normal-state)
+      (key-chord-define evil-visual-state-map "jk" 'evil-normal-state)
+      (key-chord-define evil-emacs-state-map "jk" 'evil-normal-state)
+
+      (define-key evil-ex-map "b " 'ido-switch-buffer)
+      (define-key evil-ex-map "e " 'ido-find-file)
+
+      (require 'evil-surround)
+      (global-evil-surround-mode 1)
+
+      (require 'evil-leader)
+      (evil-leader/set-leader "<SPC>")
+      (evil-leader/set-key "x" 'execute-extended-command)
+      (evil-leader/set-key ":" 'eval-expression)
+      (evil-leader/set-key "k" 'ido-kill-buffer)
+      (evil-leader/set-key "p" 'projectile-commander)
+      (evil-leader/set-key "e" 'mu4e)
+      (evil-leader/set-key "j" 'ace-jump-mode)
+      (evil-leader/set-key "J" 'ace-window)
+      (global-evil-leader-mode)
+    #+END_SRC
+
+
+*** Emacs style
+    #+NAME: bindings-emacs
+    #+BEGIN_SRC elisp
+      (global-set-key (kbd "C-o") 'other-window)
+      (global-set-key (kbd "<f9>") 'magit-status)
+      (require 'expand-region)
+      (global-set-key (kbd "C-=") 'er/expand-region)
+    #+END_SRC
 
 
 
