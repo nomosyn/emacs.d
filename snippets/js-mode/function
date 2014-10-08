@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: function
+# key: fun
+# --
+function ${1:fun_name}(${2:args}) {
+    "use strict";
+    $0
+}

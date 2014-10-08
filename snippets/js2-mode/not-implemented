@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: not-implemented
+# key: err
+# --
+throw new Error('${1:TODO : not implemented}');$0

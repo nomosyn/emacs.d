@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: marker
+# key: mar
+# --
+
+
+${1:$(make-string 80 ?\#)}
+# ${1:Title} ${1:$(make-string (- 75 (string-width yas-text)) ?\ )} #
+${1:$(make-string 80 ?\#)}

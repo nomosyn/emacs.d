@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: textarea
+# key: textarea
+# --
+<textarea>$0</textarea>

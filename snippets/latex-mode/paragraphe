@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: paragraphe
+# key: <p
+# --
+\paragraph*{${1:title}}
+{
+
+  $0
+
+}

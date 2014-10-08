@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: type
+# key: <type
+# --
+[[file:${1:root}${2:file_name}.org][$2]$0

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: spacebars-inclusion
+# key: <sin
+# --
+{{> ${1:template name}}}$0

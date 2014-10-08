@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: spacebars-with
+# key: <sw
+# binding: direct-keybinding
+# --
+{{#with ${1:data_context}}}
+  $0
+{{/with}}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: CALL
+# key: <c
+# --
+#+CALL: ${1:file_name:}${2:function_name}()
