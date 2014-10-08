@@ -1,7 +1,6 @@
 * Load configurations
 
-  - Exclude a configuration: comment it here
-  - Add a configuration: add it here
+  - ~M-x org-babel-tangle~ to create ~./init.el~ file.
 
   #+BEGIN_SRC elisp :tangle "./init.el" :noweb yes
     (add-hook 'after-init-hook (lambda ()

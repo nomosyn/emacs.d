@@ -1,9 +1,4 @@
 
-;; Load configurations
-
-;;   - Exclude a configuration: comment it here
-;;   - Add a configuration: add it here
-
 (add-hook 'after-init-hook (lambda ()
                              (setq package-archives '(("\"marmalade\"" . "http://marmalade-repo.org/packages/")
                                                       ("gnu" . "http://elpa.gnu.org/packages/")
