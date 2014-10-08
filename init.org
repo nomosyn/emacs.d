@@ -157,7 +157,6 @@
 
 ** Resources
 
-   - Directories
      #+NAME: resources
      #+BEGIN_SRC elisp
        (defconst user-home (file-name-as-directory (expand-file-name "~")))
@@ -234,8 +233,6 @@
    #+BEGIN_SRC elisp
      ;; auto-complete for words in buffers
      (require 'auto-complete-config)
-     ;; Make sure we can find the dictionaries
-     (add-to-list 'ac-dictionary-directories user-tools-ac-dictionnaries)
      ;; Use dictionaries by default
      (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
      (global-auto-complete-mode nil)

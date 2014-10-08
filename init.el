@@ -142,10 +142,8 @@
                              (put 'narrow-to-region 'disabled nil)
                              ;; auto-complete for words in buffers
                              (require 'auto-complete-config)
-                             ;; Make sure we can find the dictionaries
-                             ;; (add-to-list 'ac-dictionary-directories user-tools-ac-dictionnaries)
                              ;; Use dictionaries by default
-                             ;; (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
+                             (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
                              (global-auto-complete-mode nil)
                              ;; Start auto-completion after 2 characters of a word
                              (setq ac-auto-start 2)

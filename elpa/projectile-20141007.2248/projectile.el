@@ -5,7 +5,7 @@
 ;; Author: Bozhidar Batsov <bozhidar@batsov.com>
 ;; URL: https://github.com/bbatsov/projectile
 ;; Keywords: project, convenience
-;; Version: 20141002.1125
+;; Version: 20141007.2248
 ;; X-Original-Version: 0.11.0
 ;; Package-Requires: ((s "1.6.0") (dash "1.5.0") (pkg-info "0.4"))
 
@@ -576,6 +576,14 @@ Returns nil if no window configuration was found"
   (when (and projectile-remember-window-configs
              (projectile-project-p))
     (projectile-restore-window-config (projectile-project-name))))
+
+(defadvice delete-file (before purge-from-projectile-cache (filename &optional trash))
+  (if (and (projectile-project-p) projectile-enable-caching)
+      (let* ((project-root (projectile-project-root))
+             (true-filename (file-truename filename))
+             (relative-filename (file-relative-name true-filename project-root)))
+        (if (projectile-file-cached-p relative-filename project-root)
+            (projectile-purge-file-from-cache relative-filename)))))
 
 
 ;;; Project root related utilities
@@ -2433,12 +2441,14 @@ Otherwise behave as if called interactively.
     (add-hook 'find-file-hook 'projectile-cache-projects-find-file-hook t t)
     (add-hook 'projectile-find-dir-hook 'projectile-cache-projects-find-file-hook)
     (add-hook 'find-file-hook 'projectile-visit-project-tags-table t t)
-    (ad-activate 'compilation-find-file))
+    (ad-activate 'compilation-find-file)
+    (ad-activate 'delete-file))
    (t
     (remove-hook 'find-file-hook 'projectile-cache-files-find-file-hook t)
     (remove-hook 'find-file-hook 'projectile-cache-projects-find-file-hook t)
     (remove-hook 'find-file-hook 'projectile-visit-project-tags-table t)
-    (ad-deactivate 'compilation-find-file))))
+    (ad-deactivate 'compilation-find-file)
+    (ad-deactivate 'delete-file))))
 
 ;;;###autoload
 (define-globalized-minor-mode projectile-global-mode

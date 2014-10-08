@@ -1,9 +1,9 @@
 ;;; jump-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-
+(add-to-list 'load-path (or (file-name-directory #$) (car load-path)))
 
-;;;### (autoloads (defjump) "jump" "jump.el" (20962 30032 0 0))
+;;;### (autoloads nil "jump" "jump.el" (21556 62663 0 0))
 ;;; Generated autoloads from jump.el
 
 (autoload 'defjump "jump" "\
@@ -37,15 +37,9 @@ find the current method which defaults to `which-function'.
 
 ;;;***
 
-;;;### (autoloads nil nil ("jump-pkg.el") (20962 30032 348035 0))
-
-;;;***
-
-(provide 'jump-autoloads)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
-;; coding: utf-8
 ;; End:
 ;;; jump-autoloads.el ends here
