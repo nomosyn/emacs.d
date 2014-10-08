@@ -1,9 +1,11 @@
 
 ;; Configure
+;;   - List of loaded configurations.
+;;   - Exclude a configuration: comment it here
+;;   - Add a configuration: add it here
 
 (add-hook 'after-init-hook (lambda ()
                              (setq package-archives '(("\"marmalade\"" . "http://marmalade-repo.org/packages/")
-                                                      ("\"tromey\"" . "http://tromey.com/elpa/")
                                                       ("gnu" . "http://elpa.gnu.org/packages/")
                                                       ("org-mode" . "http://orgmode.org/elpa/")
                                                       ("melpa" . "http://melpa.milkbox.net/packages/")))
@@ -14,8 +16,6 @@
                              (prefer-coding-system 'utf-8-unix)
                              (set-default default-buffer-file-coding-system 'utf-8-unix)
                              (when (eq system-type 'darwin)
-                               ;; default Latin font (e.g. Consolas)
-                               ;; default font size (point * 10)
                                (set-face-attribute 'default nil :family "monaco" :height 110 :weight 'normal))
                              (load-theme 'solarized-dark t)
                              (setq ns-command-modifier 'meta)
@@ -97,7 +97,6 @@
                              (defconst user-local-bin "/usr/local/bin")
                              (defconst user-nnotes-tasks-path (concat user-nnotes-documents-directory "todo.org"))
                              (defconst user-todo-path (concat user-org-path "me.org"))
-                             ;; clean text
                              (setq initial-scratch-message "")
                              (set-default 'fill-column 80)
                              (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
@@ -140,31 +139,21 @@
                              (put 'downcase-region 'disabled nil)
                              (put 'set-goal-column 'disabled nil)
                              (put 'narrow-to-region 'disabled nil)
-                             ;; auto-complete for words in buffers
                              (require 'auto-complete-config)
-                             ;; Use dictionaries by default
                              (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
                              (global-auto-complete-mode nil)
-                             ;; Start auto-completion after 2 characters of a word
                              (setq ac-auto-start 2)
-                             ;; case sensitivity is important when finding matches
                              (setq ac-ignore-case nil)
                              
                              
-                             
-                             ;; auto-complete for finding files in a "project directory"
                              (projectile-global-mode)
                              
                              
-                             
-                             ;; auto-complete for finding recently visited files
                              (require 'recentf)
                              (recentf-mode 1)
                              (setq recentf-max-menu-items 100)
                              
                              
-                             
-                             ;; auto-complete for M-x stuff
                              (require 'smex)
                              (smex-initialize)
                              (global-set-key (kbd "M-x") 'smex)
@@ -172,29 +161,19 @@
                              (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
                              
                              
-                             
-                             ;; auto-complete using fuzzy-matching
                              (require 'ido)
                              (ido-mode 1)
                              (ido-everywhere 1)
-                             
                              (require 'ido-vertical-mode)
                              (ido-vertical-mode)
-                             
-                             ;; forget latest selected directory names
                              (setq ido-enable-last-directory-history nil)
-                             
-                             ;; disable ido faces to see flx highlights.
                              (setq ido-use-faces nil)
-                             
                              (require 'flx-ido)
                              (flx-ido-mode 1)
-                             
                              (require 'ido-ubiquitous)
                              (ido-ubiquitous)
                              
                              
-                             ;; auto-complete using abbreviations
                              (require 'dropdown-list)
                              (require 'yasnippet)
                              (setq yas-snippet-dirs user-snippets-dir-path)
@@ -204,22 +183,6 @@
                              (yas-global-mode 1)
                              
                              
-                             
-                             ;; auto-complete tags using fuzzy-matching
-                             (defun ido-find-tag ()
-                               "Find a tag using ido"
-                               (interactive)
-                               (tags-completion-table)
-                               (let (tag-names)
-                                 (mapatoms (lambda (x)
-                                             (push (prin1-to-string x t) tag-names))
-                                           tags-completion-table)
-                                 (find-tag (ido-completing-read "Tag: " tag-names))))
-                             
-                             
-                             
-                             
-                             ;; auto-complete stuff using TAB key
                              (setq hippie-expand-try-functions-list
                                    '(yas-hippie-try-expand
                                      try-expand-dabbrev
@@ -227,10 +190,8 @@
                                      try-expand-dabbrev-from-kill
                                      try-complete-file-name
                                      try-complete-lisp-symbol))
-                             
                              (defvar smart-tab-using-hippie-expand t
                                "turn this on if you want to use hippie-expand completion.")
-                             
                              (defun smart-indent ()
                                "Indents region if mark is active, or current line otherwise."
                                (interactive)
@@ -238,7 +199,6 @@
                                    (indent-region (region-beginning)
                                                   (region-end))
                                  (indent-for-tab-command)))
-                             
                              (defun smart-tab (prefix)
                                "Needs `transient-mark-mode' to be on. This smart tab is
                                        minibuffer compliant: it acts as usual in the minibuffer.
@@ -258,7 +218,6 @@
                                             (hippie-expand prefix)
                                           (dabbrev-expand prefix)))
                                        ((smart-indent)))))
-                             
                              (global-set-key (kbd "TAB") 'smart-tab)
                              (require 'org)
                              (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
@@ -266,12 +225,9 @@
                              (global-set-key (kbd "C-c a") 'org-agenda)
                              (global-set-key (kbd "C-c b") 'org-iswitchb)
                              (setq org-hide-leading-stars t)
-                             
-                             ;; Indentation
                              (setq org-list-indent-offset 2)
                              
                              
-                             ;; Bindings
                              (defun org-shortcuts ()
                                (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
                                (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
@@ -283,29 +239,24 @@
                                (auto-complete-mode)
                                (message "org-mode-hook func"))
                              (add-hook 'org-mode-hook 'org-shortcuts)
-                             
-                             
-                             
                              (add-hook 'org-agenda-mode-hook
                                        (lambda ()
                                          (local-set-key (kbd "<tab>") 'org-agenda-goto)))
                              
                              
-                             
-                             ;; TODOs
                              (setq org-todo-keywords '("TODO(t!)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELLED(c@)"))
-                             
                              (setq org-todo-keyword-faces
                                    '(("TODO" :foreground "red" :weight bold)
                                      ("WAIT" :foreground "orange" :weight bold)
                                      ("DONE" :foreground "forest green" :weight bold)
                                      ("CANCELLED" :foreground "white" :weight bold)))
-                             
                              (setq org-enforce-todo-dependencies t)
+                             
+                             
                              (setq org-log-into-drawer t)
                              (setq org-clock-into-drawer t)
                              
-                             ;; TAGS
+                             
                              (setq org-tag-faces '(("ph" :foreground "cyan" :weight bold)
                                                    ("ad" :foreground "cyan" :weight bold)
                                                    ("bf" :foreground "cyan" :weight bold)
@@ -328,23 +279,17 @@
                              ;;                 (org-mobile-push))))
                              
                              
-                             ;; Agenda
+                             
                              (setq org-agenda-files (list
                                                      user-todo-path
                                                      user-nnotes-tasks-path))
-                             
-                             
                              (setq org-agenda-span 'month)
                              (setq org-deadline-warning-days 1)
                              (setq org-agenda-skip-scheduled-if-done t)
                              (setq org-log-done t)
                              
                              
-                             
-                             ;; Capture
-                             ;; see global.el
                              (global-set-key (kbd "C-c c") 'org-capture)
-                             
                              (defun user-before-finalize-capture-hooks ()
                                (org-id-get-create))
                              (add-hook 'org-capture-before-finalize-hook 'user-before-finalize-capture-hooks)
@@ -363,13 +308,7 @@
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
                              
                              
-                             
-                             
-                             
-                             ;; code block
-                             ;; allow ditaa block
                              (setq org-src-fontify-natively t)
-                             
                              (org-babel-do-load-languages
                               'org-babel-load-languages
                               '((emacs-lisp . t)
@@ -377,7 +316,6 @@
                                 (latex . t)
                                 (ditaa . t)
                                 (js . t)))
-                             
                              (setq org-src-lang-modes '(("ocaml" . tuareg)
                                                         ("elisp" . emacs-lisp)
                                                         ("ditaa" . artist)
@@ -400,15 +338,11 @@
                              (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
                              
                              
-                             
-                             ;; clocktable
                              (setq org-clock-clocktable-default-properties '(:maxlevel 3 :scope file))
                              (setq org-clock-persist 'history)
                              (org-clock-persistence-insinuate)
                              
                              
-                             
-                             ;; org-table
                              (setq org-enable-table-editor t)
                              (require 'sws-mode)
                              (require 'stylus-mode)
@@ -427,13 +361,16 @@
                              (setq js2-pretty-multiline-declarations t)
                              (setq js2-highlight-level 3)
                              
+                             
                              (require 'js2-refactor)
                              (js2r-add-keybindings-with-prefix "C-c C-m")
+                             
                              
                              ;; jshint
                              ;; (require 'flycheck)
                              ;; (add-hook 'js2-mode-hook
                              ;;           (lambda () (flycheck-mode t)))
+                             
                              
                              (defun prettify-js-symbols ()
                                (push '("lambda" . ?λ) prettify-symbols-alist)
@@ -444,7 +381,6 @@
                                (push '("!==" . ?≠) prettify-symbols-alist)
                                (prettify-symbols-mode)
                                (electric-pair-mode))
-                             
                              (add-hook 'js2-mode-hook 'prettify-js-symbols)
                              (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
                              (require 'tex)
@@ -462,6 +398,7 @@
                              (setq LaTeX-indent-level 4)
                              (setq LaTeX-item-indent 0)
                              
+                             
                              (add-hook 'after-save-hook
                                        (lambda ()
                                          (let ((cur-file-name ""))
@@ -471,4 +408,5 @@
                                             ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
                                            )
                                          )
-                                       )))
+                                       )
+                             ))
