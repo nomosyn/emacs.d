@@ -1,6 +1,4 @@
-#+PROPERTY: header-args:elisp :comments org
-
-* Configure
+* Load configurations
   - List of loaded configurations.
   - Exclude a configuration: comment it here
   - Add a configuration: add it here
