@@ -1,6 +1,6 @@
 
-;; Configure
-;;   - List of loaded configurations.
+;; Load configurations
+
 ;;   - Exclude a configuration: comment it here
 ;;   - Add a configuration: add it here
 
