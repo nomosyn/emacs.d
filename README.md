@@ -1,14 +1,930 @@
-emacs.d
-=======
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Load configurations</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Packages manager</a></li>
+<li><a href="#sec-1-2">1.2. Encoding</a></li>
+<li><a href="#sec-1-3">1.3. Font</a></li>
+<li><a href="#sec-1-4">1.4. Theme</a></li>
+<li><a href="#sec-1-5">1.5. Mac</a></li>
+<li><a href="#sec-1-6">1.6. Bindings</a>
+<ul>
+<li><a href="#sec-1-6-1">1.6.1. Vim style</a></li>
+<li><a href="#sec-1-6-2">1.6.2. Emacs style</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-7">1.7. Defun</a></li>
+<li><a href="#sec-1-8">1.8. Resources</a></li>
+<li><a href="#sec-1-9">1.9. Global</a></li>
+<li><a href="#sec-1-10">1.10. Completion</a></li>
+<li><a href="#sec-1-11">1.11. Org</a></li>
+<li><a href="#sec-1-12">1.12. Stylus</a></li>
+<li><a href="#sec-1-13">1.13. Html</a></li>
+<li><a href="#sec-1-14">1.14. Javascript</a></li>
+<li><a href="#sec-1-15">1.15. Haskell</a></li>
+<li><a href="#sec-1-16">1.16. Latex</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
-`M-x emacs-version`
+# Load configurations<a id="sec-1" name="sec-1"></a>
 
-GNU Emacs 24.4.50.1 (x86_64-apple-darwin13.3.0, NS appkit-1265.21 Version 10.9.4 (Build 13E28)) of 2014-09-28 on builder10-9.porkrind.org
+-   Exclude a configuration: comment it here
+-   Add a configuration: add it here
+
+    (add-hook 'after-init-hook (lambda ()
+                                 (setq package-archives '(("\"marmalade\"" . "http://marmalade-repo.org/packages/")
+                                                          ("gnu" . "http://elpa.gnu.org/packages/")
+                                                          ("org-mode" . "http://orgmode.org/elpa/")
+                                                          ("melpa" . "http://melpa.milkbox.net/packages/")))
+                                 (require 'un-define "un-define" t)
+                                 (set-buffer-file-coding-system 'utf-8 'utf-8-unix)
+                                 (set-default buffer-file-coding-system 'utf-8-unix)
+                                 (set-default-coding-systems 'utf-8-unix)
+                                 (prefer-coding-system 'utf-8-unix)
+                                 (set-default default-buffer-file-coding-system 'utf-8-unix)
+                                 (when (eq system-type 'darwin)
+                                   (set-face-attribute 'default nil :family "monaco" :height 110 :weight 'normal))
+                                 (load-theme 'solarized-dark t)
+                                 (setq ns-command-modifier 'meta)
+                                 (setq ns-option-modifier  'super)
+                                 (setq ns-right-option-modifier  'nil)
+                                 (when (fboundp 'tool-bar-mode)
+                                   (tool-bar-mode 0))
+
+                                 ;; Slow down the mouse wheel acceleration
+                                 (when (boundp 'mouse-wheel-scroll-amount)
+                                   (setq mouse-wheel-scroll-amount '(0.01)))
+                                 (global-set-key (kbd "C-o") 'other-window)
+                                 (global-set-key (kbd "<f9>") 'magit-status)
+                                 (require 'expand-region)
+                                 (global-set-key (kbd "C-=") 'er/expand-region)
+                                 (defun iwb()
+                                   "Indent Whole Buffer"
+                                   (interactive)
+                                   (delete-trailing-whitespace)
+                                   (indent-region (point-min) (point-max) nil)
+                                   (untabify (point-min) (point-max)))
+
+                                 (defun lorem ()
+                                   (interactive)
+                                   (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                       elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                       gravida vitae, arcu. Nunc posuere. Suspendisse
+                                       potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                       eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                       vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                       laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                       venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                       augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                       augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                       in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                       et leo. Sed sodales vestibulum justo. Cras convallis
+                                       pellentesque augue. In eu magna. In pede turpis, feugiat
+                                       pulvinar, sodales eget, bibendum consectetuer,
+                                       magna. Pellentesque vitae augue."))
+
+                                 (defun dedicate-window ()
+                                   (interactive)
+                                   (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
+
+                                 (defun fold (f x list)
+                                   "Ex:
+                                      (fold 'concat \"X\" \'(\"a\" \"b\"))
+                                        <- (concat (concat (concat \"X\") \"a\") \"b\")
+                                        <- \"Xab\""
+                                   (let ((li list) (x2 x))
+                                     (while li (setq x2 (funcall f x2 (pop li))))
+                                     x2))
+
+                                 (defun build-dir-path (path &rest fname-list)
+                                   "build-dir-path: PATH NAME1 NAME2 ... -> PATH
+
+                                   (build-dir-path some-path \"to\" \"this\" \"dir\") -> \"/some/path/to/this/dir\"
+                                 "
+                                   (expand-file-name
+
+                                    (fold (lambda (path fname)
+                                            (concat path (file-name-as-directory fname)))
+
+                                          ;; Check that path looks like /.../my/path/.../end/
+                                          (if (string= path (file-name-as-directory path))
+                                              path
+                                            (error "first argument should be a directory path ex : /my/dir/"))
+
+                                          fname-list)))
+                                 (defconst user-home (file-name-as-directory (expand-file-name "~")))
+                                 (defconst user-home-dir (file-name-as-directory user-home))
+                                 (defconst user-emacs-directory (build-dir-path user-home-dir ".emacs.d"))
+                                 (defconst user-nnotes-directory (build-dir-path user-home-dir "nnotes"))
+                                 (defconst user-backups-path (build-dir-path user-emacs-directory "backups"))
+                                 (defconst user-snippets-dir-path (build-dir-path user-emacs-directory "snippets"))
+                                 (defconst user-nnotes-documents-directory (build-dir-path user-nnotes-directory "nnotes-documents"))
+                                 (defconst user-elpa-path (concat user-emacs-directory (file-name-as-directory "elpa")))
+                                 (defconst user-org-path (concat user-home (file-name-as-directory "org")))
+                                 (defconst user-local-bin "/usr/local/bin")
+                                 (defconst user-nnotes-tasks-path (concat user-nnotes-documents-directory "todo.org"))
+                                 (defconst user-todo-path (concat user-org-path "me.org"))
+                                 (setq initial-scratch-message "")
+                                 (set-default 'fill-column 80)
+                                 (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
+                                 (show-paren-mode t)
+                                 (setq truncate-lines t)
+                                 (setq truncate-partial-width-windows nil)
+                                 (defvar whitespace-cleanup-on-save t)
+                                 (add-hook 'before-save-hook
+                                           (lambda ()
+                                             (if whitespace-cleanup-on-save (whitespace-cleanup))))
+                                 (setq transient-mark-mode t)
+                                 (pending-delete-mode t)
+                                 (setq-default ispell-program-name "aspell")
+                                 (setq ispell-list-command "list")
+                                 (setq ispell-extra-args '("--sug-mode=ultra"))
+                                 (column-number-mode)
+                                 (setq gc-cons-threshold 20000000)
+                                 (add-to-list 'default-frame-alist '(width  . 184))
+                                 (add-to-list 'default-frame-alist '(height . 52))
+                                 (tool-bar-mode 0)
+                                 (setq inhibit-startup-message t)
+                                 (fset 'yes-or-no-p 'y-or-n-p)
+                                 (scroll-bar-mode -1)
+                                 (set-default 'indicate-empty-lines nil)
+                                 (set-fringe-mode '(1 . 1))
+                                 (setq visible-bell t)
+                                 (setq backup-directory-alist (list (cons "." user-backups-path)))
+                                 (setq delete-by-moving-to-trash t)
+                                 (server-start)
+                                 (global-auto-revert-mode)
+                                 (require 'uniquify)
+                                 (setq uniquify-buffer-name-style 'post-forward)
+                                 (setq uniquify-strip-common-suffix nil)
+                                 (require 'misc)
+                                 (setq exec-path (cons user-local-bin exec-path))
+                                 (setenv "PATH" (concat user-local-bin ":" (getenv "PATH")))
+                                 (setq-default indent-tabs-mode nil)
+                                 (setq-default tab-width 4)
+                                 (put 'upcase-region 'disabled nil)
+                                 (put 'downcase-region 'disabled nil)
+                                 (put 'set-goal-column 'disabled nil)
+                                 (put 'narrow-to-region 'disabled nil)
+                                 (require 'auto-complete-config)
+                                 (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
+                                 (global-auto-complete-mode nil)
+                                 (setq ac-auto-start 2)
+                                 (setq ac-ignore-case nil)
 
 
-`M-x org-version`
-
-Org-mode version 8.2.8
+                                 (projectile-global-mode)
 
 
-`M-x org-babel-tangle` -> init.el
+                                 (require 'recentf)
+                                 (recentf-mode 1)
+                                 (setq recentf-max-menu-items 100)
+
+
+                                 (require 'smex)
+                                 (smex-initialize)
+                                 (global-set-key (kbd "M-x") 'smex)
+                                 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+                                 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
+                                 (require 'ido)
+                                 (ido-mode 1)
+                                 (ido-everywhere 1)
+                                 (require 'ido-vertical-mode)
+                                 (ido-vertical-mode)
+                                 (setq ido-enable-last-directory-history nil)
+                                 (setq ido-use-faces nil)
+                                 (require 'flx-ido)
+                                 (flx-ido-mode 1)
+                                 (require 'ido-ubiquitous)
+                                 (ido-ubiquitous)
+
+
+                                 (require 'dropdown-list)
+                                 (require 'yasnippet)
+                                 (setq yas-snippet-dirs user-snippets-dir-path)
+                                 (setq yas-prompt-functions '(yas-ido-prompt
+                                                              yas-dropdown-prompt
+                                                              yas-completing-prompt))
+                                 (yas-global-mode 1)
+
+
+                                 (setq hippie-expand-try-functions-list
+                                       '(yas-hippie-try-expand
+                                         try-expand-dabbrev
+                                         try-expand-dabbrev-all-buffers
+                                         try-expand-dabbrev-from-kill
+                                         try-complete-file-name
+                                         try-complete-lisp-symbol))
+                                 (defvar smart-tab-using-hippie-expand t
+                                   "turn this on if you want to use hippie-expand completion.")
+                                 (defun smart-indent ()
+                                   "Indents region if mark is active, or current line otherwise."
+                                   (interactive)
+                                   (if mark-active
+                                       (indent-region (region-beginning)
+                                                      (region-end))
+                                     (indent-for-tab-command)))
+                                 (defun smart-tab (prefix)
+                                   "Needs `transient-mark-mode' to be on. This smart tab is
+                                           minibuffer compliant: it acts as usual in the minibuffer.
+
+                                           In all other buffers: if PREFIX is \\[universal-argument], calls
+                                           `smart-indent'. Else if point is at the end of a symbol,
+                                           expands it. Else calls `smart-indent'."
+                                   (interactive "P")
+                                   (labels ((smart-tab-must-expand (&optional prefix)
+                                                                   (unless (or (consp prefix)
+                                                                               mark-active)
+                                                                     (looking-at "\\_>"))))
+                                     (cond ((minibufferp)
+                                            (minibuffer-complete))
+                                           ((smart-tab-must-expand prefix)
+                                            (if smart-tab-using-hippie-expand
+                                                (hippie-expand prefix)
+                                              (dabbrev-expand prefix)))
+                                           ((smart-indent)))))
+                                 (global-set-key (kbd "TAB") 'smart-tab)
+                                 (require 'org)
+                                 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+                                 (global-set-key (kbd "C-c l") 'org-store-link)
+                                 (global-set-key (kbd "C-c a") 'org-agenda)
+                                 (global-set-key (kbd "C-c b") 'org-iswitchb)
+                                 (setq org-hide-leading-stars t)
+                                 (setq org-list-indent-offset 2)
+
+
+                                 (defun org-shortcuts ()
+                                   (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
+                                   (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
+                                   (local-set-key (kbd "C-c i") 'org-clock-in)
+                                   (local-set-key (kbd "C-c o") 'org-clock-out)
+                                   (local-set-key (kbd "C-c t") 'org-todo)
+                                   (local-set-key (kbd "C-c r") 'org-clock-report)
+                                   (local-set-key (kbd "C-c .") 'org-time-stamp)
+                                   (auto-complete-mode)
+                                   (message "org-mode-hook func"))
+                                 (add-hook 'org-mode-hook 'org-shortcuts)
+                                 (add-hook 'org-agenda-mode-hook
+                                           (lambda ()
+                                             (local-set-key (kbd "<tab>") 'org-agenda-goto)))
+
+
+                                 (setq org-todo-keywords '("TODO(t!)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELLED(c@)"))
+                                 (setq org-todo-keyword-faces
+                                       '(("TODO" :foreground "red" :weight bold)
+                                         ("WAIT" :foreground "orange" :weight bold)
+                                         ("DONE" :foreground "forest green" :weight bold)
+                                         ("CANCELLED" :foreground "white" :weight bold)))
+                                 (setq org-enforce-todo-dependencies t)
+
+
+                                 (setq org-log-into-drawer t)
+                                 (setq org-clock-into-drawer t)
+
+
+                                 (setq org-tag-faces '(("ph" :foreground "cyan" :weight bold)
+                                                       ("ad" :foreground "cyan" :weight bold)
+                                                       ("bf" :foreground "cyan" :weight bold)
+                                                       ("dev" :foreground "cyan" :weight bold)
+                                                       ("doc" :foreground "cyan" :weight bold)
+                                                       ("com" :foreground "cyan" :weight bold)))
+
+
+
+                                 ;; Mobile
+                                 ;; (setq org-mobile-directory user-data-org-mobile-path)
+                                 ;; (setq org-mobile-inbox-for-pull user-org-mobile-inbox-for-pull-path)
+
+
+
+                                 ;; Push todo.org when saved
+                                 ;; (add-hook 'after-save-hook
+                                 ;;           (lambda ()
+                                 ;;             (if (string= buffer-file-name user-todo-path)
+                                 ;;                 (org-mobile-push))))
+
+
+
+                                 (setq org-agenda-files (list
+                                                         user-todo-path
+                                                         user-nnotes-tasks-path))
+                                 (setq org-agenda-span 'month)
+                                 (setq org-deadline-warning-days 1)
+                                 (setq org-agenda-skip-scheduled-if-done t)
+                                 (setq org-log-done t)
+
+
+                                 (global-set-key (kbd "C-c c") 'org-capture)
+                                 (defun user-before-finalize-capture-hooks ()
+                                   (org-id-get-create))
+                                 (add-hook 'org-capture-before-finalize-hook 'user-before-finalize-capture-hooks)
+
+                                 (setq org-capture-templates
+                                       '(("p"
+                                          "personal"
+                                          entry
+                                          (file+headline user-todo-path "tasks")
+                                          "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)
+
+                                         ("n"
+                                          "nnotes"
+                                          entry
+                                          (file+headline user-nnotes-tasks-path "tasks")
+                                          "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
+
+
+                                 (setq org-src-fontify-natively t)
+                                 (org-babel-do-load-languages
+                                  'org-babel-load-languages
+                                  '((emacs-lisp . t)
+                                    (org . t)
+                                    (latex . t)
+                                    (ditaa . t)
+                                    (js . t)))
+                                 (setq org-src-lang-modes '(("ocaml" . tuareg)
+                                                            ("elisp" . emacs-lisp)
+                                                            ("ditaa" . artist)
+                                                            ("asymptote" . asy)
+                                                            ("dot" . fundamental)
+                                                            ("sqlite" . sql)
+                                                            ("calc" . fundamental)
+                                                            ("C" . c)
+                                                            ("js" . js2)
+                                                            ("cpp" . c++)
+                                                            ("C++" . c++)
+                                                            ("screen" . shell-script)))
+
+
+                                 (defun my-org-confirm-babel-evaluate (lang body)
+                                   (not (or
+                                         (string= lang "org")
+                                         (string= lang "ditaa")      ;; don't ask for ditaa
+                                         (string= lang "emacs-lisp")))) ;; don't ask for elisp
+                                 (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+
+                                 (setq org-clock-clocktable-default-properties '(:maxlevel 3 :scope file))
+                                 (setq org-clock-persist 'history)
+                                 (org-clock-persistence-insinuate)
+
+
+                                 (setq org-enable-table-editor t)
+                                 (require 'sws-mode)
+                                 (require 'stylus-mode)
+                                 (require 'handlebars-sgml-mode)
+                                 (handlebars-use-mode 'global)
+                                 (setq sgml-basic-offset 4)
+                                 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+                                 (setq js2-allow-keywords-as-property-names nil)
+                                 (setq js2-mode-show-strict-warnings nil)
+                                 (setq js2-basic-offset 4)
+                                 (setq js2-bounce-indent-p nil)
+                                 (setq js2-dynamic-idle-timer-adjust 10000)
+                                 (setq js2-highlight-external-variables nil)
+                                 (setq js2-idle-timer-delay 1)
+                                 (setq js2-mode-show-parse-errors t)
+                                 (setq js2-pretty-multiline-declarations t)
+                                 (setq js2-highlight-level 3)
+
+
+                                 (require 'js2-refactor)
+                                 (js2r-add-keybindings-with-prefix "C-c C-m")
+
+
+                                 ;; jshint
+                                 ;; (require 'flycheck)
+                                 ;; (add-hook 'js2-mode-hook
+                                 ;;           (lambda () (flycheck-mode t)))
+
+
+                                 (defun prettify-js-symbols ()
+                                   (push '("lambda" . ?λ) prettify-symbols-alist)
+                                   (push '("function" . ?ƒ) prettify-symbols-alist)
+                                   (push '("return" . ?⟼) prettify-symbols-alist)
+                                   (push '("<=" . ?≤) prettify-symbols-alist)
+                                   (push '(">=" . ?≥) prettify-symbols-alist)
+                                   (push '("!==" . ?≠) prettify-symbols-alist)
+                                   (prettify-symbols-mode)
+                                   (electric-pair-mode))
+                                 (add-hook 'js2-mode-hook 'prettify-js-symbols)
+                                 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+                                 (require 'tex)
+                                 (add-hook 'TeX-mode-hook (lambda ()
+                                                            (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
+                                                            (local-set-key (kbd "C-f") 'LaTeX-fill-region)
+                                                            (LaTeX-math-mode)
+                                                            ;; (setq TeX-engine 'xetex)
+                                                            (turn-on-reftex)))
+                                 (setq TeX-auto-save t)
+                                 (setq TeX-parse-self t)
+                                 (setq-default TeX-master nil)
+                                 (setq reftex-plug-into-AUCTeX t)
+                                 (TeX-global-PDF-mode t)
+                                 (setq LaTeX-indent-level 4)
+                                 (setq LaTeX-item-indent 0)
+
+
+                                 (add-hook 'after-save-hook
+                                           (lambda ()
+                                             (let ((cur-file-name ""))
+                                               (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+                                               (cond
+                                                ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
+                                                ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                                               )
+                                             )
+                                           )
+                                 ))
+
+## Packages manager<a id="sec-1-1" name="sec-1-1"></a>
+
+    (setq package-archives '(("\"marmalade\"" . "http://marmalade-repo.org/packages/")
+                             ("gnu" . "http://elpa.gnu.org/packages/")
+                             ("org-mode" . "http://orgmode.org/elpa/")
+                             ("melpa" . "http://melpa.milkbox.net/packages/")))
+
+## Encoding<a id="sec-1-2" name="sec-1-2"></a>
+
+    (require 'un-define "un-define" t)
+    (set-buffer-file-coding-system 'utf-8 'utf-8-unix)
+    (set-default buffer-file-coding-system 'utf-8-unix)
+    (set-default-coding-systems 'utf-8-unix)
+    (prefer-coding-system 'utf-8-unix)
+    (set-default default-buffer-file-coding-system 'utf-8-unix)
+
+## Font<a id="sec-1-3" name="sec-1-3"></a>
+
+    (when (eq system-type 'darwin)
+      (set-face-attribute 'default nil :family "monaco" :height 110 :weight 'normal))
+
+## Theme<a id="sec-1-4" name="sec-1-4"></a>
+
+    (load-theme 'solarized-dark t)
+
+## Mac<a id="sec-1-5" name="sec-1-5"></a>
+
+    (setq ns-command-modifier 'meta)
+    (setq ns-option-modifier  'super)
+    (setq ns-right-option-modifier  'nil)
+    (when (fboundp 'tool-bar-mode)
+      (tool-bar-mode 0))
+
+    ;; Slow down the mouse wheel acceleration
+    (when (boundp 'mouse-wheel-scroll-amount)
+      (setq mouse-wheel-scroll-amount '(0.01)))
+
+## Bindings<a id="sec-1-6" name="sec-1-6"></a>
+
+### Vim style<a id="sec-1-6-1" name="sec-1-6-1"></a>
+
+Because configuring vim means installing Emacs + [Evil](https://gitorious.org/evil/pages/Home)
+
+Borrowed from [echosa](https://github.com/echosa/emacs.d).
+
+    (evil-mode 1)
+    (setq evil-default-cursor '(t))
+
+    (key-chord-mode 1)
+    (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+    (key-chord-define evil-motion-state-map "jk" 'evil-normal-state)
+    (key-chord-define evil-visual-state-map "jk" 'evil-normal-state)
+    (key-chord-define evil-emacs-state-map "jk" 'evil-normal-state)
+
+    (define-key evil-ex-map "b " 'ido-switch-buffer)
+    (define-key evil-ex-map "e " 'ido-find-file)
+
+    (require 'evil-surround)
+    (global-evil-surround-mode 1)
+
+    (require 'evil-leader)
+    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-key "x" 'execute-extended-command)
+    (evil-leader/set-key ":" 'eval-expression)
+    (evil-leader/set-key "k" 'ido-kill-buffer)
+    (evil-leader/set-key "p" 'projectile-commander)
+    (evil-leader/set-key "e" 'mu4e)
+    (evil-leader/set-key "j" 'ace-jump-mode)
+    (evil-leader/set-key "J" 'ace-window)
+    (global-evil-leader-mode)
+
+### Emacs style<a id="sec-1-6-2" name="sec-1-6-2"></a>
+
+    (global-set-key (kbd "C-o") 'other-window)
+    (global-set-key (kbd "<f9>") 'magit-status)
+    (require 'expand-region)
+    (global-set-key (kbd "C-=") 'er/expand-region)
+
+## Defun<a id="sec-1-7" name="sec-1-7"></a>
+
+    (defun iwb()
+      "Indent Whole Buffer"
+      (interactive)
+      (delete-trailing-whitespace)
+      (indent-region (point-min) (point-max) nil)
+      (untabify (point-min) (point-max)))
+
+    (defun lorem ()
+      (interactive)
+      (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
+          elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+          gravida vitae, arcu. Nunc posuere. Suspendisse
+          potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+          eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+          vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+          laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+          venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+          augue. Nullam fringilla consectetuer sapien. Aenean neque
+          augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+          in nibh quis erat condimentum pretium. Vestibulum tempor odio
+          et leo. Sed sodales vestibulum justo. Cras convallis
+          pellentesque augue. In eu magna. In pede turpis, feugiat
+          pulvinar, sodales eget, bibendum consectetuer,
+          magna. Pellentesque vitae augue."))
+
+    (defun dedicate-window ()
+      (interactive)
+      (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
+
+    (defun fold (f x list)
+      "Ex:
+         (fold 'concat \"X\" \'(\"a\" \"b\"))
+           <- (concat (concat (concat \"X\") \"a\") \"b\")
+           <- \"Xab\""
+      (let ((li list) (x2 x))
+        (while li (setq x2 (funcall f x2 (pop li))))
+        x2))
+
+    (defun build-dir-path (path &rest fname-list)
+      "build-dir-path: PATH NAME1 NAME2 ... -> PATH
+
+      (build-dir-path some-path \"to\" \"this\" \"dir\") -> \"/some/path/to/this/dir\"
+    "
+      (expand-file-name
+
+       (fold (lambda (path fname)
+               (concat path (file-name-as-directory fname)))
+
+             ;; Check that path looks like /.../my/path/.../end/
+             (if (string= path (file-name-as-directory path))
+                 path
+               (error "first argument should be a directory path ex : /my/dir/"))
+
+             fname-list)))
+
+## Resources<a id="sec-1-8" name="sec-1-8"></a>
+
+    (defconst user-home (file-name-as-directory (expand-file-name "~")))
+    (defconst user-home-dir (file-name-as-directory user-home))
+    (defconst user-emacs-directory (build-dir-path user-home-dir ".emacs.d"))
+    (defconst user-nnotes-directory (build-dir-path user-home-dir "nnotes"))
+    (defconst user-backups-path (build-dir-path user-emacs-directory "backups"))
+    (defconst user-snippets-dir-path (build-dir-path user-emacs-directory "snippets"))
+    (defconst user-nnotes-documents-directory (build-dir-path user-nnotes-directory "nnotes-documents"))
+    (defconst user-elpa-path (concat user-emacs-directory (file-name-as-directory "elpa")))
+    (defconst user-org-path (concat user-home (file-name-as-directory "org")))
+    (defconst user-local-bin "/usr/local/bin")
+    (defconst user-nnotes-tasks-path (concat user-nnotes-documents-directory "todo.org"))
+    (defconst user-todo-path (concat user-org-path "me.org"))
+
+## Global<a id="sec-1-9" name="sec-1-9"></a>
+
+    (setq initial-scratch-message "")
+    (set-default 'fill-column 80)
+    (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
+    (show-paren-mode t)
+    (setq truncate-lines t)
+    (setq truncate-partial-width-windows nil)
+    (defvar whitespace-cleanup-on-save t)
+    (add-hook 'before-save-hook
+              (lambda ()
+                (if whitespace-cleanup-on-save (whitespace-cleanup))))
+    (setq transient-mark-mode t)
+    (pending-delete-mode t)
+    (setq-default ispell-program-name "aspell")
+    (setq ispell-list-command "list")
+    (setq ispell-extra-args '("--sug-mode=ultra"))
+    (column-number-mode)
+    (setq gc-cons-threshold 20000000)
+    (add-to-list 'default-frame-alist '(width  . 184))
+    (add-to-list 'default-frame-alist '(height . 52))
+    (tool-bar-mode 0)
+    (setq inhibit-startup-message t)
+    (fset 'yes-or-no-p 'y-or-n-p)
+    (scroll-bar-mode -1)
+    (set-default 'indicate-empty-lines nil)
+    (set-fringe-mode '(1 . 1))
+    (setq visible-bell t)
+    (setq backup-directory-alist (list (cons "." user-backups-path)))
+    (setq delete-by-moving-to-trash t)
+    (server-start)
+    (global-auto-revert-mode)
+    (require 'uniquify)
+    (setq uniquify-buffer-name-style 'post-forward)
+    (setq uniquify-strip-common-suffix nil)
+    (require 'misc)
+    (setq exec-path (cons user-local-bin exec-path))
+    (setenv "PATH" (concat user-local-bin ":" (getenv "PATH")))
+    (setq-default indent-tabs-mode nil)
+    (setq-default tab-width 4)
+    (put 'upcase-region 'disabled nil)
+    (put 'downcase-region 'disabled nil)
+    (put 'set-goal-column 'disabled nil)
+    (put 'narrow-to-region 'disabled nil)
+
+## Completion<a id="sec-1-10" name="sec-1-10"></a>
+
+    (require 'auto-complete-config)
+    (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
+    (global-auto-complete-mode nil)
+    (setq ac-auto-start 2)
+    (setq ac-ignore-case nil)
+
+
+    (projectile-global-mode)
+
+
+    (require 'recentf)
+    (recentf-mode 1)
+    (setq recentf-max-menu-items 100)
+
+
+    (require 'smex)
+    (smex-initialize)
+    (global-set-key (kbd "M-x") 'smex)
+    (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+    (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
+    (require 'ido)
+    (ido-mode 1)
+    (ido-everywhere 1)
+    (require 'ido-vertical-mode)
+    (ido-vertical-mode)
+    (setq ido-enable-last-directory-history nil)
+    (setq ido-use-faces nil)
+    (require 'flx-ido)
+    (flx-ido-mode 1)
+    (require 'ido-ubiquitous)
+    (ido-ubiquitous)
+
+
+    (require 'dropdown-list)
+    (require 'yasnippet)
+    (setq yas-snippet-dirs user-snippets-dir-path)
+    (setq yas-prompt-functions '(yas-ido-prompt
+                                 yas-dropdown-prompt
+                                 yas-completing-prompt))
+    (yas-global-mode 1)
+
+
+    (setq hippie-expand-try-functions-list
+          '(yas-hippie-try-expand
+            try-expand-dabbrev
+            try-expand-dabbrev-all-buffers
+            try-expand-dabbrev-from-kill
+            try-complete-file-name
+            try-complete-lisp-symbol))
+    (defvar smart-tab-using-hippie-expand t
+      "turn this on if you want to use hippie-expand completion.")
+    (defun smart-indent ()
+      "Indents region if mark is active, or current line otherwise."
+      (interactive)
+      (if mark-active
+          (indent-region (region-beginning)
+                         (region-end))
+        (indent-for-tab-command)))
+    (defun smart-tab (prefix)
+      "Needs `transient-mark-mode' to be on. This smart tab is
+              minibuffer compliant: it acts as usual in the minibuffer.
+
+              In all other buffers: if PREFIX is \\[universal-argument], calls
+              `smart-indent'. Else if point is at the end of a symbol,
+              expands it. Else calls `smart-indent'."
+      (interactive "P")
+      (labels ((smart-tab-must-expand (&optional prefix)
+                                      (unless (or (consp prefix)
+                                                  mark-active)
+                                        (looking-at "\\_>"))))
+        (cond ((minibufferp)
+               (minibuffer-complete))
+              ((smart-tab-must-expand prefix)
+               (if smart-tab-using-hippie-expand
+                   (hippie-expand prefix)
+                 (dabbrev-expand prefix)))
+              ((smart-indent)))))
+    (global-set-key (kbd "TAB") 'smart-tab)
+
+## Org<a id="sec-1-11" name="sec-1-11"></a>
+
+    (require 'org)
+    (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+    (global-set-key (kbd "C-c l") 'org-store-link)
+    (global-set-key (kbd "C-c a") 'org-agenda)
+    (global-set-key (kbd "C-c b") 'org-iswitchb)
+    (setq org-hide-leading-stars t)
+    (setq org-list-indent-offset 2)
+
+
+    (defun org-shortcuts ()
+      (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
+      (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
+      (local-set-key (kbd "C-c i") 'org-clock-in)
+      (local-set-key (kbd "C-c o") 'org-clock-out)
+      (local-set-key (kbd "C-c t") 'org-todo)
+      (local-set-key (kbd "C-c r") 'org-clock-report)
+      (local-set-key (kbd "C-c .") 'org-time-stamp)
+      (auto-complete-mode)
+      (message "org-mode-hook func"))
+    (add-hook 'org-mode-hook 'org-shortcuts)
+    (add-hook 'org-agenda-mode-hook
+              (lambda ()
+                (local-set-key (kbd "<tab>") 'org-agenda-goto)))
+
+
+    (setq org-todo-keywords '("TODO(t!)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELLED(c@)"))
+    (setq org-todo-keyword-faces
+          '(("TODO" :foreground "red" :weight bold)
+            ("WAIT" :foreground "orange" :weight bold)
+            ("DONE" :foreground "forest green" :weight bold)
+            ("CANCELLED" :foreground "white" :weight bold)))
+    (setq org-enforce-todo-dependencies t)
+
+
+    (setq org-log-into-drawer t)
+    (setq org-clock-into-drawer t)
+
+
+    (setq org-tag-faces '(("ph" :foreground "cyan" :weight bold)
+                          ("ad" :foreground "cyan" :weight bold)
+                          ("bf" :foreground "cyan" :weight bold)
+                          ("dev" :foreground "cyan" :weight bold)
+                          ("doc" :foreground "cyan" :weight bold)
+                          ("com" :foreground "cyan" :weight bold)))
+
+
+
+    ;; Mobile
+    ;; (setq org-mobile-directory user-data-org-mobile-path)
+    ;; (setq org-mobile-inbox-for-pull user-org-mobile-inbox-for-pull-path)
+
+
+
+    ;; Push todo.org when saved
+    ;; (add-hook 'after-save-hook
+    ;;           (lambda ()
+    ;;             (if (string= buffer-file-name user-todo-path)
+    ;;                 (org-mobile-push))))
+
+
+
+    (setq org-agenda-files (list
+                            user-todo-path
+                            user-nnotes-tasks-path))
+    (setq org-agenda-span 'month)
+    (setq org-deadline-warning-days 1)
+    (setq org-agenda-skip-scheduled-if-done t)
+    (setq org-log-done t)
+
+
+    (global-set-key (kbd "C-c c") 'org-capture)
+    (defun user-before-finalize-capture-hooks ()
+      (org-id-get-create))
+    (add-hook 'org-capture-before-finalize-hook 'user-before-finalize-capture-hooks)
+
+    (setq org-capture-templates
+          '(("p"
+             "personal"
+             entry
+             (file+headline user-todo-path "tasks")
+             "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)
+
+            ("n"
+             "nnotes"
+             entry
+             (file+headline user-nnotes-tasks-path "tasks")
+             "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
+
+
+    (setq org-src-fontify-natively t)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (org . t)
+       (latex . t)
+       (ditaa . t)
+       (js . t)))
+    (setq org-src-lang-modes '(("ocaml" . tuareg)
+                               ("elisp" . emacs-lisp)
+                               ("ditaa" . artist)
+                               ("asymptote" . asy)
+                               ("dot" . fundamental)
+                               ("sqlite" . sql)
+                               ("calc" . fundamental)
+                               ("C" . c)
+                               ("js" . js2)
+                               ("cpp" . c++)
+                               ("C++" . c++)
+                               ("screen" . shell-script)))
+
+
+    (defun my-org-confirm-babel-evaluate (lang body)
+      (not (or
+            (string= lang "org")
+            (string= lang "ditaa")      ;; don't ask for ditaa
+            (string= lang "emacs-lisp")))) ;; don't ask for elisp
+    (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+
+
+    (setq org-clock-clocktable-default-properties '(:maxlevel 3 :scope file))
+    (setq org-clock-persist 'history)
+    (org-clock-persistence-insinuate)
+
+
+    (setq org-enable-table-editor t)
+
+## Stylus<a id="sec-1-12" name="sec-1-12"></a>
+
+    (require 'sws-mode)
+    (require 'stylus-mode)
+
+## Html<a id="sec-1-13" name="sec-1-13"></a>
+
+    (require 'handlebars-sgml-mode)
+    (handlebars-use-mode 'global)
+    (setq sgml-basic-offset 4)
+
+## Javascript<a id="sec-1-14" name="sec-1-14"></a>
+
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+    (setq js2-allow-keywords-as-property-names nil)
+    (setq js2-mode-show-strict-warnings nil)
+    (setq js2-basic-offset 4)
+    (setq js2-bounce-indent-p nil)
+    (setq js2-dynamic-idle-timer-adjust 10000)
+    (setq js2-highlight-external-variables nil)
+    (setq js2-idle-timer-delay 1)
+    (setq js2-mode-show-parse-errors t)
+    (setq js2-pretty-multiline-declarations t)
+    (setq js2-highlight-level 3)
+
+
+    (require 'js2-refactor)
+    (js2r-add-keybindings-with-prefix "C-c C-m")
+
+
+    ;; jshint
+    ;; (require 'flycheck)
+    ;; (add-hook 'js2-mode-hook
+    ;;           (lambda () (flycheck-mode t)))
+
+
+    (defun prettify-js-symbols ()
+      (push '("lambda" . ?λ) prettify-symbols-alist)
+      (push '("function" . ?ƒ) prettify-symbols-alist)
+      (push '("return" . ?⟼) prettify-symbols-alist)
+      (push '("<=" . ?≤) prettify-symbols-alist)
+      (push '(">=" . ?≥) prettify-symbols-alist)
+      (push '("!==" . ?≠) prettify-symbols-alist)
+      (prettify-symbols-mode)
+      (electric-pair-mode))
+    (add-hook 'js2-mode-hook 'prettify-js-symbols)
+
+## Haskell<a id="sec-1-15" name="sec-1-15"></a>
+
+    (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
+## Latex<a id="sec-1-16" name="sec-1-16"></a>
+
+    (require 'tex)
+    (add-hook 'TeX-mode-hook (lambda ()
+                               (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
+                               (local-set-key (kbd "C-f") 'LaTeX-fill-region)
+                               (LaTeX-math-mode)
+                               ;; (setq TeX-engine 'xetex)
+                               (turn-on-reftex)))
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil)
+    (setq reftex-plug-into-AUCTeX t)
+    (TeX-global-PDF-mode t)
+    (setq LaTeX-indent-level 4)
+    (setq LaTeX-item-indent 0)
+
+
+    (add-hook 'after-save-hook
+              (lambda ()
+                (let ((cur-file-name ""))
+                  (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+                  (cond
+                   ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
+                   ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                  )
+                )
+              )
