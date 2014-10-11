@@ -26,7 +26,7 @@
                              (global-set-key (kbd "<f9>") 'magit-status)
                              (require 'expand-region)
                              (global-set-key (kbd "C-=") 'er/expand-region)
-                             (defun iwb()
+                             (defun iwb ()
                                "Indent Whole Buffer"
                                (interactive)
                                (delete-trailing-whitespace)
@@ -54,44 +54,17 @@
                              (defun dedicate-window ()
                                (interactive)
                                (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
-                             
-                             (defun fold (f x list)
-                               "Ex:
-                                  (fold 'concat \"X\" \'(\"a\" \"b\"))
-                                    <- (concat (concat (concat \"X\") \"a\") \"b\")
-                                    <- \"Xab\""
-                               (let ((li list) (x2 x))
-                                 (while li (setq x2 (funcall f x2 (pop li))))
-                                 x2))
-                             
-                             (defun build-dir-path (path &rest fname-list)
-                               "build-dir-path: PATH NAME1 NAME2 ... -> PATH
-                             
-                               (build-dir-path some-path \"to\" \"this\" \"dir\") -> \"/some/path/to/this/dir\"
-                             "
-                               (expand-file-name
-                             
-                                (fold (lambda (path fname)
-                                        (concat path (file-name-as-directory fname)))
-                             
-                                      ;; Check that path looks like /.../my/path/.../end/
-                                      (if (string= path (file-name-as-directory path))
-                                          path
-                                        (error "first argument should be a directory path ex : /my/dir/"))
-                             
-                                      fname-list)))
-                             (defconst user-home (file-name-as-directory (expand-file-name "~")))
-                             (defconst user-home-dir (file-name-as-directory user-home))
-                             (defconst user-emacs-directory (build-dir-path user-home-dir ".emacs.d"))
-                             (defconst user-nnotes-directory (build-dir-path user-home-dir "nnotes"))
-                             (defconst user-backups-path (build-dir-path user-emacs-directory "backups"))
-                             (defconst user-snippets-dir-path (build-dir-path user-emacs-directory "snippets"))
-                             (defconst user-nnotes-documents-directory (build-dir-path user-nnotes-directory "nnotes-documents"))
-                             (defconst user-elpa-path (concat user-emacs-directory (file-name-as-directory "elpa")))
-                             (defconst user-org-path (concat user-home (file-name-as-directory "org")))
-                             (defconst user-local-bin "/usr/local/bin")
-                             (defconst user-nnotes-tasks-path (concat user-nnotes-documents-directory "todo.org"))
-                             (defconst user-todo-path (concat user-org-path "me.org"))
+                             (defconst user-home-dir (file-name-as-directory (expand-file-name "~")))
+                             (defconst user-emacs-dir (concat user-home-dir (file-name-as-directory ".emacs.d")))
+                             (defconst user-nnotes-dir (concat user-home-dir (file-name-as-directory "nnotes")))
+                             (defconst user-backups-dir (concat user-emacs-dir (file-name-as-directory "backups")))
+                             (defconst user-snippets-dir (concat user-emacs-dir (file-name-as-directory "snippets")))
+                             (defconst user-nnotes-documents-dir (concat user-nnotes-dir (file-name-as-directory "nnotes-documents")))
+                             (defconst user-elpa-dir (concat user-emacs-dir (file-name-as-directory "elpa")))
+                             (defconst user-org-dir (concat user-home-dir (file-name-as-directory "org")))
+                             (defconst user-local-bin-dir "/usr/local/bin/")
+                             (defconst user-nnotes-tasks-file (concat user-nnotes-documents-dir "todo.org"))
+                             (defconst user-todo-file (concat user-org-dir "me.org"))
                              (setq initial-scratch-message "")
                              (set-default 'fill-column 80)
                              (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
@@ -118,7 +91,7 @@
                              (set-default 'indicate-empty-lines nil)
                              (set-fringe-mode '(1 . 1))
                              (setq visible-bell t)
-                             (setq backup-directory-alist (list (cons "." user-backups-path)))
+                             (setq backup-directory-alist (list (cons "." user-backups-dir)))
                              (setq delete-by-moving-to-trash t)
                              (server-start)
                              (global-auto-revert-mode)
@@ -126,8 +99,8 @@
                              (setq uniquify-buffer-name-style 'post-forward)
                              (setq uniquify-strip-common-suffix nil)
                              (require 'misc)
-                             (setq exec-path (cons user-local-bin exec-path))
-                             (setenv "PATH" (concat user-local-bin ":" (getenv "PATH")))
+                             (setq exec-path (cons user-local-bin-dir exec-path))
+                             (setenv "PATH" (concat user-local-bin-dir ":" (getenv "PATH")))
                              (setq-default indent-tabs-mode nil)
                              (setq-default tab-width 4)
                              (put 'upcase-region 'disabled nil)
@@ -171,7 +144,7 @@
                              
                              (require 'dropdown-list)
                              (require 'yasnippet)
-                             (setq yas-snippet-dirs user-snippets-dir-path)
+                             (setq yas-snippet-dirs user-snippets-dir)
                              (setq yas-prompt-functions '(yas-ido-prompt
                                                           yas-dropdown-prompt
                                                           yas-completing-prompt))
@@ -270,14 +243,14 @@
                              ;; Push todo.org when saved
                              ;; (add-hook 'after-save-hook
                              ;;           (lambda ()
-                             ;;             (if (string= buffer-file-name user-todo-path)
+                             ;;             (if (string= buffer-file-name user-todo-file)
                              ;;                 (org-mobile-push))))
                              
                              
                              
                              (setq org-agenda-files (list
-                                                     user-todo-path
-                                                     user-nnotes-tasks-path))
+                                                     user-todo-file
+                                                     user-nnotes-tasks-file))
                              (setq org-agenda-span 'month)
                              (setq org-deadline-warning-days 1)
                              (setq org-agenda-skip-scheduled-if-done t)
@@ -293,13 +266,13 @@
                                    '(("p"
                                       "personal"
                                       entry
-                                      (file+headline user-todo-path "tasks")
+                                      (file+headline user-todo-file "tasks")
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)
                              
                                      ("n"
                                       "nnotes"
                                       entry
-                                      (file+headline user-nnotes-tasks-path "tasks")
+                                      (file+headline user-nnotes-tasks-file "tasks")
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
                              
                              
