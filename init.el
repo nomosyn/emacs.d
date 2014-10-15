@@ -77,13 +77,8 @@
                                          (if whitespace-cleanup-on-save (whitespace-cleanup))))
                              (setq transient-mark-mode t)
                              (pending-delete-mode t)
-                             (setq-default ispell-program-name "aspell")
-                             (setq ispell-list-command "list")
-                             (setq ispell-extra-args '("--sug-mode=ultra"))
                              (column-number-mode)
                              (setq gc-cons-threshold 20000000)
-                             (add-to-list 'default-frame-alist '(width  . 184))
-                             (add-to-list 'default-frame-alist '(height . 52))
                              (tool-bar-mode 0)
                              (setq inhibit-startup-message t)
                              (fset 'yes-or-no-p 'y-or-n-p)
@@ -107,6 +102,9 @@
                              (put 'downcase-region 'disabled nil)
                              (put 'set-goal-column 'disabled nil)
                              (put 'narrow-to-region 'disabled nil)
+                             (setq-default ispell-program-name "aspell")
+                             (setq ispell-list-command "list")
+                             (setq ispell-extra-args '("--sug-mode=ultra"))
                              (require 'auto-complete-config)
                              (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
                              (global-auto-complete-mode nil)
@@ -334,10 +332,9 @@
                              (js2r-add-keybindings-with-prefix "C-c C-m")
                              
                              
-                             ;; jshint
-                             ;; (require 'flycheck)
-                             ;; (add-hook 'js2-mode-hook
-                             ;;           (lambda () (flycheck-mode t)))
+                             (require 'flycheck)
+                             (add-hook 'js2-mode-hook
+                                       (lambda () (flycheck-mode t)))
                              
                              
                              (defun prettify-js-symbols ()
