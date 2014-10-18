@@ -84,7 +84,7 @@
                              (fset 'yes-or-no-p 'y-or-n-p)
                              (scroll-bar-mode -1)
                              (set-default 'indicate-empty-lines nil)
-                             (set-fringe-mode '(1 . 1))
+                             (set-fringe-mode 15)
                              (setq visible-bell t)
                              (setq backup-directory-alist (list (cons "." user-backups-dir)))
                              (setq delete-by-moving-to-trash t)
@@ -102,6 +102,9 @@
                              (put 'downcase-region 'disabled nil)
                              (put 'set-goal-column 'disabled nil)
                              (put 'narrow-to-region 'disabled nil)
+                             (setq projectile-indexing-method 'native)
+                             (setq ag-highlight-search t)
+                             (projectile-global-mode)
                              (setq-default ispell-program-name "aspell")
                              (setq ispell-list-command "list")
                              (setq ispell-extra-args '("--sug-mode=ultra"))
@@ -110,9 +113,6 @@
                              (global-auto-complete-mode nil)
                              (setq ac-auto-start 2)
                              (setq ac-ignore-case nil)
-                             
-                             
-                             (projectile-global-mode)
                              
                              
                              (require 'recentf)
