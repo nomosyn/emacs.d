@@ -1,4 +1,3 @@
-
 (add-hook 'after-init-hook (lambda ()
                              (setq package-archives '(("\"marmalade\"" . "http://marmalade-repo.org/packages/")
                                                       ("gnu" . "http://elpa.gnu.org/packages/")
@@ -18,7 +17,7 @@
                              (setq ns-right-option-modifier  'nil)
                              (when (fboundp 'tool-bar-mode)
                                (tool-bar-mode 0))
-                             
+
                              ;; Slow down the mouse wheel acceleration
                              (when (boundp 'mouse-wheel-scroll-amount)
                                (setq mouse-wheel-scroll-amount '(0.01)))
@@ -32,7 +31,7 @@
                                (delete-trailing-whitespace)
                                (indent-region (point-min) (point-max) nil)
                                (untabify (point-min) (point-max)))
-                             
+
                              (defun lorem ()
                                (interactive)
                                (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
@@ -50,7 +49,7 @@
                                    pellentesque augue. In eu magna. In pede turpis, feugiat
                                    pulvinar, sodales eget, bibendum consectetuer,
                                    magna. Pellentesque vitae augue."))
-                             
+
                              (defun dedicate-window ()
                                (interactive)
                                (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
@@ -113,20 +112,20 @@
                              (global-auto-complete-mode nil)
                              (setq ac-auto-start 2)
                              (setq ac-ignore-case nil)
-                             
-                             
+
+
                              (require 'recentf)
                              (recentf-mode 1)
                              (setq recentf-max-menu-items 100)
-                             
-                             
+
+
                              (require 'smex)
                              (smex-initialize)
                              (global-set-key (kbd "M-x") 'smex)
                              (global-set-key (kbd "M-X") 'smex-major-mode-commands)
                              (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-                             
-                             
+
+
                              (require 'ido)
                              (ido-mode 1)
                              (ido-everywhere 1)
@@ -138,8 +137,8 @@
                              (flx-ido-mode 1)
                              (require 'ido-ubiquitous)
                              (ido-ubiquitous)
-                             
-                             
+
+
                              (require 'dropdown-list)
                              (require 'yasnippet)
                              (setq yas-snippet-dirs user-snippets-dir)
@@ -147,8 +146,8 @@
                                                           yas-dropdown-prompt
                                                           yas-completing-prompt))
                              (yas-global-mode 1)
-                             
-                             
+
+
                              (setq hippie-expand-try-functions-list
                                    '(yas-hippie-try-expand
                                      try-expand-dabbrev
@@ -168,7 +167,7 @@
                              (defun smart-tab (prefix)
                                "Needs `transient-mark-mode' to be on. This smart tab is
                                        minibuffer compliant: it acts as usual in the minibuffer.
-                             
+
                                        In all other buffers: if PREFIX is \\[universal-argument], calls
                                        `smart-indent'. Else if point is at the end of a symbol,
                                        expands it. Else calls `smart-indent'."
@@ -192,8 +191,8 @@
                              (global-set-key (kbd "C-c b") 'org-iswitchb)
                              (setq org-hide-leading-stars t)
                              (setq org-list-indent-offset 2)
-                             
-                             
+
+
                              (defun org-shortcuts ()
                                (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
                                (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
@@ -208,8 +207,8 @@
                              (add-hook 'org-agenda-mode-hook
                                        (lambda ()
                                          (local-set-key (kbd "<tab>") 'org-agenda-goto)))
-                             
-                             
+
+
                              (setq org-todo-keywords '("TODO(t!)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELLED(c@)"))
                              (setq org-todo-keyword-faces
                                    '(("TODO" :foreground "red" :weight bold)
@@ -217,35 +216,35 @@
                                      ("DONE" :foreground "forest green" :weight bold)
                                      ("CANCELLED" :foreground "white" :weight bold)))
                              (setq org-enforce-todo-dependencies t)
-                             
-                             
+
+
                              (setq org-log-into-drawer t)
                              (setq org-clock-into-drawer t)
-                             
-                             
+
+
                              (setq org-tag-faces '(("ph" :foreground "cyan" :weight bold)
                                                    ("ad" :foreground "cyan" :weight bold)
                                                    ("bf" :foreground "cyan" :weight bold)
                                                    ("dev" :foreground "cyan" :weight bold)
                                                    ("doc" :foreground "cyan" :weight bold)
                                                    ("com" :foreground "cyan" :weight bold)))
-                             
-                             
-                             
+
+
+
                              ;; Mobile
                              ;; (setq org-mobile-directory user-data-org-mobile-path)
                              ;; (setq org-mobile-inbox-for-pull user-org-mobile-inbox-for-pull-path)
-                             
-                             
-                             
+
+
+
                              ;; Push todo.org when saved
                              ;; (add-hook 'after-save-hook
                              ;;           (lambda ()
                              ;;             (if (string= buffer-file-name user-todo-file)
                              ;;                 (org-mobile-push))))
-                             
-                             
-                             
+
+
+
                              (setq org-agenda-files (list
                                                      user-todo-file
                                                      user-nnotes-tasks-file))
@@ -253,27 +252,27 @@
                              (setq org-deadline-warning-days 1)
                              (setq org-agenda-skip-scheduled-if-done t)
                              (setq org-log-done t)
-                             
-                             
+
+
                              (global-set-key (kbd "C-c c") 'org-capture)
                              (defun user-before-finalize-capture-hooks ()
                                (org-id-get-create))
                              (add-hook 'org-capture-before-finalize-hook 'user-before-finalize-capture-hooks)
-                             
+
                              (setq org-capture-templates
                                    '(("p"
                                       "personal"
                                       entry
                                       (file+headline user-todo-file "tasks")
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)
-                             
+
                                      ("n"
                                       "nnotes"
                                       entry
                                       (file+headline user-nnotes-tasks-file "tasks")
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
-                             
-                             
+
+
                              (setq org-src-fontify-natively t)
                              (org-babel-do-load-languages
                               'org-babel-load-languages
@@ -294,21 +293,21 @@
                                                         ("cpp" . c++)
                                                         ("C++" . c++)
                                                         ("screen" . shell-script)))
-                             
-                             
+
+
                              (defun my-org-confirm-babel-evaluate (lang body)
                                (not (or
                                      (string= lang "org")
                                      (string= lang "ditaa")      ;; don't ask for ditaa
                                      (string= lang "emacs-lisp")))) ;; don't ask for elisp
                              (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
-                             
-                             
+
+
                              (setq org-clock-clocktable-default-properties '(:maxlevel 3 :scope file))
                              (setq org-clock-persist 'history)
                              (org-clock-persistence-insinuate)
-                             
-                             
+
+
                              (setq org-enable-table-editor t)
                              (require 'sws-mode)
                              (require 'stylus-mode)
@@ -326,17 +325,17 @@
                              (setq js2-mode-show-parse-errors t)
                              (setq js2-pretty-multiline-declarations t)
                              (setq js2-highlight-level 3)
-                             
-                             
+
+
                              (require 'js2-refactor)
                              (js2r-add-keybindings-with-prefix "C-c C-m")
-                             
-                             
+
+
                              (require 'flycheck)
                              (add-hook 'js2-mode-hook
                                        (lambda () (flycheck-mode t)))
-                             
-                             
+
+
                              (defun prettify-js-symbols ()
                                (push '("lambda" . ?λ) prettify-symbols-alist)
                                (push '("function" . ?ƒ) prettify-symbols-alist)
@@ -362,8 +361,8 @@
                              (TeX-global-PDF-mode t)
                              (setq LaTeX-indent-level 4)
                              (setq LaTeX-item-indent 0)
-                             
-                             
+
+
                              (add-hook 'after-save-hook
                                        (lambda ()
                                          (let ((cur-file-name ""))
@@ -375,3 +374,17 @@
                                          )
                                        )
                              ))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
