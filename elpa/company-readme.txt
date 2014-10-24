@@ -20,17 +20,12 @@ To write your own back-end, look at the documentation for `company-backends'.
 Here is a simple example completing "foo":
 
 (defun company-my-backend (command &optional arg &rest ignored)
-  (case command
-    (prefix (when (looking-back "foo\\>")
+  (pcase command
+    (`prefix (when (looking-back "foo\\>")
               (match-string 0)))
-    (candidates (list "foobar" "foobaz" "foobarbaz"))
-    (meta (format "This value is named %s" arg))))
+    (`candidates (list "foobar" "foobaz" "foobarbaz"))
+    (`meta (format "This value is named %s" arg))))
 
 Sometimes it is a good idea to mix several back-ends together, for example to
 enrich gtags with dabbrev-code results (to emulate local variables).
 To do this, add a list with both back-ends as an element in company-backends.
-
-Known Issues:
-When point is at the very end of the buffer, the pseudo-tooltip appears very
-wrong, unless company is allowed to temporarily insert a fake newline.
-This behavior is enabled by `company-end-of-buffer-workaround'.

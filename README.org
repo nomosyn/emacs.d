@@ -22,7 +22,12 @@
                                  <<javascript>>
                                  <<haskell>>
                                  <<latex>>
+                                 <<clojurescript>>
                                  ))
+
+    (add-hook 'after-save-hook
+              (lambda ()
+                (cond ((string= buffer-file-name user-emacs-conf-org) (org-babel-tangle)))))
   #+END_SRC
 
 ** Packages manager
@@ -126,6 +131,7 @@
       (global-set-key (kbd "<f9>") 'magit-status)
       (require 'expand-region)
       (global-set-key (kbd "C-=") 'er/expand-region)
+      (global-set-key (kbd "<f7>") 'ido-recentf-open)
     #+END_SRC
 
 
@@ -140,6 +146,7 @@
        (delete-trailing-whitespace)
        (indent-region (point-min) (point-max) nil)
        (untabify (point-min) (point-max)))
+
 
      (defun lorem ()
        (interactive)
@@ -159,9 +166,18 @@
            pulvinar, sodales eget, bibendum consectetuer,
            magna. Pellentesque vitae augue."))
 
+
      (defun dedicate-window ()
        (interactive)
        (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
+
+
+     (defun ido-recentf-open ()
+       "Use `ido-completing-read' to \\[find-file] a recent file"
+       (interactive)
+       (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+           (message "Opening file...")
+         (message "Aborting")))
    #+END_SRC
 
 
@@ -170,13 +186,15 @@
      #+NAME: resources
      #+BEGIN_SRC elisp
        (defconst user-home-dir (file-name-as-directory (expand-file-name "~")))
+       (defconst user-documents-dir (concat user-home-dir (file-name-as-directory "Documents")))
        (defconst user-emacs-dir (concat user-home-dir (file-name-as-directory ".emacs.d")))
-       (defconst user-nnotes-dir (concat user-home-dir (file-name-as-directory "nnotes")))
+       (defconst user-emacs-conf-org (concat user-emacs-dir "README.org"))
+       (defconst user-nnotes-dir (concat user-documents-dir (file-name-as-directory "nnotes")))
        (defconst user-backups-dir (concat user-emacs-dir (file-name-as-directory "backups")))
        (defconst user-snippets-dir (concat user-emacs-dir (file-name-as-directory "snippets")))
        (defconst user-nnotes-documents-dir (concat user-nnotes-dir (file-name-as-directory "nnotes-documents")))
        (defconst user-elpa-dir (concat user-emacs-dir (file-name-as-directory "elpa")))
-       (defconst user-org-dir (concat user-home-dir (file-name-as-directory "org")))
+       (defconst user-org-dir (concat user-documents-dir (file-name-as-directory "org")))
        (defconst user-local-bin-dir "/usr/local/bin/")
        (defconst user-nnotes-tasks-file (concat user-nnotes-documents-dir "todo.org"))
        (defconst user-todo-file (concat user-org-dir "me.org"))
@@ -224,6 +242,11 @@
      (put 'downcase-region 'disabled nil)
      (put 'set-goal-column 'disabled nil)
      (put 'narrow-to-region 'disabled nil)
+
+     (rainbow-mode)
+     (rainbow-identifiers-mode)
+     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+     (rainbow-blocks-mode)
    #+END_SRC
 
 
@@ -247,7 +270,7 @@
 ** Searching files
    #+NAME: searching-files
    #+BEGIN_SRC elisp
-     (setq projectile-indexing-method 'native)
+     (setq projectile-indexing-method 'alien)
      (setq ag-highlight-search t)
      (projectile-global-mode)
    #+END_SRC
@@ -257,11 +280,7 @@
 
    #+NAME: completion
    #+BEGIN_SRC elisp
-     (require 'auto-complete-config)
-     (setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
-     (global-auto-complete-mode nil)
-     (setq ac-auto-start 2)
-     (setq ac-ignore-case nil)
+     (global-company-mode)
 
 
      (require 'recentf)
@@ -289,6 +308,7 @@
      (ido-ubiquitous)
 
 
+
      (require 'dropdown-list)
      (require 'yasnippet)
      (setq yas-snippet-dirs user-snippets-dir)
@@ -298,6 +318,7 @@
      (yas-global-mode 1)
 
 
+
      (setq hippie-expand-try-functions-list
            '(yas-hippie-try-expand
              try-expand-dabbrev
@@ -305,8 +326,13 @@
              try-expand-dabbrev-from-kill
              try-complete-file-name
              try-complete-lisp-symbol))
+
+
      (defvar smart-tab-using-hippie-expand t
        "turn this on if you want to use hippie-expand completion.")
+
+
+
      (defun smart-indent ()
        "Indents region if mark is active, or current line otherwise."
        (interactive)
@@ -314,6 +340,9 @@
            (indent-region (region-beginning)
                           (region-end))
          (indent-for-tab-command)))
+
+
+
      (defun smart-tab (prefix)
        "Needs `transient-mark-mode' to be on. This smart tab is
                minibuffer compliant: it acts as usual in the minibuffer.
@@ -359,7 +388,6 @@
        (local-set-key (kbd "C-c t") 'org-todo)
        (local-set-key (kbd "C-c r") 'org-clock-report)
        (local-set-key (kbd "C-c .") 'org-time-stamp)
-       (auto-complete-mode)
        (message "org-mode-hook func"))
      (add-hook 'org-mode-hook 'org-shortcuts)
      (add-hook 'org-agenda-mode-hook
@@ -572,3 +600,29 @@
                  )
                )
    #+END_SRC
+
+
+** Clojurescript
+
+  #+NAME: clojurescript
+  #+BEGIN_SRC elisp
+    ;; Enable eldoc in Clojure buffers
+    (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+
+    ;; Log communication with the nREPL server (extremely useful for debugging CIDER problems):
+    (setq nrepl-log-messages t)
+
+    ;; Enabling CamelCase support for editing commands(like
+    ;; forward-word, backward-word, etc) in the REPL is quite useful
+    ;; since we often have to deal with Java class and method names. The
+    ;; built-in Emacs minor mode subword-mode provides such
+    ;; functionality:
+    (add-hook 'cider-repl-mode-hook 'subword-mode)
+
+
+    (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
+
+
+    (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+
+  #+END_SRC
