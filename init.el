@@ -22,11 +22,15 @@
                              ;; Slow down the mouse wheel acceleration
                              (when (boundp 'mouse-wheel-scroll-amount)
                                (setq mouse-wheel-scroll-amount '(0.01)))
-                             (global-set-key (kbd "C-o") 'other-window)
-                             (global-set-key (kbd "<f9>") 'magit-status)
+                             (key-chord-mode 1)
+                             (key-chord-define-global "ff" 'ido-find-file)
+                             (key-chord-define-global "fr" 'ido-recentf-open)
+                             (key-chord-define-global "fp" 'projectile-commander)
+                             (key-chord-define-global "ow" 'other-window)
+                             (key-chord-define-global "ms" 'magit-status)
+                             
                              (require 'expand-region)
                              (global-set-key (kbd "C-=") 'er/expand-region)
-                             (global-set-key (kbd "<f7>") 'ido-recentf-open)
                              (defun iwb ()
                                "Indent Whole Buffer"
                                (interactive)
