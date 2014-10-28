@@ -3,7 +3,7 @@
                              (setq package-archives '(("\"marmalade\"" . "http://marmalade-repo.org/packages/")
                                                       ("gnu" . "http://elpa.gnu.org/packages/")
                                                       ("org-mode" . "http://orgmode.org/elpa/")
-                                                      ("melpa" . "http://melpa.milkbox.net/packages/")))
+                                                      ("melpa" . "http://melpa.org/packages/")))
                              (require 'un-define "un-define" t)
                              (set-buffer-file-coding-system 'utf-8 'utf-8-unix)
                              (set-default buffer-file-coding-system 'utf-8-unix)
@@ -23,11 +23,16 @@
                              (when (boundp 'mouse-wheel-scroll-amount)
                                (setq mouse-wheel-scroll-amount '(0.01)))
                              (key-chord-mode 1)
-                             (key-chord-define-global "ff" 'ido-find-file)
-                             (key-chord-define-global "fr" 'ido-recentf-open)
-                             (key-chord-define-global "fp" 'projectile-commander)
+                             (key-chord-define-global "sf" 'ido-find-file)
+                             (key-chord-define-global "pc" 'projectile-commander)
+                             (key-chord-define-global "ss" 'projectile-ag)
+                             (key-chord-define-global "sb" 'ido-switch-buffer)
+                             (key-chord-define-global "db" 'kill-buffer)
+                             (key-chord-define-global "gs" 'magit-status)
                              (key-chord-define-global "ow" 'other-window)
-                             (key-chord-define-global "ms" 'magit-status)
+                             (key-chord-define-global "ib" 'iwb)
+                             (key-chord-define-global "wa" 'save-some-buffers)
+                             
                              
                              (require 'expand-region)
                              (global-set-key (kbd "C-=") 'er/expand-region)
@@ -42,20 +47,20 @@
                              (defun lorem ()
                                (interactive)
                                (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                   elit. Praesent libero orci, auctor sed, faucibus vestibulum,
-                                   gravida vitae, arcu. Nunc posuere. Suspendisse
-                                   potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
-                                   eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
-                                   vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
-                                   laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
-                                   venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
-                                   augue. Nullam fringilla consectetuer sapien. Aenean neque
-                                   augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
-                                   in nibh quis erat condimentum pretium. Vestibulum tempor odio
-                                   et leo. Sed sodales vestibulum justo. Cras convallis
-                                   pellentesque augue. In eu magna. In pede turpis, feugiat
-                                   pulvinar, sodales eget, bibendum consectetuer,
-                                   magna. Pellentesque vitae augue."))
+                                        elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                        gravida vitae, arcu. Nunc posuere. Suspendisse
+                                        potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                        eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                        vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                        laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                        venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                        augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                        augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                        in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                        et leo. Sed sodales vestibulum justo. Cras convallis
+                                        pellentesque augue. In eu magna. In pede turpis, feugiat
+                                        pulvinar, sodales eget, bibendum consectetuer,
+                                        magna. Pellentesque vitae augue."))
                              
                              
                              (defun dedicate-window ()
@@ -67,6 +72,23 @@
                                "Use `ido-completing-read' to \\[find-file] a recent file"
                                (interactive)
                                (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+                                   (message "Opening file...")
+                                 (message "Aborting")))
+                             
+                             
+                             ;; XXX: work in progress...
+                             (defun dabus-find-file ()
+                               "Find file among: current directory files + if defined, in
+                               recently visited files + if defined, files in project."
+                               (interactive)
+                               (if (find-file (ido-completing-read "Find recent file: " (concat
+                                                                                         (cond ((boundp 'recentf-list) recentf-list))
+                                                                                         (if (buffer-file-name)
+                                                                                             (directory-files (file-name-directory (buffer-file-name)))
+                                                                                           ())
+                             
+                                                                                         (projectile-current-project-files)
+                                                                                         )))
                                    (message "Opening file...")
                                  (message "Aborting")))
                              (defconst user-home-dir (file-name-as-directory (expand-file-name "~")))
@@ -120,9 +142,9 @@
                              (put 'set-goal-column 'disabled nil)
                              (put 'narrow-to-region 'disabled nil)
                              
-                             (rainbow-mode)
-                             (rainbow-identifiers-mode)
-                             (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+                             ;; (rainbow-mode)
+                             ;; (rainbow-identifiers-mode)
+                             ;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
                              (rainbow-blocks-mode)
                              (setq projectile-indexing-method 'alien)
                              (setq ag-highlight-search t)

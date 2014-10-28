@@ -7,7 +7,7 @@
 ;;         Fanael Linithien <fanael4@gmail.com>
 ;; Maintainer: Fanael Linithien <fanael4@gmail.com>
 ;; Created: 2010-09-02
-;; Version: 20141026.1346
+;; Version: 20141027.1356
 ;; X-Original-Version: 1.3.13
 ;; Keywords: faces, convenience, lisp, tools
 ;; Homepage: https://github.com/Fanael/rainbow-delimiters
@@ -85,8 +85,8 @@
   "Faces for successively nested pairs of delimiters.
 
 When depth exceeds innermost defined face, colors cycle back through."
-  :tag "Color theme"
   :group 'rainbow-delimiters
+  :group 'faces
   :link '(custom-group-link "rainbow-delimiters")
   :prefix "rainbow-delimiters-")
 
@@ -113,76 +113,39 @@ Delimiters in this list are not highlighted."
   "Face to highlight mismatched closing delimiters in."
   :group 'rainbow-delimiters-faces)
 
-;; Faces for highlighting delimiters by nesting level:
-(defface rainbow-delimiters-depth-1-face
-  '((((background light)) (:foreground "#707183"))
-    (((background dark)) (:foreground "grey55")))
-  "Nested delimiters face, depth 1 - outermost set."
-  :tag "Rainbow Delimiters Depth 1 Face -- OUTERMOST"
-  :group 'rainbow-delimiters-faces)
+(eval-when-compile
+  (defmacro rainbow-delimiters--define-depth-faces ()
+    (let ((faces '())
+          (light-colors ["#707183" "#7388d6" "#909183" "#709870" "#907373"
+                         "#6276ba" "#858580" "#80a880" "#887070"])
+          (dark-colors ["grey55" "#93a8c6" "#b0b1a3" "#97b098" "#aebed8"
+                        "#b0b0b3" "#90a890" "#a2b6da" "#9cb6ad"]))
+      (dotimes (i 9)
+        (push `(defface ,(intern (format "rainbow-delimiters-depth-%d-face" (1+ i)))
+                 '((((class color) (background light)) :background ,(aref light-colors i))
+                   (((class color) (background dark)) :background ,(aref dark-colors i)))
+                 ,(format "Nested delimiter face, depth %d." (1+ i))
+                 :group 'rainbow-delimiters-faces)
+              faces))
+      `(progn ,@faces))))
+(rainbow-delimiters--define-depth-faces)
 
-(defface rainbow-delimiters-depth-2-face
-  '((((background light)) (:foreground "#7388d6"))
-    (((background dark)) (:foreground "#93a8c6")))
-  "Nested delimiters face, depth 2."
-  :group 'rainbow-delimiters-faces)
-
-(defface rainbow-delimiters-depth-3-face
-  '((((background light)) (:foreground "#909183"))
-    (((background dark)) (:foreground "#b0b1a3")))
-  "Nested delimiters face, depth 3."
-  :group 'rainbow-delimiters-faces)
-
-(defface rainbow-delimiters-depth-4-face
-  '((((background light)) (:foreground "#709870"))
-    (((background dark)) (:foreground "#97b098")))
-  "Nested delimiters face, depth 4."
-  :group 'rainbow-delimiters-faces)
-
-(defface rainbow-delimiters-depth-5-face
-  '((((background light)) (:foreground "#907373"))
-    (((background dark)) (:foreground "#aebed8")))
-  "Nested delimiters face, depth 5."
-  :group 'rainbow-delimiters-faces)
-
-(defface rainbow-delimiters-depth-6-face
-  '((((background light)) (:foreground "#6276ba"))
-    (((background dark)) (:foreground "#b0b0b3")))
-  "Nested delimiters face, depth 6."
-  :group 'rainbow-delimiters-faces)
-
-(defface rainbow-delimiters-depth-7-face
-  '((((background light)) (:foreground "#858580"))
-    (((background dark)) (:foreground "#90a890")))
-  "Nested delimiters face, depth 7."
-  :group 'rainbow-delimiters-faces)
-
-(defface rainbow-delimiters-depth-8-face
-  '((((background light)) (:foreground "#80a880"))
-    (((background dark)) (:foreground "#a2b6da")))
-  "Nested delimiters face, depth 8."
-  :group 'rainbow-delimiters-faces)
-
-(defface rainbow-delimiters-depth-9-face
-  '((((background light)) (:foreground "#887070"))
-    (((background dark)) (:foreground "#9cb6ad")))
-  "Nested delimiters face, depth 9."
-  :group 'rainbow-delimiters-faces)
-
-;;; Faces 10+:
-;; NOTE: Currently unused. Additional faces for depths 10+ can be added on request.
-
-(defconst rainbow-delimiters-max-face-count 9
+(defcustom rainbow-delimiters-max-face-count 9
   "Number of faces defined for highlighting delimiter levels.
 
-Determines depth at which to cycle through faces again.")
+Determines depth at which to cycle through faces again.
+
+It's safe to change this variable provided that for all integers from 1 to the
+new value inclusive, a face `rainbow-delimiters-depth-N-face' is defined."
+  :type 'integer
+  :group 'rainbow-delimiters)
 
 (defcustom rainbow-delimiters-outermost-only-face-count 0
   "Number of faces to be used only for N outermost delimiter levels.
 
 This should be smaller than `rainbow-delimiters-max-face-count'."
   :type 'integer
-  :group 'rainbow-delimiters-faces)
+  :group 'rainbow-delimiters)
 
 
 (defun rainbow-delimiters--depth-face (depth)
@@ -209,15 +172,18 @@ For example: `rainbow-delimiters-depth-1-face'."
 
 LOC is the location of the character to add text properties to.
 DEPTH is the nested depth at LOC, which determines the face to use.
-MATCH is nil iff it's a mismatched closing delimiter."
-  (let ((delim-face (cond
-                     ((<= depth 0)
-                      'rainbow-delimiters-unmatched-face)
-                     ((not match)
-                      'rainbow-delimiters-mismatched-face)
-                     (t
-                      (rainbow-delimiters--depth-face depth)))))
-    (font-lock-prepend-text-property loc (1+ loc) 'face delim-face)))
+MATCH is nil iff it's a mismatched closing delimiter.
+
+The delimiter is not highlighted if it's a blacklisted delimiter."
+  (unless (memq (char-after loc) rainbow-delimiters-delimiter-blacklist)
+    (let ((delim-face (cond
+                       ((<= depth 0)
+                        'rainbow-delimiters-unmatched-face)
+                       ((not match)
+                        'rainbow-delimiters-mismatched-face)
+                       (t
+                        (rainbow-delimiters--depth-face depth)))))
+      (font-lock-prepend-text-property loc (1+ loc) 'face delim-face))))
 
 (defvar rainbow-delimiters-escaped-char-predicate nil)
 (make-variable-buffer-local 'rainbow-delimiters-escaped-char-predicate)
@@ -252,8 +218,7 @@ DELIM-SYNTAX-CODE is the `car' of a raw syntax descriptor at LOC.
 Returns t if char at loc meets one of the following conditions:
 - Inside a string.
 - Inside a comment.
-- Is an escaped char, e.g. ?\)
-- Is a blacklisted character."
+- Is an escaped char, e.g. ?\)"
   (or
    (nth 3 ppss)                ; inside string?
    (nth 4 ppss)                ; inside comment?
@@ -269,8 +234,7 @@ Returns t if char at loc meets one of the following conditions:
     (t
      nil))
    (when rainbow-delimiters-escaped-char-predicate
-     (funcall rainbow-delimiters-escaped-char-predicate loc))
-   (memq (char-after loc) rainbow-delimiters-delimiter-blacklist)))
+     (funcall rainbow-delimiters-escaped-char-predicate loc))))
 
 (defconst rainbow-delimiters--delim-regex "\\s(\\|\\s)"
   "Regex matching all opening and closing delimiters the mode highlights.")
