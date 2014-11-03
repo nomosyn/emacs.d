@@ -2,4 +2,4 @@
 # name: comment
 # key: <com
 # --
-XXX:PH:${1:OK | ?? | KO}$0
+(comment "`(downcase (nth 1 (split-string (org-id-new) "-")))`" "${1: message }")

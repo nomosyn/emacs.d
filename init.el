@@ -22,20 +22,23 @@
                              ;; Slow down the mouse wheel acceleration
                              (when (boundp 'mouse-wheel-scroll-amount)
                                (setq mouse-wheel-scroll-amount '(0.01)))
-                             (key-chord-mode 1)
-                             (key-chord-define-global "sf" 'ido-find-file)
-                             (key-chord-define-global "pc" 'projectile-commander)
-                             (key-chord-define-global "ss" 'projectile-ag)
-                             (key-chord-define-global "sb" 'ido-switch-buffer)
-                             (key-chord-define-global "db" 'kill-buffer)
-                             (key-chord-define-global "gs" 'magit-status)
-                             (key-chord-define-global "ow" 'other-window)
-                             (key-chord-define-global "ib" 'iwb)
-                             (key-chord-define-global "wa" 'save-some-buffers)
-                             
-                             
                              (require 'expand-region)
                              (global-set-key (kbd "C-=") 'er/expand-region)
+                             (global-set-key (kbd "<f8>") 'iwb)
+                             (global-set-key (kbd "<f9>") 'magit-status)
+                             
+                             ;; search window
+                             (global-set-key (kbd "C-o") 'other-window)
+                             
+                             ;; search string in buffer
+                             (global-set-key (kbd "C-s") 'isearch-forward)
+                             (global-set-key (kbd "C-r") 'isearch-backward)
+                             
+                             ;; search string in project
+                             (global-set-key (kbd "C-ù") 'projectile-ag)
+                             
+                             ;; search file among [recentf, if project then files_in_project else current_dir]
+                             (global-set-key (kbd "C-f") 'projectile-find-file)
                              (defun iwb ()
                                "Indent Whole Buffer"
                                (interactive)
@@ -77,7 +80,7 @@
                              
                              
                              ;; XXX: work in progress...
-                             (defun dabus-find-file ()
+                             (defun user-find-file ()
                                "Find file among: current directory files + if defined, in
                                recently visited files + if defined, files in project."
                                (interactive)
@@ -145,7 +148,9 @@
                              ;; (rainbow-mode)
                              ;; (rainbow-identifiers-mode)
                              ;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+                             (rainbow-delimiters-mode)
                              (rainbow-blocks-mode)
+                             (electric-pair-mode)
                              (setq projectile-indexing-method 'alien)
                              (setq ag-highlight-search t)
                              (projectile-global-mode)
@@ -252,7 +257,8 @@
                                (local-set-key (kbd "C-c t") 'org-todo)
                                (local-set-key (kbd "C-c r") 'org-clock-report)
                                (local-set-key (kbd "C-c .") 'org-time-stamp)
-                               (message "org-mode-hook func"))
+                               (local-set-key (kbd "C-b") 'org-mark-ring-goto))
+                             
                              (add-hook 'org-mode-hook 'org-shortcuts)
                              (add-hook 'org-agenda-mode-hook
                                        (lambda ()
@@ -393,8 +399,8 @@
                                (push '("<=" . ?≤) prettify-symbols-alist)
                                (push '(">=" . ?≥) prettify-symbols-alist)
                                (push '("!==" . ?≠) prettify-symbols-alist)
-                               (prettify-symbols-mode)
-                               (electric-pair-mode))
+                               (prettify-symbols-mode))
+                             
                              (add-hook 'js2-mode-hook 'prettify-js-symbols)
                              (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
                              (require 'tex)
