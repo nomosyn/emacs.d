@@ -1,7 +1,6 @@
 
 (add-hook 'after-init-hook (lambda ()
-                             (setq package-archives '(("\"marmalade\"" . "http://marmalade-repo.org/packages/")
-                                                      ("gnu" . "http://elpa.gnu.org/packages/")
+                             (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                                                       ("org-mode" . "http://orgmode.org/elpa/")
                                                       ("melpa" . "http://melpa.org/packages/")))
                              (require 'un-define "un-define" t)
@@ -27,18 +26,38 @@
                              (global-set-key (kbd "<f8>") 'iwb)
                              (global-set-key (kbd "<f9>") 'magit-status)
                              
-                             ;; search window
+                             ;; Search window.
                              (global-set-key (kbd "C-o") 'other-window)
                              
-                             ;; search string in buffer
+                             ;; Search string in buffer.
                              (global-set-key (kbd "C-s") 'isearch-forward)
                              (global-set-key (kbd "C-r") 'isearch-backward)
                              
-                             ;; search string in project
+                             ;; Search string in project.
                              (global-set-key (kbd "C-ù") 'projectile-ag)
                              
-                             ;; search file among [recentf, if project then files_in_project else current_dir]
-                             (global-set-key (kbd "C-f") 'projectile-find-file)
+                             ;; Search file in recently opened files and (current project or current directory).
+                             (global-set-key (kbd "C-f") 'user/find-file)
+                             (defun flatten (list-of-lists?)
+                             
+                               ;; Verify argument type: list-of-lists? : List(List)
+                               (let ((err-message "error: arg should be a list of lists"))
+                                 (if (listp list-of-lists?)
+                                     (dolist (list? list-of-lists?)
+                                       (when (not (listp list?)) (error err-message)))
+                                   (error err-message)))
+                             
+                               ;; List(List) -> List
+                               (let ((rev-res-list)
+                                     (res-list))
+                                 (dolist (list list-of-lists? rev-res-list)
+                                   (dolist (list-elem list)
+                                     (setq rev-res-list (cons list-elem rev-res-list))))
+                                 (dolist (elem rev-res-list res-list)
+                                   (setq res-list (cons elem res-list)))))
+                             
+                             
+                             
                              (defun iwb ()
                                "Indent Whole Buffer"
                                (interactive)
@@ -50,20 +69,20 @@
                              (defun lorem ()
                                (interactive)
                                (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                        elit. Praesent libero orci, auctor sed, faucibus vestibulum,
-                                        gravida vitae, arcu. Nunc posuere. Suspendisse
-                                        potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
-                                        eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
-                                        vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
-                                        laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
-                                        venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
-                                        augue. Nullam fringilla consectetuer sapien. Aenean neque
-                                        augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
-                                        in nibh quis erat condimentum pretium. Vestibulum tempor odio
-                                        et leo. Sed sodales vestibulum justo. Cras convallis
-                                        pellentesque augue. In eu magna. In pede turpis, feugiat
-                                        pulvinar, sodales eget, bibendum consectetuer,
-                                        magna. Pellentesque vitae augue."))
+                                                                 elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                                                 gravida vitae, arcu. Nunc posuere. Suspendisse
+                                                                 potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                                                 eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                                                 vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                                                 laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                                                 venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                                                 augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                                                 augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                                                 in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                                                 et leo. Sed sodales vestibulum justo. Cras convallis
+                                                                 pellentesque augue. In eu magna. In pede turpis, feugiat
+                                                                 pulvinar, sodales eget, bibendum consectetuer,
+                                                                 magna. Pellentesque vitae augue."))
                              
                              
                              (defun dedicate-window ()
@@ -71,42 +90,38 @@
                                (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
                              
                              
-                             (defun ido-recentf-open ()
-                               "Use `ido-completing-read' to \\[find-file] a recent file"
-                               (interactive)
-                               (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-                                   (message "Opening file...")
-                                 (message "Aborting")))
+                             
+                             ;; List files in buffer's file's parent directory.
+                             (defun user/list-files-in-current-parent-directory ()
+                               (let (buffer-file-name?)
+                                 (setq buffer-file-name? (buffer-file-name (current-buffer)))
+                                 (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
                              
                              
-                             ;; XXX: work in progress...
-                             (defun user-find-file ()
-                               "Find file among: current directory files + if defined, in
-                               recently visited files + if defined, files in project."
-                               (interactive)
-                               (if (find-file (ido-completing-read "Find recent file: " (concat
-                                                                                         (cond ((boundp 'recentf-list) recentf-list))
-                                                                                         (if (buffer-file-name)
-                                                                                             (directory-files (file-name-directory (buffer-file-name)))
-                                                                                           ())
+                             (defun user/find-file (&optional arg)
+                               "Find file among recentf and project file (if projectile
+                                      project) or current dir file."
+                               (interactive "P")
+                               (let ((file (projectile-completing-read "Find file: "
+                                                                       (delete-dups (flatten (list recentf-list (condition-case nil
+                                                                                                       (projectile-current-project-files)
+                                                                                                     (error (user/list-files-in-current-parent-directory))))))
+                                                                       )))
+                                 (find-file (expand-file-name file))))
                              
-                                                                                         (projectile-current-project-files)
-                                                                                         )))
-                                   (message "Opening file...")
-                                 (message "Aborting")))
-                             (defconst user-home-dir (file-name-as-directory (expand-file-name "~")))
-                             (defconst user-documents-dir (concat user-home-dir (file-name-as-directory "Documents")))
-                             (defconst user-emacs-dir (concat user-home-dir (file-name-as-directory ".emacs.d")))
-                             (defconst user-emacs-conf-org (concat user-emacs-dir "README.org"))
-                             (defconst user-nnotes-dir (concat user-documents-dir (file-name-as-directory "nnotes")))
-                             (defconst user-backups-dir (concat user-emacs-dir (file-name-as-directory "backups")))
-                             (defconst user-snippets-dir (concat user-emacs-dir (file-name-as-directory "snippets")))
-                             (defconst user-nnotes-documents-dir (concat user-nnotes-dir (file-name-as-directory "nnotes-documents")))
-                             (defconst user-elpa-dir (concat user-emacs-dir (file-name-as-directory "elpa")))
-                             (defconst user-org-dir (concat user-documents-dir (file-name-as-directory "org")))
-                             (defconst user-local-bin-dir "/usr/local/bin/")
-                             (defconst user-nnotes-tasks-file (concat user-nnotes-documents-dir "todo.org"))
-                             (defconst user-todo-file (concat user-org-dir "me.org"))
+                             (defconst user/home-dir (file-name-as-directory (expand-file-name "~")))
+                             (defconst user/documents-dir (concat user/home-dir (file-name-as-directory "Documents")))
+                             (defconst user/emacs-dir (concat user/home-dir (file-name-as-directory ".emacs.d")))
+                             (defconst user/emacs-conf-org (concat user/emacs-dir "README.org"))
+                             (defconst user/nnotes-dir (concat user/documents-dir (file-name-as-directory "nnotes")))
+                             (defconst user/backups-dir (concat user/emacs-dir (file-name-as-directory "backups")))
+                             (defconst user/snippets-dir (concat user/emacs-dir (file-name-as-directory "snippets")))
+                             (defconst user/nnotes-documents-dir (concat user/nnotes-dir (file-name-as-directory "nnotes-documents")))
+                             (defconst user/elpa-dir (concat user/emacs-dir (file-name-as-directory "elpa")))
+                             (defconst user/org-dir (concat user/documents-dir (file-name-as-directory "org")))
+                             (defconst user/local-bin-dir "/usr/local/bin/")
+                             (defconst user/nnotes-tasks-file (concat user/nnotes-documents-dir "todo.org"))
+                             (defconst user/todo-file (concat user/org-dir "me.org"))
                              (setq initial-scratch-message "")
                              (set-default 'fill-column 80)
                              (add-hook 'lisp-mode-hook 'turn-on-auto-fill)
@@ -128,7 +143,7 @@
                              (set-default 'indicate-empty-lines nil)
                              (set-fringe-mode 15)
                              (setq visible-bell t)
-                             (setq backup-directory-alist (list (cons "." user-backups-dir)))
+                             (setq backup-directory-alist (list (cons "." user/backups-dir)))
                              (setq delete-by-moving-to-trash t)
                              (server-start)
                              (global-auto-revert-mode)
@@ -136,8 +151,8 @@
                              (setq uniquify-buffer-name-style 'post-forward)
                              (setq uniquify-strip-common-suffix nil)
                              (require 'misc)
-                             (setq exec-path (cons user-local-bin-dir exec-path))
-                             (setenv "PATH" (concat user-local-bin-dir ":" (getenv "PATH")))
+                             (setq exec-path (cons user/local-bin-dir exec-path))
+                             (setenv "PATH" (concat user/local-bin-dir ":" (getenv "PATH")))
                              (setq-default indent-tabs-mode nil)
                              (setq-default tab-width 4)
                              (put 'upcase-region 'disabled nil)
@@ -162,7 +177,7 @@
                              
                              (require 'recentf)
                              (recentf-mode 1)
-                             (setq recentf-max-menu-items 100)
+                             (setq recentf-max-menu-items 50)
                              
                              
                              (require 'smex)
@@ -188,7 +203,7 @@
                              
                              (require 'dropdown-list)
                              (require 'yasnippet)
-                             (setq yas-snippet-dirs user-snippets-dir)
+                             (setq yas-snippet-dirs user/snippets-dir)
                              (setq yas-prompt-functions '(yas-ido-prompt
                                                           yas-dropdown-prompt
                                                           yas-completing-prompt))
@@ -288,22 +303,22 @@
                              
                              
                              ;; Mobile
-                             ;; (setq org-mobile-directory user-data-org-mobile-path)
-                             ;; (setq org-mobile-inbox-for-pull user-org-mobile-inbox-for-pull-path)
+                             ;; (setq org-mobile-directory user/data-org-mobile-path)
+                             ;; (setq org-mobile-inbox-for-pull user/org-mobile-inbox-for-pull-path)
                              
                              
                              
                              ;; Push todo.org when saved
                              ;; (add-hook 'after-save-hook
                              ;;           (lambda ()
-                             ;;             (if (string= buffer-file-name user-todo-file)
+                             ;;             (if (string= buffer-file-name user/todo-file)
                              ;;                 (org-mobile-push))))
                              
                              
                              
                              (setq org-agenda-files (list
-                                                     user-todo-file
-                                                     user-nnotes-tasks-file))
+                                                     user/todo-file
+                                                     user/nnotes-tasks-file))
                              (setq org-agenda-span 'month)
                              (setq org-deadline-warning-days 1)
                              (setq org-agenda-skip-scheduled-if-done t)
@@ -311,21 +326,21 @@
                              
                              
                              (global-set-key (kbd "C-c c") 'org-capture)
-                             (defun user-before-finalize-capture-hooks ()
+                             (defun user/before-finalize-capture-hooks ()
                                (org-id-get-create))
-                             (add-hook 'org-capture-before-finalize-hook 'user-before-finalize-capture-hooks)
+                             (add-hook 'org-capture-before-finalize-hook 'user/before-finalize-capture-hooks)
                              
                              (setq org-capture-templates
                                    '(("p"
                                       "personal"
                                       entry
-                                      (file+headline user-todo-file "tasks")
+                                      (file+headline user/todo-file "tasks")
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)
                              
                                      ("n"
                                       "nnotes"
                                       entry
-                                      (file+headline user-nnotes-tasks-file "tasks")
+                                      (file+headline user/nnotes-tasks-file "tasks")
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
                              
                              
@@ -402,54 +417,38 @@
                                (prettify-symbols-mode))
                              
                              (add-hook 'js2-mode-hook 'prettify-js-symbols)
-                             (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-                             (require 'tex)
-                             (add-hook 'TeX-mode-hook (lambda ()
-                                                        (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
-                                                        (local-set-key (kbd "C-f") 'LaTeX-fill-region)
-                                                        (LaTeX-math-mode)
-                                                        ;; (setq TeX-engine 'xetex)
-                                                        (turn-on-reftex)))
-                             (setq TeX-auto-save t)
-                             (setq TeX-parse-self t)
-                             (setq-default TeX-master nil)
-                             (setq reftex-plug-into-AUCTeX t)
-                             (TeX-global-PDF-mode t)
-                             (setq LaTeX-indent-level 4)
-                             (setq LaTeX-item-indent 0)
-                             
-                             
-                             (add-hook 'after-save-hook
-                                       (lambda ()
-                                         (let ((cur-file-name ""))
-                                           (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
-                                           (cond
-                                            ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
-                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
-                                           )
-                                         )
-                                       )
-                             ;; Enable eldoc in Clojure buffers
-                             (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-                             
-                             ;; Log communication with the nREPL server (extremely useful for debugging CIDER problems):
-                             (setq nrepl-log-messages t)
-                             
-                             ;; Enabling CamelCase support for editing commands(like
-                             ;; forward-word, backward-word, etc) in the REPL is quite useful
-                             ;; since we often have to deal with Java class and method names. The
-                             ;; built-in Emacs minor mode subword-mode provides such
-                             ;; functionality:
-                             (add-hook 'cider-repl-mode-hook 'subword-mode)
-                             
-                             
-                             (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
-                             
-                             
-                             (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-                             
+                             ;;(require 'tex)
+                             ;;(add-hook 'TeX-mode-hook (lambda ()
+                             ;;                           (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
+                             ;;                           (local-set-key (kbd "C-f") 'LaTeX-fill-region)
+                             ;;                           (LaTeX-math-mode)
+                             ;;                           ;; (setq TeX-engine 'xetex)
+                             ;;                           (turn-on-reftex)))
+                             ;;(setq TeX-auto-save t)
+                             ;;(setq TeX-parse-self t)
+                             ;;(setq-default TeX-master nil)
+                             ;;(setq reftex-plug-into-AUCTeX t)
+                             ;;(TeX-global-PDF-mode t)
+                             ;;(setq LaTeX-indent-level 4)
+                             ;;(setq LaTeX-item-indent 0)
+                             ;;
+                             ;;
+                             ;;(add-hook 'after-save-hook
+                             ;;          (lambda ()
+                             ;;            (let ((cur-file-name ""))
+                             ;;              (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+                             ;;              (cond
+                             ;;               ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
+                             ;;               ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                             ;;              )
+                             ;;            )
+                             ;;          )
+                             (add-hook 'emacs-lisp-mode-hook (lambda ()
+                                                               (rainbow-mode)
+                                                               (rainbow-delimiters-mode)
+                                                               (smartparens-strict-mode)))
                              ))
 
 (add-hook 'after-save-hook
           (lambda ()
-            (cond ((string= buffer-file-name user-emacs-conf-org) (org-babel-tangle)))))
+            (cond ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle)))))
