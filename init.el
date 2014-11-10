@@ -21,23 +21,38 @@
                              ;; Slow down the mouse wheel acceleration
                              (when (boundp 'mouse-wheel-scroll-amount)
                                (setq mouse-wheel-scroll-amount '(0.01)))
+                             ;; To select semantic groups of characters (word, sentence, quotes, block, ...)
                              (require 'expand-region)
                              (global-set-key (kbd "C-=") 'er/expand-region)
+                             
+                             
+                             ;; To indent working buffer.
                              (global-set-key (kbd "<f8>") 'iwb)
+                             
+                             
+                             ;; To log work into history.
                              (global-set-key (kbd "<f9>") 'magit-status)
                              
-                             ;; Search window.
+                             
+                             ;; To switch windows.
                              (global-set-key (kbd "C-o") 'other-window)
                              
-                             ;; Search string in buffer.
+                             
+                             ;; To search string in buffer.
                              (global-set-key (kbd "C-s") 'isearch-forward)
                              (global-set-key (kbd "C-r") 'isearch-backward)
                              
-                             ;; Search string in project.
+                             
+                             ;; To search string in project.
                              (global-set-key (kbd "C-ù") 'projectile-ag)
                              
-                             ;; Search file in recently opened files and (current project or current directory).
+                             
+                             ;; To search files among most probable candidates.
                              (global-set-key (kbd "C-f") 'user/find-file)
+                             
+                             
+                             ;; To narrow two regions of the same buffer in two windows.
+                             (global-set-key (kbd "C-$") 'clone-indirect-buffer-other-window)
                              (defun flatten (list-of-lists?)
                              
                                ;; Verify argument type: list-of-lists? : List(List)
