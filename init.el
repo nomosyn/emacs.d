@@ -1,9 +1,13 @@
 
+(add-hook 'after-save-hook
+          (lambda ()
+            (cond ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle)))))
+
 (add-hook 'after-init-hook (lambda ()
                              (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                                                       ("org-mode" . "http://orgmode.org/elpa/")
                                                       ("melpa" . "http://melpa.org/packages/")))
-                             (setq utf-translate-cjk-mode nil) ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+                             (setq utf-translate-cjk-mode nil)
                              (set-language-environment 'utf-8)
                              (setq locale-coding-system 'utf-8)
                              (set-default-coding-systems 'utf-8)
@@ -19,8 +23,6 @@
                              (setq ns-right-option-modifier  'nil)
                              (when (fboundp 'tool-bar-mode)
                                (tool-bar-mode 0))
-                             
-                             ;; Slow down the mouse wheel acceleration
                              (when (boundp 'mouse-wheel-scroll-amount)
                                (setq mouse-wheel-scroll-amount '(0.01)))
                              ;; To select semantic groups of characters (word, sentence, quotes, block, ...)
@@ -86,43 +88,44 @@
                              (defun lorem ()
                                (interactive)
                                (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                                                 elit. Praesent libero orci, auctor sed, faucibus vestibulum,
-                                                                 gravida vitae, arcu. Nunc posuere. Suspendisse
-                                                                 potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
-                                                                 eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
-                                                                 vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
-                                                                 laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
-                                                                 venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
-                                                                 augue. Nullam fringilla consectetuer sapien. Aenean neque
-                                                                 augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
-                                                                 in nibh quis erat condimentum pretium. Vestibulum tempor odio
-                                                                 et leo. Sed sodales vestibulum justo. Cras convallis
-                                                                 pellentesque augue. In eu magna. In pede turpis, feugiat
-                                                                 pulvinar, sodales eget, bibendum consectetuer,
-                                                                 magna. Pellentesque vitae augue."))
+                                                                      elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                                                      gravida vitae, arcu. Nunc posuere. Suspendisse
+                                                                      potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                                                      eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                                                      vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                                                      laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                                                      venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                                                      augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                                                      augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                                                      in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                                                      et leo. Sed sodales vestibulum justo. Cras convallis
+                                                                      pellentesque augue. In eu magna. In pede turpis, feugiat
+                                                                      pulvinar, sodales eget, bibendum consectetuer,
+                                                                      magna. Pellentesque vitae augue."))
                              
                              
                              (defun dedicate-window ()
+                               "To prevent modifying a window buffer, make the selected window dedicated to its buffer."
                                (interactive)
                                (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
                              
                              
                              
-                             ;; List files in buffer's file's parent directory.
                              (defun user/list-files-in-current-parent-directory ()
                                (let (buffer-file-name?)
                                  (setq buffer-file-name? (buffer-file-name (current-buffer)))
                                  (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
                              
                              
+                             
                              (defun user/find-file (&optional arg)
                                "Find file among recentf and project file (if projectile
-                                      project) or current dir file."
+                                           project) or current dir file."
                                (interactive "P")
                                (let ((file (projectile-completing-read "Find file: "
                                                                        (delete-dups (flatten (list recentf-list (condition-case nil
-                                                                                                       (projectile-current-project-files)
-                                                                                                     (error (user/list-files-in-current-parent-directory))))))
+                                                                                                                    (projectile-current-project-files)
+                                                                                                                  (error (user/list-files-in-current-parent-directory))))))
                                                                        )))
                                  (find-file (expand-file-name file))))
                              
@@ -465,7 +468,3 @@
                                                                (rainbow-delimiters-mode)
                                                                (smartparens-strict-mode)))
                              ))
-
-(add-hook 'after-save-hook
-          (lambda ()
-            (cond ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle)))))

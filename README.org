@@ -1,32 +1,35 @@
 * Load configurations
-  - ~M-x org-babel-tangle~ to create ~./init.el~ file.
 
-  #+BEGIN_SRC elisp :tangle "./init.el" :noweb yes
-        (add-hook 'after-init-hook (lambda ()
-                                     <<package-manager>>
-                                     <<encoding>>
-                                     <<font>>
-                                     <<theme>>
-                                     <<mac>>
-                                     <<bindings>>
-                                     <<defun>>
-                                     <<resources>>
-                                     <<global>>
-                                     <<searching-files>>
-                                     <<spelling>>
-                                     <<completion>>
-                                     <<org>>
-                                     <<stylus>>
-                                     <<html>>
-                                     <<javascript>>
-                                     ;;<<latex>>
-                                     <<elisp>>
-                                     ))
+  - To never have to modify the init.el file.
+    #+BEGIN_SRC elisp :tangle "./init.el"
+      (add-hook 'after-save-hook
+                (lambda ()
+                  (cond ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle)))))
+    #+END_SRC
 
-        (add-hook 'after-save-hook
-                  (lambda ()
-                    (cond ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle)))))
-  #+END_SRC
+  - Activate export a configuration to the init.el file by adding/removing a noweb target bellow.
+   #+BEGIN_SRC elisp :tangle "./init.el" :noweb yes
+         (add-hook 'after-init-hook (lambda ()
+                                      <<package-manager>>
+                                      <<encoding>>
+                                      <<font>>
+                                      <<theme>>
+                                      <<mac>>
+                                      <<bindings>>
+                                      <<defun>>
+                                      <<resources>>
+                                      <<global>>
+                                      <<searching-files>>
+                                      <<spelling>>
+                                      <<completion>>
+                                      <<org>>
+                                      <<stylus>>
+                                      <<html>>
+                                      <<javascript>>
+                                      ;;<<latex>>
+                                      <<elisp>>
+                                      ))
+   #+END_SRC
 
 ** Packages manager
    #+NAME: package-manager
@@ -39,9 +42,10 @@
 
 ** Encoding
 
+   - To make utf8 the default everywhere.
    #+NAME: encoding
    #+BEGIN_SRC elisp
-     (setq utf-translate-cjk-mode nil) ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+     (setq utf-translate-cjk-mode nil)
      (set-language-environment 'utf-8)
      (setq locale-coding-system 'utf-8)
      (set-default-coding-systems 'utf-8)
@@ -53,7 +57,6 @@
 
 
 ** Font
-
    #+NAME: font
    #+BEGIN_SRC elisp
      (when (eq system-type 'darwin)
@@ -62,7 +65,6 @@
 
 
 ** Theme
-
    #+NAME: theme
    #+BEGIN_SRC elisp
      (load-theme 'solarized-dark t)
@@ -70,7 +72,6 @@
 
 
 ** Mac
-
    #+NAME: mac
    #+BEGIN_SRC elisp
      (setq ns-command-modifier 'meta)
@@ -78,8 +79,6 @@
      (setq ns-right-option-modifier  'nil)
      (when (fboundp 'tool-bar-mode)
        (tool-bar-mode 0))
-
-     ;; Slow down the mouse wheel acceleration
      (when (boundp 'mouse-wheel-scroll-amount)
        (setq mouse-wheel-scroll-amount '(0.01)))
    #+END_SRC
@@ -120,43 +119,44 @@
      (defun lorem ()
        (interactive)
        (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                         elit. Praesent libero orci, auctor sed, faucibus vestibulum,
-                                         gravida vitae, arcu. Nunc posuere. Suspendisse
-                                         potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
-                                         eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
-                                         vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
-                                         laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
-                                         venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
-                                         augue. Nullam fringilla consectetuer sapien. Aenean neque
-                                         augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
-                                         in nibh quis erat condimentum pretium. Vestibulum tempor odio
-                                         et leo. Sed sodales vestibulum justo. Cras convallis
-                                         pellentesque augue. In eu magna. In pede turpis, feugiat
-                                         pulvinar, sodales eget, bibendum consectetuer,
-                                         magna. Pellentesque vitae augue."))
+                                              elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                              gravida vitae, arcu. Nunc posuere. Suspendisse
+                                              potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                              eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                              vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                              laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                              venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                              augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                              augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                              in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                              et leo. Sed sodales vestibulum justo. Cras convallis
+                                              pellentesque augue. In eu magna. In pede turpis, feugiat
+                                              pulvinar, sodales eget, bibendum consectetuer,
+                                              magna. Pellentesque vitae augue."))
 
 
      (defun dedicate-window ()
+       "To prevent modifying a window buffer, make the selected window dedicated to its buffer."
        (interactive)
        (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
 
 
 
-     ;; List files in buffer's file's parent directory.
      (defun user/list-files-in-current-parent-directory ()
        (let (buffer-file-name?)
          (setq buffer-file-name? (buffer-file-name (current-buffer)))
          (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
 
 
+
      (defun user/find-file (&optional arg)
        "Find file among recentf and project file (if projectile
-              project) or current dir file."
+                   project) or current dir file."
        (interactive "P")
        (let ((file (projectile-completing-read "Find file: "
                                                (delete-dups (flatten (list recentf-list (condition-case nil
-                                                                               (projectile-current-project-files)
-                                                                             (error (user/list-files-in-current-parent-directory))))))
+                                                                                            (projectile-current-project-files)
+                                                                                          (error (user/list-files-in-current-parent-directory))))))
                                                )))
          (find-file (expand-file-name file))))
 
@@ -206,22 +206,23 @@
 
 ** Resources
 
-     #+NAME: resources
-     #+BEGIN_SRC elisp
-       (defconst user/home-dir (file-name-as-directory (expand-file-name "~")))
-       (defconst user/documents-dir (concat user/home-dir (file-name-as-directory "Documents")))
-       (defconst user/emacs-dir (concat user/home-dir (file-name-as-directory ".emacs.d")))
-       (defconst user/emacs-conf-org (concat user/emacs-dir "README.org"))
-       (defconst user/nnotes-dir (concat user/documents-dir (file-name-as-directory "nnotes")))
-       (defconst user/backups-dir (concat user/emacs-dir (file-name-as-directory "backups")))
-       (defconst user/snippets-dir (concat user/emacs-dir (file-name-as-directory "snippets")))
-       (defconst user/nnotes-documents-dir (concat user/nnotes-dir (file-name-as-directory "nnotes-documents")))
-       (defconst user/elpa-dir (concat user/emacs-dir (file-name-as-directory "elpa")))
-       (defconst user/org-dir (concat user/documents-dir (file-name-as-directory "org")))
-       (defconst user/local-bin-dir "/usr/local/bin/")
-       (defconst user/nnotes-tasks-file (concat user/nnotes-documents-dir "todo.org"))
-       (defconst user/todo-file (concat user/org-dir "me.org"))
-     #+END_SRC
+   - To reference resources in the host file-system.
+   #+NAME: resources
+   #+BEGIN_SRC elisp
+     (defconst user/home-dir (file-name-as-directory (expand-file-name "~")))
+     (defconst user/documents-dir (concat user/home-dir (file-name-as-directory "Documents")))
+     (defconst user/emacs-dir (concat user/home-dir (file-name-as-directory ".emacs.d")))
+     (defconst user/emacs-conf-org (concat user/emacs-dir "README.org"))
+     (defconst user/nnotes-dir (concat user/documents-dir (file-name-as-directory "nnotes")))
+     (defconst user/backups-dir (concat user/emacs-dir (file-name-as-directory "backups")))
+     (defconst user/snippets-dir (concat user/emacs-dir (file-name-as-directory "snippets")))
+     (defconst user/nnotes-documents-dir (concat user/nnotes-dir (file-name-as-directory "nnotes-documents")))
+     (defconst user/elpa-dir (concat user/emacs-dir (file-name-as-directory "elpa")))
+     (defconst user/org-dir (concat user/documents-dir (file-name-as-directory "org")))
+     (defconst user/local-bin-dir "/usr/local/bin/")
+     (defconst user/nnotes-tasks-file (concat user/nnotes-documents-dir "todo.org"))
+     (defconst user/todo-file (concat user/org-dir "me.org"))
+   #+END_SRC
 
 
 ** Global
