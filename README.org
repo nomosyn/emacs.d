@@ -26,8 +26,9 @@
                                       <<stylus>>
                                       <<html>>
                                       <<javascript>>
-                                      ;;<<latex>>
+                                      <<latex>>
                                       <<elisp>>
+                                      <<latex>>
                                       ))
    #+END_SRC
 
@@ -148,6 +149,14 @@
          (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
 
 
+(defun user/find-recent-file ()
+  "Find a recent file using ido."
+  (interactive)
+  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+    (when file
+      (find-file file))))
+
+
 
      (defun user/find-file (&optional arg)
        "Find file among recentf and project file (if projectile
@@ -165,6 +174,9 @@
 
 
 ** Bindings
+
+
+   - To list heavily used bindings... => optimize them ?
 
    #+NAME: bindings
    #+BEGIN_SRC elisp
@@ -195,7 +207,10 @@
 
 
      ;; To search files among most probable candidates.
-     (global-set-key (kbd "C-f") 'user/find-file)
+     ;; XXX find a way to merge these three into one binding calling contextualized function.
+     (global-set-key (kbd "C-f") 'projectile-find-file)
+     (global-set-key (kbd "C-x C-r") 'user/find-recent-file)
+     (global-set-key (kbd "C-x C-f") 'ido-find-file)
 
 
      ;; To narrow two regions of the same buffer in two windows.
@@ -600,6 +615,7 @@
 
    #+NAME: latex
    #+BEGIN_SRC elisp
+
      (require 'tex)
      (add-hook 'TeX-mode-hook (lambda ()
                                 (local-set-key (kbd "C-c h") 'TeX-fold-dwim)

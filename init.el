@@ -52,82 +52,93 @@
                              
                              
                              ;; To search files among most probable candidates.
-                             (global-set-key (kbd "C-f") 'user/find-file)
+                             ;; XXX find a way to merge these three into one binding calling contextualized function.
+                             (global-set-key (kbd "C-f") 'projectile-find-file)
+                             (global-set-key (kbd "C-x C-r") 'user/find-recent-file)
+                             (global-set-key (kbd "C-x C-f") 'ido-find-file)
                              
                              
                              ;; To narrow two regions of the same buffer in two windows.
                              (global-set-key (kbd "C-$") 'clone-indirect-buffer-other-window)
-                             (defun flatten (list-of-lists?)
+                                  (defun flatten (list-of-lists?)
                              
-                               ;; Verify argument type: list-of-lists? : List(List)
-                               (let ((err-message "error: arg should be a list of lists"))
-                                 (if (listp list-of-lists?)
-                                     (dolist (list? list-of-lists?)
-                                       (when (not (listp list?)) (error err-message)))
-                                   (error err-message)))
+                                    ;; Verify argument type: list-of-lists? : List(List)
+                                    (let ((err-message "error: arg should be a list of lists"))
+                                      (if (listp list-of-lists?)
+                                          (dolist (list? list-of-lists?)
+                                            (when (not (listp list?)) (error err-message)))
+                                        (error err-message)))
                              
-                               ;; List(List) -> List
-                               (let ((rev-res-list)
-                                     (res-list))
-                                 (dolist (list list-of-lists? rev-res-list)
-                                   (dolist (list-elem list)
-                                     (setq rev-res-list (cons list-elem rev-res-list))))
-                                 (dolist (elem rev-res-list res-list)
-                                   (setq res-list (cons elem res-list)))))
+                                    ;; List(List) -> List
+                                    (let ((rev-res-list)
+                                          (res-list))
+                                      (dolist (list list-of-lists? rev-res-list)
+                                        (dolist (list-elem list)
+                                          (setq rev-res-list (cons list-elem rev-res-list))))
+                                      (dolist (elem rev-res-list res-list)
+                                        (setq res-list (cons elem res-list)))))
                              
                              
                              
-                             (defun iwb ()
-                               "Indent Whole Buffer"
+                                  (defun iwb ()
+                                    "Indent Whole Buffer"
+                                    (interactive)
+                                    (delete-trailing-whitespace)
+                                    (indent-region (point-min) (point-max) nil)
+                                    (untabify (point-min) (point-max)))
+                             
+                             
+                                  (defun lorem ()
+                                    (interactive)
+                                    (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                                                           elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                                                           gravida vitae, arcu. Nunc posuere. Suspendisse
+                                                                           potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                                                           eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                                                           vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                                                           laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                                                           venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                                                           augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                                                           augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                                                           in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                                                           et leo. Sed sodales vestibulum justo. Cras convallis
+                                                                           pellentesque augue. In eu magna. In pede turpis, feugiat
+                                                                           pulvinar, sodales eget, bibendum consectetuer,
+                                                                           magna. Pellentesque vitae augue."))
+                             
+                             
+                                  (defun dedicate-window ()
+                                    "To prevent modifying a window buffer, make the selected window dedicated to its buffer."
+                                    (interactive)
+                                    (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
+                             
+                             
+                             
+                                  (defun user/list-files-in-current-parent-directory ()
+                                    (let (buffer-file-name?)
+                                      (setq buffer-file-name? (buffer-file-name (current-buffer)))
+                                      (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
+                             
+                             
+                             (defun user/find-recent-file ()
+                               "Find a recent file using ido."
                                (interactive)
-                               (delete-trailing-whitespace)
-                               (indent-region (point-min) (point-max) nil)
-                               (untabify (point-min) (point-max)))
-                             
-                             
-                             (defun lorem ()
-                               (interactive)
-                               (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                                                      elit. Praesent libero orci, auctor sed, faucibus vestibulum,
-                                                                      gravida vitae, arcu. Nunc posuere. Suspendisse
-                                                                      potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
-                                                                      eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
-                                                                      vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
-                                                                      laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
-                                                                      venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
-                                                                      augue. Nullam fringilla consectetuer sapien. Aenean neque
-                                                                      augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
-                                                                      in nibh quis erat condimentum pretium. Vestibulum tempor odio
-                                                                      et leo. Sed sodales vestibulum justo. Cras convallis
-                                                                      pellentesque augue. In eu magna. In pede turpis, feugiat
-                                                                      pulvinar, sodales eget, bibendum consectetuer,
-                                                                      magna. Pellentesque vitae augue."))
-                             
-                             
-                             (defun dedicate-window ()
-                               "To prevent modifying a window buffer, make the selected window dedicated to its buffer."
-                               (interactive)
-                               (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
+                               (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+                                 (when file
+                                   (find-file file))))
                              
                              
                              
-                             (defun user/list-files-in-current-parent-directory ()
-                               (let (buffer-file-name?)
-                                 (setq buffer-file-name? (buffer-file-name (current-buffer)))
-                                 (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
-                             
-                             
-                             
-                             (defun user/find-file (&optional arg)
-                               "Find file among recentf and project file (if projectile
-                                           project) or current dir file."
-                               (interactive "P")
-                               (let ((file (projectile-completing-read "Find file: "
-                                                                       (delete-dups (flatten (list recentf-list (condition-case nil
-                                                                                                                    (projectile-current-project-files)
-                                                                                                                  (error (user/list-files-in-current-parent-directory))))))
-                                                                       )))
-                                 (find-file (expand-file-name file))))
+                                  (defun user/find-file (&optional arg)
+                                    "Find file among recentf and project file (if projectile
+                                                project) or current dir file."
+                                    (interactive "P")
+                                    (let ((file (projectile-completing-read "Find file: "
+                                                                            (delete-dups (flatten (list recentf-list (condition-case nil
+                                                                                                                         (projectile-current-project-files)
+                                                                                                                       (error (user/list-files-in-current-parent-directory))))))
+                                                                            )))
+                                      (find-file (expand-file-name file))))
                              
                              (defconst user/home-dir (file-name-as-directory (expand-file-name "~")))
                              (defconst user/documents-dir (concat user/home-dir (file-name-as-directory "Documents")))
@@ -437,34 +448,62 @@
                                (prettify-symbols-mode))
                              
                              (add-hook 'js2-mode-hook 'prettify-js-symbols)
-                             ;;(require 'tex)
-                             ;;(add-hook 'TeX-mode-hook (lambda ()
-                             ;;                           (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
-                             ;;                           (local-set-key (kbd "C-f") 'LaTeX-fill-region)
-                             ;;                           (LaTeX-math-mode)
-                             ;;                           ;; (setq TeX-engine 'xetex)
-                             ;;                           (turn-on-reftex)))
-                             ;;(setq TeX-auto-save t)
-                             ;;(setq TeX-parse-self t)
-                             ;;(setq-default TeX-master nil)
-                             ;;(setq reftex-plug-into-AUCTeX t)
-                             ;;(TeX-global-PDF-mode t)
-                             ;;(setq LaTeX-indent-level 4)
-                             ;;(setq LaTeX-item-indent 0)
-                             ;;
-                             ;;
-                             ;;(add-hook 'after-save-hook
-                             ;;          (lambda ()
-                             ;;            (let ((cur-file-name ""))
-                             ;;              (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
-                             ;;              (cond
-                             ;;               ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
-                             ;;               ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
-                             ;;              )
-                             ;;            )
-                             ;;          )
+                             
+                             (require 'tex)
+                             (add-hook 'TeX-mode-hook (lambda ()
+                                                        (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
+                                                        (local-set-key (kbd "C-f") 'LaTeX-fill-region)
+                                                        (LaTeX-math-mode)
+                                                        ;; (setq TeX-engine 'xetex)
+                                                        (turn-on-reftex)))
+                             (setq TeX-auto-save t)
+                             (setq TeX-parse-self t)
+                             (setq-default TeX-master nil)
+                             (setq reftex-plug-into-AUCTeX t)
+                             (TeX-global-PDF-mode t)
+                             (setq LaTeX-indent-level 4)
+                             (setq LaTeX-item-indent 0)
+                             
+                             
+                             (add-hook 'after-save-hook
+                                       (lambda ()
+                                         (let ((cur-file-name ""))
+                                           (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+                                           (cond
+                                            ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
+                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                                           )
+                                         )
+                                       )
                              (add-hook 'emacs-lisp-mode-hook (lambda ()
                                                                (rainbow-mode)
                                                                (rainbow-delimiters-mode)
                                                                (smartparens-strict-mode)))
+                             
+                             (require 'tex)
+                             (add-hook 'TeX-mode-hook (lambda ()
+                                                        (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
+                                                        (local-set-key (kbd "C-f") 'LaTeX-fill-region)
+                                                        (LaTeX-math-mode)
+                                                        ;; (setq TeX-engine 'xetex)
+                                                        (turn-on-reftex)))
+                             (setq TeX-auto-save t)
+                             (setq TeX-parse-self t)
+                             (setq-default TeX-master nil)
+                             (setq reftex-plug-into-AUCTeX t)
+                             (TeX-global-PDF-mode t)
+                             (setq LaTeX-indent-level 4)
+                             (setq LaTeX-item-indent 0)
+                             
+                             
+                             (add-hook 'after-save-hook
+                                       (lambda ()
+                                         (let ((cur-file-name ""))
+                                           (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+                                           (cond
+                                            ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
+                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                                           )
+                                         )
+                                       )
                              ))
