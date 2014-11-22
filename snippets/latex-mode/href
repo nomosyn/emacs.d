@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: href
+# key: <hr
+# --
+\href{${1:url}}{${2:label}}

@@ -1,0 +1,12 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: comment-function
+# key: <cf
+# --
+/** ${1:Move a subtree with id {@code childInferenceId} into a child of index
+ *  {@code index} of subtree with id {@code parentInferenceId}}
+ *
+ *
+ * ${2:@param {String} childInferenceId Description}
+ * ${3:@throws {InvalidArgumentException}}
+ * ${4:@return {clientBook}}
+ */

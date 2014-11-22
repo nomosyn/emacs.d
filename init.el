@@ -25,72 +25,85 @@
                                (tool-bar-mode 0))
                              (when (boundp 'mouse-wheel-scroll-amount)
                                (setq mouse-wheel-scroll-amount '(0.01)))
-                             ;; To select semantic groups of characters (word, sentence, quotes, block, ...)
+                             ;; select semantic groups of characters (word, sentence, quotes, block, ...)
                              (require 'expand-region)
                              (global-set-key (kbd "C-=") 'er/expand-region)
                              
                              
-                             ;; To indent working buffer.
+                             
+                             ;; indent working buffer.
                              (global-set-key (kbd "<f8>") 'iwb)
                              
                              
-                             ;; To log work into history.
+                             
+                             ;; log work into history.
                              (global-set-key (kbd "<f9>") 'magit-status)
                              
                              
-                             ;; To switch windows.
+                             
+                             ;; switch windows.
                              (global-set-key (kbd "C-o") 'other-window)
                              
                              
-                             ;; To search string in buffer.
+                             
+                             ;; search string :
+                             ;;;; in buffer
                              (global-set-key (kbd "C-s") 'isearch-forward)
                              (global-set-key (kbd "C-r") 'isearch-backward)
                              
+                             ;;;; in project
+                             (global-set-key (kbd "C-^") 'projectile-ag)
                              
-                             ;; To search string in project.
-                             (global-set-key (kbd "C-ù") 'projectile-ag)
                              
                              
-                             ;; To search files among most probable candidates.
-                             ;; XXX find a way to merge these three into one binding calling contextualized function.
+                             ;; search files/buffer among most probable candidates.
                              (global-set-key (kbd "C-f") 'projectile-find-file)
-                             (global-set-key (kbd "C-x C-r") 'user/find-recent-file)
-                             (global-set-key (kbd "C-x C-f") 'ido-find-file)
+                             (global-set-key (kbd "C-ù") 'helm-mini)
                              
                              
-                             ;; To narrow two regions of the same buffer in two windows.
+                             
+                             ;; narrow two regions of the same buffer in two windows.
                              (global-set-key (kbd "C-$") 'clone-indirect-buffer-other-window)
-                                  (defun flatten (list-of-lists?)
-                             
-                                    ;; Verify argument type: list-of-lists? : List(List)
-                                    (let ((err-message "error: arg should be a list of lists"))
-                                      (if (listp list-of-lists?)
-                                          (dolist (list? list-of-lists?)
-                                            (when (not (listp list?)) (error err-message)))
-                                        (error err-message)))
-                             
-                                    ;; List(List) -> List
-                                    (let ((rev-res-list)
-                                          (res-list))
-                                      (dolist (list list-of-lists? rev-res-list)
-                                        (dolist (list-elem list)
-                                          (setq rev-res-list (cons list-elem rev-res-list))))
-                                      (dolist (elem rev-res-list res-list)
-                                        (setq res-list (cons elem res-list)))))
                              
                              
+                             ;; move current line:
+                             ;;;; up
+                             (global-set-key [(meta shift up)]  'move-line-up)
                              
-                                  (defun iwb ()
-                                    "Indent Whole Buffer"
-                                    (interactive)
-                                    (delete-trailing-whitespace)
-                                    (indent-region (point-min) (point-max) nil)
-                                    (untabify (point-min) (point-max)))
+                             ;;;; down
+                             (global-set-key [(meta shift down)]  'move-line-down)
+                             
+                             (defun flatten (list-of-lists?)
+                             
+                               ;; Verify argument type: list-of-lists? : List(List)
+                               (let ((err-message "error: arg should be a list of lists"))
+                                 (if (listp list-of-lists?)
+                                     (dolist (list? list-of-lists?)
+                                       (when (not (listp list?)) (error err-message)))
+                                   (error err-message)))
+                             
+                               ;; List(List) -> List
+                               (let ((rev-res-list)
+                                     (res-list))
+                                 (dolist (list list-of-lists? rev-res-list)
+                                   (dolist (list-elem list)
+                                     (setq rev-res-list (cons list-elem rev-res-list))))
+                                 (dolist (elem rev-res-list res-list)
+                                   (setq res-list (cons elem res-list)))))
                              
                              
-                                  (defun lorem ()
-                                    (interactive)
-                                    (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
+                             
+                             (defun iwb ()
+                               "Indent Whole Buffer"
+                               (interactive)
+                               (delete-trailing-whitespace)
+                               (indent-region (point-min) (point-max) nil)
+                               (untabify (point-min) (point-max)))
+                             
+                             
+                             (defun lorem ()
+                               (interactive)
+                               (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
                                                                            elit. Praesent libero orci, auctor sed, faucibus vestibulum,
                                                                            gravida vitae, arcu. Nunc posuere. Suspendisse
                                                                            potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
@@ -107,17 +120,17 @@
                                                                            magna. Pellentesque vitae augue."))
                              
                              
-                                  (defun dedicate-window ()
-                                    "To prevent modifying a window buffer, make the selected window dedicated to its buffer."
-                                    (interactive)
-                                    (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
+                             (defun dedicate-window ()
+                               "To prevent modifying a window buffer, make the selected window dedicated to its buffer."
+                               (interactive)
+                               (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
                              
                              
                              
-                                  (defun user/list-files-in-current-parent-directory ()
-                                    (let (buffer-file-name?)
-                                      (setq buffer-file-name? (buffer-file-name (current-buffer)))
-                                      (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
+                             (defun user/list-files-in-current-parent-directory ()
+                               (let (buffer-file-name?)
+                                 (setq buffer-file-name? (buffer-file-name (current-buffer)))
+                                 (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
                              
                              
                              (defun user/find-recent-file ()
@@ -129,17 +142,32 @@
                              
                              
                              
-                                  (defun user/find-file (&optional arg)
-                                    "Find file among recentf and project file (if projectile
+                             (defun user/find-file (&optional arg)
+                               "Find file among recentf and project file (if projectile
                                                 project) or current dir file."
-                                    (interactive "P")
-                                    (let ((file (projectile-completing-read "Find file: "
-                                                                            (delete-dups (flatten (list recentf-list (condition-case nil
-                                                                                                                         (projectile-current-project-files)
-                                                                                                                       (error (user/list-files-in-current-parent-directory))))))
-                                                                            )))
-                                      (find-file (expand-file-name file))))
+                               (interactive "P")
+                               (let ((file (projectile-completing-read "Find file: "
+                                                                       (delete-dups (flatten (list recentf-list (condition-case nil
+                                                                                                                    (projectile-current-project-files)
+                                                                                                                  (error (user/list-files-in-current-parent-directory))))))
+                                                                       )))
+                                 (find-file (expand-file-name file))))
                              
+                             
+                             (defun move-line-up ()
+                               "Move up the current line."
+                               (interactive)
+                               (transpose-lines 1)
+                               (forward-line -2)
+                               (indent-according-to-mode))
+                             
+                             (defun move-line-down ()
+                               "Move down the current line."
+                               (interactive)
+                               (forward-line 1)
+                               (transpose-lines 1)
+                               (forward-line -1)
+                               (indent-according-to-mode))
                              (defconst user/home-dir (file-name-as-directory (expand-file-name "~")))
                              (defconst user/documents-dir (concat user/home-dir (file-name-as-directory "Documents")))
                              (defconst user/emacs-dir (concat user/home-dir (file-name-as-directory ".emacs.d")))
@@ -199,56 +227,35 @@
                              (electric-pair-mode)
                              (setq projectile-indexing-method 'alien)
                              (setq ag-highlight-search t)
+                             (setq projectile-completion-system 'helm)
                              (projectile-global-mode)
                              (setq-default ispell-program-name "aspell")
                              (setq ispell-list-command "list")
                              (setq ispell-extra-args '("--sug-mode=ultra"))
                              (global-company-mode)
+                             (require 'helm-config)
+                             (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+                                   helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil
+                                   helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+                                   helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+                                   helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+                                   helm-ff-file-name-history-use-recentf t)
+                             (helm-mode 1)
                              
-                             
-                             (require 'recentf)
-                             (recentf-mode 1)
-                             (setq recentf-max-menu-items 50)
-                             
-                             
-                             (require 'smex)
-                             (smex-initialize)
-                             (global-set-key (kbd "M-x") 'smex)
-                             (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-                             (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-                             
-                             
-                             (require 'ido)
-                             (ido-mode 1)
-                             (ido-everywhere 1)
-                             (require 'ido-vertical-mode)
-                             (ido-vertical-mode)
-                             (setq ido-enable-last-directory-history nil)
-                             (setq ido-use-faces nil)
-                             (require 'flx-ido)
-                             (flx-ido-mode 1)
-                             (require 'ido-ubiquitous)
-                             (ido-ubiquitous)
-                             
-                             
-                             
-                             (require 'dropdown-list)
                              (require 'yasnippet)
                              (setq yas-snippet-dirs user/snippets-dir)
-                             (setq yas-prompt-functions '(yas-ido-prompt
-                                                          yas-dropdown-prompt
-                                                          yas-completing-prompt))
+                             
+                             (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                                                      try-expand-dabbrev-all-buffers
+                                                                      try-expand-dabbrev-from-kill
+                                                                      try-complete-file-name-partially
+                                                                      try-complete-file-name
+                                                                      try-expand-all-abbrevs
+                                                                      try-expand-list
+                                                                      try-expand-line
+                                                                      try-complete-lisp-symbol-partially
+                                                                      try-complete-lisp-symbol))
                              (yas-global-mode 1)
-                             
-                             
-                             
-                             (setq hippie-expand-try-functions-list
-                                   '(yas-hippie-try-expand
-                                     try-expand-dabbrev
-                                     try-expand-dabbrev-all-buffers
-                                     try-expand-dabbrev-from-kill
-                                     try-complete-file-name
-                                     try-complete-lisp-symbol))
                              
                              
                              (defvar smart-tab-using-hippie-expand t
@@ -268,11 +275,11 @@
                              
                              (defun smart-tab (prefix)
                                "Needs `transient-mark-mode' to be on. This smart tab is
-                                       minibuffer compliant: it acts as usual in the minibuffer.
+                                            minibuffer compliant: it acts as usual in the minibuffer.
                              
-                                       In all other buffers: if PREFIX is \\[universal-argument], calls
-                                       `smart-indent'. Else if point is at the end of a symbol,
-                                       expands it. Else calls `smart-indent'."
+                                            In all other buffers: if PREFIX is \\[universal-argument], calls
+                                            `smart-indent'. Else if point is at the end of a symbol,
+                                            expands it. Else calls `smart-indent'."
                                (interactive "P")
                                (labels ((smart-tab-must-expand (&optional prefix)
                                                                (unless (or (consp prefix)
@@ -449,6 +456,10 @@
                              
                              (add-hook 'js2-mode-hook 'prettify-js-symbols)
                              
+                             (add-hook 'after-save-hook
+                                       (lambda ()
+                                         (cond ((string= buffer-file-name "story-template-builder.org") (org-babel-tangle)))))
+                             
                              (require 'tex)
                              (add-hook 'TeX-mode-hook (lambda ()
                                                         (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
@@ -471,7 +482,8 @@
                                            (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
                                            (cond
                                             ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
-                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur"))
+                                            ((string= cur-file-name "slides-journee.tex") (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
                                            )
                                          )
                                        )
@@ -502,7 +514,8 @@
                                            (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
                                            (cond
                                             ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
-                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur"))
+                                            ((string= cur-file-name "slides-journee.tex") (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
                                            )
                                          )
                                        )

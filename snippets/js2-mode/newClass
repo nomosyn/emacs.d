@@ -2,7 +2,31 @@
 # name: newClass
 # key: <nc
 # --
-/*global $0: true*/
+/**
+ * This class is stateful | stateless.
+ *   StatelessClass: provides methods working without side effects:
+ *   they can be replaced with their value without changing the behavior
+ *   of a program.  (Result does not depend on the state of a db for
+ *   example.)
+ *
+ *   StatefulClass: provides methods working on instances => side
+ *   effects (like on a db for ex).
+ *
+ *
+ * In Charge:
+ *   fullname:  ${1:Full name}, contact: ${2: mail}
+ *   ...
+ *
+ *
+ * Author:
+ *   fullname:  $1, contact: $2
+ *
+ *
+ * Contributors:
+ *   fullname:  $1, contact: $2
+ *
+ */
+
 (function () {
     'use strict';
 

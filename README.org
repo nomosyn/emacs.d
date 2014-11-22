@@ -120,20 +120,20 @@
      (defun lorem ()
        (interactive)
        (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                              elit. Praesent libero orci, auctor sed, faucibus vestibulum,
-                                              gravida vitae, arcu. Nunc posuere. Suspendisse
-                                              potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
-                                              eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
-                                              vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
-                                              laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
-                                              venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
-                                              augue. Nullam fringilla consectetuer sapien. Aenean neque
-                                              augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
-                                              in nibh quis erat condimentum pretium. Vestibulum tempor odio
-                                              et leo. Sed sodales vestibulum justo. Cras convallis
-                                              pellentesque augue. In eu magna. In pede turpis, feugiat
-                                              pulvinar, sodales eget, bibendum consectetuer,
-                                              magna. Pellentesque vitae augue."))
+                                                   elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                                   gravida vitae, arcu. Nunc posuere. Suspendisse
+                                                   potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                                   eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                                   vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                                   laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                                   venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                                   augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                                   augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                                   in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                                   et leo. Sed sodales vestibulum justo. Cras convallis
+                                                   pellentesque augue. In eu magna. In pede turpis, feugiat
+                                                   pulvinar, sodales eget, bibendum consectetuer,
+                                                   magna. Pellentesque vitae augue."))
 
 
      (defun dedicate-window ()
@@ -149,18 +149,18 @@
          (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
 
 
-(defun user/find-recent-file ()
-  "Find a recent file using ido."
-  (interactive)
-  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-    (when file
-      (find-file file))))
+     (defun user/find-recent-file ()
+       "Find a recent file using ido."
+       (interactive)
+       (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+         (when file
+           (find-file file))))
 
 
 
      (defun user/find-file (&optional arg)
        "Find file among recentf and project file (if projectile
-                   project) or current dir file."
+                        project) or current dir file."
        (interactive "P")
        (let ((file (projectile-completing-read "Find file: "
                                                (delete-dups (flatten (list recentf-list (condition-case nil
@@ -169,6 +169,21 @@
                                                )))
          (find-file (expand-file-name file))))
 
+
+     (defun move-line-up ()
+       "Move up the current line."
+       (interactive)
+       (transpose-lines 1)
+       (forward-line -2)
+       (indent-according-to-mode))
+
+     (defun move-line-down ()
+       "Move down the current line."
+       (interactive)
+       (forward-line 1)
+       (transpose-lines 1)
+       (forward-line -1)
+       (indent-according-to-mode))
    #+END_SRC
 
 
@@ -180,41 +195,54 @@
 
    #+NAME: bindings
    #+BEGIN_SRC elisp
-     ;; To select semantic groups of characters (word, sentence, quotes, block, ...)
+     ;; select semantic groups of characters (word, sentence, quotes, block, ...)
      (require 'expand-region)
      (global-set-key (kbd "C-=") 'er/expand-region)
 
 
-     ;; To indent working buffer.
+
+     ;; indent working buffer.
      (global-set-key (kbd "<f8>") 'iwb)
 
 
-     ;; To log work into history.
+
+     ;; log work into history.
      (global-set-key (kbd "<f9>") 'magit-status)
 
 
-     ;; To switch windows.
+
+     ;; switch windows.
      (global-set-key (kbd "C-o") 'other-window)
 
 
-     ;; To search string in buffer.
+
+     ;; search string :
+     ;;;; in buffer
      (global-set-key (kbd "C-s") 'isearch-forward)
      (global-set-key (kbd "C-r") 'isearch-backward)
 
+     ;;;; in project
+     (global-set-key (kbd "C-^") 'projectile-ag)
 
-     ;; To search string in project.
-     (global-set-key (kbd "C-ù") 'projectile-ag)
 
 
-     ;; To search files among most probable candidates.
-     ;; XXX find a way to merge these three into one binding calling contextualized function.
+     ;; search files/buffer among most probable candidates.
      (global-set-key (kbd "C-f") 'projectile-find-file)
-     (global-set-key (kbd "C-x C-r") 'user/find-recent-file)
-     (global-set-key (kbd "C-x C-f") 'ido-find-file)
+     (global-set-key (kbd "C-ù") 'helm-mini)
 
 
-     ;; To narrow two regions of the same buffer in two windows.
+
+     ;; narrow two regions of the same buffer in two windows.
      (global-set-key (kbd "C-$") 'clone-indirect-buffer-other-window)
+
+
+     ;; move current line:
+     ;;;; up
+     (global-set-key [(meta shift up)]  'move-line-up)
+
+     ;;;; down
+     (global-set-key [(meta shift down)]  'move-line-down)
+
    #+END_SRC
 
 
@@ -313,6 +341,7 @@
    #+BEGIN_SRC elisp
      (setq projectile-indexing-method 'alien)
      (setq ag-highlight-search t)
+     (setq projectile-completion-system 'helm)
      (projectile-global-mode)
    #+END_SRC
 
@@ -320,6 +349,72 @@
 ** Completion
 
    #+NAME: completion
+   #+BEGIN_SRC elisp
+     (global-company-mode)
+     (require 'helm-config)
+     (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+           helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil
+           helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+           helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+           helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+           helm-ff-file-name-history-use-recentf t)
+     (helm-mode 1)
+
+     (require 'yasnippet)
+     (setq yas-snippet-dirs user/snippets-dir)
+
+     (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                              try-expand-dabbrev-all-buffers
+                                              try-expand-dabbrev-from-kill
+                                              try-complete-file-name-partially
+                                              try-complete-file-name
+                                              try-expand-all-abbrevs
+                                              try-expand-list
+                                              try-expand-line
+                                              try-complete-lisp-symbol-partially
+                                              try-complete-lisp-symbol))
+     (yas-global-mode 1)
+
+
+     (defvar smart-tab-using-hippie-expand t
+       "turn this on if you want to use hippie-expand completion.")
+
+
+
+     (defun smart-indent ()
+       "Indents region if mark is active, or current line otherwise."
+       (interactive)
+       (if mark-active
+           (indent-region (region-beginning)
+                          (region-end))
+         (indent-for-tab-command)))
+
+
+
+     (defun smart-tab (prefix)
+       "Needs `transient-mark-mode' to be on. This smart tab is
+                    minibuffer compliant: it acts as usual in the minibuffer.
+
+                    In all other buffers: if PREFIX is \\[universal-argument], calls
+                    `smart-indent'. Else if point is at the end of a symbol,
+                    expands it. Else calls `smart-indent'."
+       (interactive "P")
+       (labels ((smart-tab-must-expand (&optional prefix)
+                                       (unless (or (consp prefix)
+                                                   mark-active)
+                                         (looking-at "\\_>"))))
+         (cond ((minibufferp)
+                (minibuffer-complete))
+               ((smart-tab-must-expand prefix)
+                (if smart-tab-using-hippie-expand
+                    (hippie-expand prefix)
+                  (dabbrev-expand prefix)))
+               ((smart-indent)))))
+     (global-set-key (kbd "TAB") 'smart-tab)
+   #+END_SRC
+
+
+   #+NAME: completion-backup
    #+BEGIN_SRC elisp
      (global-company-mode)
 
@@ -598,6 +693,10 @@
        (prettify-symbols-mode))
 
      (add-hook 'js2-mode-hook 'prettify-js-symbols)
+
+     (add-hook 'after-save-hook
+               (lambda ()
+                 (cond ((string= buffer-file-name "story-template-builder.org") (org-babel-tangle)))))
    #+END_SRC
 
 
@@ -638,7 +737,8 @@
                    (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
                    (cond
                     ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
-                    ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur")))
+                    ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur"))
+                    ((string= cur-file-name "slides-journee.tex") (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
                    )
                  )
                )
