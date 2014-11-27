@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: fixme
+# key: <fixme
+# --
+todo('(fixme ${1:message}) (def `(downcase (nth 1 (split-string (org-id-new) "-")))`)')

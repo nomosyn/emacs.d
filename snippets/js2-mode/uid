@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: uid
+# key: <uid
+# --
+`(downcase (nth 1 (split-string (org-id-new) "-")))`

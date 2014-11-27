@@ -8,7 +8,7 @@
     #+END_SRC
 
   - Activate export a configuration to the init.el file by adding/removing a noweb target bellow.
-   #+BEGIN_SRC elisp :tangle "./init.el" :noweb yes
+    #+BEGIN_SRC elisp :tangle "./init.el" :noweb yes
          (add-hook 'after-init-hook (lambda ()
                                       <<package-manager>>
                                       <<encoding>>
@@ -30,7 +30,7 @@
                                       <<elisp>>
                                       <<latex>>
                                       ))
-   #+END_SRC
+    #+END_SRC
 
 ** Packages manager
    #+NAME: package-manager
@@ -350,7 +350,12 @@
 
    #+NAME: completion
    #+BEGIN_SRC elisp
+     (require 'recentf)
+     (recentf-mode 1)
+     (setq recentf-max-menu-items 100)
+
      (global-company-mode)
+
      (require 'helm-config)
      (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
            helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil

@@ -232,7 +232,12 @@
                              (setq-default ispell-program-name "aspell")
                              (setq ispell-list-command "list")
                              (setq ispell-extra-args '("--sug-mode=ultra"))
+                             (require 'recentf)
+                             (recentf-mode 1)
+                             (setq recentf-max-menu-items 100)
+                             
                              (global-company-mode)
+                             
                              (require 'helm-config)
                              (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
                                    helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil
