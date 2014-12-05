@@ -2,4 +2,4 @@
 # name: fixme
 # key: <fixme
 # --
-todo('(fixme ${1:message}) (def `(downcase (nth 1 (split-string (org-id-new) "-")))`)')
+todo('((def `(downcase (nth 1 (split-string (org-id-new) "-")))`) (fixme ${1:message}))')

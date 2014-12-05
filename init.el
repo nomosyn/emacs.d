@@ -126,34 +126,6 @@
                                (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
                              
                              
-                             
-                             (defun user/list-files-in-current-parent-directory ()
-                               (let (buffer-file-name?)
-                                 (setq buffer-file-name? (buffer-file-name (current-buffer)))
-                                 (when (not (eq buffer-file-name? nil)) (directory-files (file-name-directory buffer-file-name?)))))
-                             
-                             
-                             (defun user/find-recent-file ()
-                               "Find a recent file using ido."
-                               (interactive)
-                               (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
-                                 (when file
-                                   (find-file file))))
-                             
-                             
-                             
-                             (defun user/find-file (&optional arg)
-                               "Find file among recentf and project file (if projectile
-                                                project) or current dir file."
-                               (interactive "P")
-                               (let ((file (projectile-completing-read "Find file: "
-                                                                       (delete-dups (flatten (list recentf-list (condition-case nil
-                                                                                                                    (projectile-current-project-files)
-                                                                                                                  (error (user/list-files-in-current-parent-directory))))))
-                                                                       )))
-                                 (find-file (expand-file-name file))))
-                             
-                             
                              (defun move-line-up ()
                                "Move up the current line."
                                (interactive)
@@ -486,8 +458,8 @@
                                          (let ((cur-file-name ""))
                                            (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
                                            (cond
-                                            ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
-                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur"))
+                                            ((string-match "^french-tech-programme.*\.tex$" cur-file-name) (shell-command "./build.sh programme"))
+                                            ((string-match "^french-tech-demandeur.*\.tex$" cur-file-name) (shell-command "./build.sh demandeur"))
                                             ((string= cur-file-name "slides-journee.tex") (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
                                            )
                                          )
@@ -496,32 +468,4 @@
                                                                (rainbow-mode)
                                                                (rainbow-delimiters-mode)
                                                                (smartparens-strict-mode)))
-                             
-                             (require 'tex)
-                             (add-hook 'TeX-mode-hook (lambda ()
-                                                        (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
-                                                        (local-set-key (kbd "C-f") 'LaTeX-fill-region)
-                                                        (LaTeX-math-mode)
-                                                        ;; (setq TeX-engine 'xetex)
-                                                        (turn-on-reftex)))
-                             (setq TeX-auto-save t)
-                             (setq TeX-parse-self t)
-                             (setq-default TeX-master nil)
-                             (setq reftex-plug-into-AUCTeX t)
-                             (TeX-global-PDF-mode t)
-                             (setq LaTeX-indent-level 4)
-                             (setq LaTeX-item-indent 0)
-                             
-                             
-                             (add-hook 'after-save-hook
-                                       (lambda ()
-                                         (let ((cur-file-name ""))
-                                           (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
-                                           (cond
-                                            ((string= cur-file-name "french-tech-programme.tex") (shell-command "./build.sh programme"))
-                                            ((string= cur-file-name "french-tech-demandeur.tex") (shell-command "./build.sh demandeur"))
-                                            ((string= cur-file-name "slides-journee.tex") (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
-                                           )
-                                         )
-                                       )
                              ))

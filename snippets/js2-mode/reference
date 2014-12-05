@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: reference
+# key: <ref
+# --
+(ref ${1:uid})
