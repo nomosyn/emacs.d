@@ -2,4 +2,4 @@
 # name: definition
 # key: <def
 # --
-(def `(downcase (nth 1 (split-string (org-id-new) "-")))`)
+(def `(downcase (nth 1 (split-string (org-id-new) "-")))`)$0

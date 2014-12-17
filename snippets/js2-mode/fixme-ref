@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: fixme-ref
+# key: <fixmeref
+# --
+todo('(fixme (def ${1:def uid}))');$0

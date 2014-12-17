@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: log-variable
+# key: <logv
+# --
+console.log('${1:variable}: ' + JSON.stringify($1));$0
