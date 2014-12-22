@@ -59,8 +59,7 @@
 ** Font
    #+NAME: font
    #+BEGIN_SRC elisp
-     (when (eq system-type 'darwin)
-       (set-face-attribute 'default nil :family "monaco" :height 110 :weight 'normal))
+     (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 110 :weight 'normal)
    #+END_SRC
 
 

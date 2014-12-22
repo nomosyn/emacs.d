@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: import
+# key: <import
+# --
+var ${1:name} = ${2:namespace}.$1;$0

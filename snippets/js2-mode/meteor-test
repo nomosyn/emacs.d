@@ -6,4 +6,5 @@ Tinytest.add('${1:test name}', function (test) {
         /** Setup */
         /** Execute */
         /** Verify */
+        /** Teardown */
 });$0
