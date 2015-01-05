@@ -29,6 +29,11 @@
                              (global-set-key (kbd "C-=") 'er/expand-region)
                              
                              
+                             ;; Mark a place in a buffer.
+                             (global-set-key (kbd "C--") 'push-mark-no-activate)
+                             
+                             ;; Go back to last mark in buffer.
+                             (global-set-key (kbd "M--") 'jump-to-mark)
                              
                              ;; indent working buffer.
                              (global-set-key (kbd "<f8>") 'iwb)
@@ -103,20 +108,20 @@
                              (defun lorem ()
                                (interactive)
                                (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                                                           elit. Praesent libero orci, auctor sed, faucibus vestibulum,
-                                                                           gravida vitae, arcu. Nunc posuere. Suspendisse
-                                                                           potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
-                                                                           eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
-                                                                           vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
-                                                                           laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
-                                                                           venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
-                                                                           augue. Nullam fringilla consectetuer sapien. Aenean neque
-                                                                           augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
-                                                                           in nibh quis erat condimentum pretium. Vestibulum tempor odio
-                                                                           et leo. Sed sodales vestibulum justo. Cras convallis
-                                                                           pellentesque augue. In eu magna. In pede turpis, feugiat
-                                                                           pulvinar, sodales eget, bibendum consectetuer,
-                                                                           magna. Pellentesque vitae augue."))
+                                                                                     elit. Praesent libero orci, auctor sed, faucibus vestibulum,
+                                                                                     gravida vitae, arcu. Nunc posuere. Suspendisse
+                                                                                     potenti. Praesent in arcu ac nisl ultricies ultricies. Fusce
+                                                                                     eros. Sed pulvinar vehicula ante. Maecenas urna dolor, egestas
+                                                                                     vel, tristique et, porta eu, leo. Curabitur vitae sem eget arcu
+                                                                                     laoreet vulputate. Cras orci neque, faucibus et, rhoncus ac,
+                                                                                     venenatis ac, magna. Aenean eu lacus. Aliquam luctus facilisis
+                                                                                     augue. Nullam fringilla consectetuer sapien. Aenean neque
+                                                                                     augue, bibendum a, feugiat id, lobortis vel, nunc. Suspendisse
+                                                                                     in nibh quis erat condimentum pretium. Vestibulum tempor odio
+                                                                                     et leo. Sed sodales vestibulum justo. Cras convallis
+                                                                                     pellentesque augue. In eu magna. In pede turpis, feugiat
+                                                                                     pulvinar, sodales eget, bibendum consectetuer,
+                                                                                     magna. Pellentesque vitae augue."))
                              
                              
                              (defun dedicate-window ()
@@ -139,6 +144,21 @@
                                (transpose-lines 1)
                                (forward-line -1)
                                (indent-according-to-mode))
+                             
+                             
+                             (defun push-mark-no-activate ()
+                               "Pushes `point' to `mark-ring' and does not activate the region
+                                     Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
+                               (interactive)
+                               (push-mark (point) t nil)
+                               (message "Pushed mark to ring"))
+                             
+                             (defun jump-to-mark ()
+                               "Jumps to the local mark, respecting the `mark-ring' order.
+                               This is the same as using \\[set-mark-command] with the prefix argument."
+                               (interactive)
+                               (set-mark-command 1))
+                             
                              (defconst user/home-dir (file-name-as-directory (expand-file-name "~")))
                              (defconst user/documents-dir (concat user/home-dir (file-name-as-directory "Documents")))
                              (defconst user/emacs-dir (concat user/home-dir (file-name-as-directory ".emacs.d")))

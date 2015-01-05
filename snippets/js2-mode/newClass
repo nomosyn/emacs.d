@@ -25,6 +25,11 @@
  * Contributors:
  *   fullname:  $1, contact: $2
  *
+ *
+ ********************************************************************************
+ *
+ *
+ * ${3: Description for human here.}
  */
 
 (function () {
