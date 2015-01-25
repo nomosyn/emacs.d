@@ -1,0 +1,19 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: template
+# key: <template
+# --
+// BEGIN ${1:name} //////////////////////
+
+
+/////////////
+// Context //
+/////////////
+
+
+////////////////////
+// Implementation //
+////////////////////
+
+$0
+
+// END $1 //////////////////////

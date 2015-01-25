@@ -3,33 +3,29 @@
 # key: <nc
 # --
 /**
- * This class is stateful | stateless.
- *   StatelessClass: provides methods working without side effects:
- *   they can be replaced with their value without changing the behavior
- *   of a program.  (Result does not depend on the state of a db for
- *   example.)
- *
- *   StatefulClass: provides methods working on instances => side
- *   effects (like on a db for ex).
- *
- *
  * In Charge:
- *   fullname:  ${1:Full name}, contact: ${2: mail}
- *   ...
+ *   fullname: Pierre-Henry Fröhring, contact: frohring.pierrehenry@gmail.com
  *
  *
  * Author:
- *   fullname:  $1, contact: $2
+ *   fullname: Pierre-Henry Fröhring, contact: frohring.pierrehenry@gmail.com
  *
  *
  * Contributors:
- *   fullname:  $1, contact: $2
+ *   fullname: Pierre-Henry Fröhring, contact: frohring.pierrehenry@gmail.com
  *
  *
  ********************************************************************************
  *
+ * - Informal spécification
+ *   - This template is implemented _so that_ <SOMEONE GAINS SOMETHING>
  *
- * ${3: Description for human here.}
+ * - Essential
+ *   - (def 554a) <description>
+ *
+ * - Accidental
+ *   - ...
+ *
  */
 
 (function () {
@@ -37,7 +33,17 @@
 
     /** Class imports */
 
+
+
+
     /** Class implementation */
 
+
+
+
     /** Class api */
+
+
+
+
 }());

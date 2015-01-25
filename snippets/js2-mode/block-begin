@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: block-begin
+# key: <blockbegin
+# --
+/** (begin (ref ${1:uid})) *******************************************/

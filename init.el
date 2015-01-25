@@ -77,6 +77,9 @@
                              ;;;; down
                              (global-set-key [(meta shift down)]  'move-line-down)
                              
+                             
+                             ;; Capture
+                             (global-set-key (kbd "C-c c") 'org-capture)
                              (defun flatten (list-of-lists?)
                              
                                ;; Verify argument type: list-of-lists? : List(List)
@@ -359,7 +362,6 @@
                              (setq org-log-done t)
                              
                              
-                             (global-set-key (kbd "C-c c") 'org-capture)
                              (defun user/before-finalize-capture-hooks ()
                                (org-id-get-create))
                              (add-hook 'org-capture-before-finalize-hook 'user/before-finalize-capture-hooks)
