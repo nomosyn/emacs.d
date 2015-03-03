@@ -256,8 +256,13 @@
      (defconst user/elpa-dir (concat user/emacs-dir (file-name-as-directory "elpa")))
      (defconst user/org-dir (concat user/documents-dir (file-name-as-directory "org")))
      (defconst user/local-bin-dir "/usr/local/bin/")
-     (defconst user/nnotes-tasks-file (concat user/nnotes-documents-dir "todo.org"))
+     (defconst user/nnotes-tasks-file (concat user/org-dir "todo.org"))
      (defconst user/todo-file (concat user/org-dir "me.org"))
+     (defconst user/libs (concat user/emacs-dir (file-name-as-directory "libs")))
+     (defconst user/org2asciidoc (concat user/libs (file-name-as-directory "org-asciidoc")))
+
+     (add-to-list 'load-path user/libs)
+     (add-to-list 'load-path user/org2asciidoc)
    #+END_SRC
 
 
@@ -541,6 +546,15 @@
 
 
      (setq org-enable-table-editor t)
+
+     (add-to-list 'org-export-backends 'taskjuggler)
+     (require 'ox-taskjuggler)
+
+     (add-to-list 'org-export-backends 'md)
+     (require 'ox-md)
+
+     (add-to-list 'org-export-backends 'asciidoc)
+     (require 'ox-asciidoc)
    #+END_SRC
 
 

@@ -17,31 +17,41 @@
  *
  ********************************************************************************
  *
- * - Informal spécification
- *   - This template is implemented _so that_ <SOMEONE GAINS SOMETHING>
  *
- * - Essential
- *   - (def 554a) <description>
+ * - Informal specification
+ *   - <SOMEONE> _expects_ <SOME FEATURE TO BE IMPLEMENTED> _so that_ <SOMEONE GAINS SOMETHING>
+ *       - Ex: Team _expects_ the isoBrowser class to detect users
+ *         browsers _so that_ it's possible for the team to write browser
+ *         specific code.
  *
- * - Accidental
- *   - ...
+ *
+ *
+ * - Formal specification
+ *   - isoBrowser
+ *     - (def 554a) Given an dictionnary of functions, returns a function `f` so
+ *                  that executing `f(x)` on Chrome | Firefox will call Chrome |
+ *                  Firefox specific code.
+ *       - (def 86d7) Given a browser id, returns a boolean indicating if the
+ *                    corresponding browser is executing this function.
+ *
+ *     - (def 3955) <description> ...
  *
  */
 
 (function () {
     'use strict';
 
-    /** Class imports */
+    /** Imports */
 
 
 
 
-    /** Class implementation */
+    /** Implementation */
 
 
 
 
-    /** Class api */
+    /** Api */
 
 
 
