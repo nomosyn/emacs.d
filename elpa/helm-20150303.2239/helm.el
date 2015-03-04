@@ -1643,6 +1643,18 @@ This is used in transformers to modify candidates list."
            (lambda (&rest oargs) (helm-compose oargs funcs))
            args)))
 
+(defun helm-stringify (str-or-sym)
+  "Get string of STR-OR-SYM."
+  (if (stringp str-or-sym)
+      str-or-sym
+    (symbol-name str-or-sym)))
+
+(defun helm-symbolify (str-or-sym)
+  "Get symbol of STR-OR-SYM."
+  (if (symbolp str-or-sym)
+      str-or-sym
+    (intern str-or-sym)))
+
 
 ;; Core: entry point
 ;; `:allow-nest' is not in this list because it is treated before.
@@ -3949,8 +3961,12 @@ don't exit and send message 'no match'."
                         (unless (if minibuffer-completing-file-name
                                     (and minibuffer-completion-predicate
                                          (funcall minibuffer-completion-predicate sel))
-                                    (try-completion sel minibuffer-completion-table
-                                                    minibuffer-completion-predicate))
+                                    (and (stringp sel)
+                                         ;; SEL may be a cons cell when helm-comp-read
+                                         ;; is called directly with a collection composed
+                                         ;; of (display . real) and real is a cons cell.
+                                         (try-completion sel minibuffer-completion-table
+                                                         minibuffer-completion-predicate)))
                           unknown))
                     (eq minibuffer-completion-confirm t))
                (minibuffer-message " [No match]"))
