@@ -28,6 +28,7 @@
                                       <<javascript>>
                                       <<latex>>
                                       <<elisp>>
+                                      <<coq>>
                                       ))
     #+END_SRC
 
@@ -661,7 +662,8 @@
                    (cond
                     ((string-match "^french-tech-programme.*\.tex$" cur-file-name) (shell-command "./build.sh programme"))
                     ((string-match "^french-tech-demandeur.*\.tex$" cur-file-name) (shell-command "./build.sh demandeur"))
-                    ((string= cur-file-name "slides-journee.tex") (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
+                    ((string-match "^network_notes_prop-2015.*\.tex$" cur-file-name) (shell-command "./build.sh"))
+                    ((string-match "slides-journee\.tex" cur-file-name) (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
                    )
                  )
                )
@@ -702,4 +704,13 @@
                                        (rainbow-mode)
                                        (rainbow-delimiters-mode)
                                        (smartparens-strict-mode)))
+   #+END_SRC
+
+
+** Coq
+
+   #+NAME: coq
+   #+BEGIN_SRC elisp
+     ;; (load-file "libs/ProofGeneral-4.3pre150202/ProofGeneral/generic/proof-site.el")
+     ;; (setq proof-prog-name "hoqtop")
    #+END_SRC

@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: math-capital-pi
+# key: $PI
+# --
+∏

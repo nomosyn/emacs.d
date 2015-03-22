@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: math-points-to
+# key: $pt
+# --
+⤳$0

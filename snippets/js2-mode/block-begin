@@ -2,4 +2,4 @@
 # name: block-begin
 # key: <blockbegin
 # --
-/** (begin (ref ${1:uid})) *******************************************/
+/** (begin (ref ${1:uid})) */
