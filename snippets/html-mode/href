@@ -1,5 +1,5 @@
 # contributor: Jimmy Wu <frozenthrone88@gmail.com>
 # name: <a></a>
-# key: <a
+# key: a
 # --
-<a>$1</a>
+<a href="">$0</a>

@@ -1,0 +1,1 @@
+(define-package "context-coloring" "6.2.0" "Syntax highlighting, except not for syntax." '((emacs "24") (js2-mode "20150126")) :url "https://github.com/jacksonrayhamilton/context-coloring" :keywords '("context" "coloring" "syntax" "highlighting"))

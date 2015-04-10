@@ -472,6 +472,9 @@
                                        (lambda ()
                                          (cond ((string= buffer-file-name "story-template-builder.org") (org-babel-tangle)))))
                              
+                             (require 'context-coloring)
+                             (add-hook 'js2-mode-hook 'context-coloring-mode)
+                             
                              (require 'tex)
                              (add-hook 'TeX-mode-hook (lambda ()
                                                         (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
@@ -506,4 +509,5 @@
                                                                (smartparens-strict-mode)))
                              ;; (load-file "libs/ProofGeneral-4.3pre150202/ProofGeneral/generic/proof-site.el")
                              ;; (setq proof-prog-name "hoqtop")
+                             (setq geiser-racket-binary "/Applications/Racketv6.1.1/bin/racket")
                              ))

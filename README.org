@@ -29,6 +29,7 @@
                                       <<latex>>
                                       <<elisp>>
                                       <<coq>>
+                                      <<racket>>
                                       ))
     #+END_SRC
 
@@ -621,6 +622,9 @@
      (add-hook 'after-save-hook
                (lambda ()
                  (cond ((string= buffer-file-name "story-template-builder.org") (org-babel-tangle)))))
+
+     (require 'context-coloring)
+     (add-hook 'js2-mode-hook 'context-coloring-mode)
    #+END_SRC
 
 
@@ -713,4 +717,11 @@
    #+BEGIN_SRC elisp
      ;; (load-file "libs/ProofGeneral-4.3pre150202/ProofGeneral/generic/proof-site.el")
      ;; (setq proof-prog-name "hoqtop")
+   #+END_SRC
+
+** Racket
+
+   #+NAME: racket
+   #+BEGIN_SRC elisp
+     (setq geiser-racket-binary "/Applications/Racketv6.1.1/bin/racket")
    #+END_SRC
