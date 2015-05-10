@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: pandoc-md-id
+# key: <puid
+# --
+{#`(downcase (nth 1 (split-string (org-id-new) "-")))`}

@@ -1,0 +1,96 @@
+---
+name: spec_language
+uuid: ccc34955-e40e-437e-8420-0bd30b7453a4
+problem_name: spec_language
+problem_uuid: eafa77de-3d86-49ef-b5a2-310d8825b646
+version: 0.0.0
+contributors:
+  - full_name: Pierre-Henry Fröhring
+    email: pierrehenry.frohring@openmailbox.org
+---
+
+
+"x :≡ blabla" means that x is a new symbol in the current context defined by
+"blabla".  It means that the text "x" can be replaced by "blabla".  So: "x is
+red" is exactly the same as "blabla is red", by definition.
+
+"x ≡ blablo" means that the existing symbol "x" is, from now, subsituable by
+"blablo" string.
+
+
+∧ :≡ "and"
+
+∨ :≡ "or"
+
+∃ :≡ "it exists"
+
+∈ :≡ "is a member of"
+
+∀ :≡ "for all"
+
+⇒ :≡ "imply"
+
+"F :≡ {n * n − 4 | (n ∈ integer) ∧ (0 ≤ n ≤ 19)}" means that F is, by
+definition, the set of the twenty smallest integers that are four less than
+perfect squares can be denoted numbers.  | :≡ "such that".
+
+A ∪ B :≡ "union of A and B" ≡ { x | (x ∈ A) ∨ (x ∈ B)}
+
+A ∩ B :≡ "intersection of A and B" ≡ { x | (x ∈ A) ∧ (x ∈ B)}
+
+A ⊆ B :≡ (x ∈ A ⇒ x ∈ B)
+
+<x y> :≡ "the couple of values x and y"
+
+variables :≡ { <name S> | (name ∈ String) ∧ (S is a set)}
+
+states :≡ { { <var value> | (var ≡ <n S> ∈ variables) ∧ (value ∈ S) } }
+
+behaviours :≡ { <s0 s1 ... sn> | <s0 s1 ... sn>[i ∈ 0 .. n] ∈ states }
+
+"algorithm execution" ≡ "behaviour" ∈ behaviours
+
+"algorithm" :≡ <I S N> where:
+* (S ∈ states) ∧ (I ⊆ S) ∧ (N ⊆ S x S).
+* I ≡ "Init states" ≡ { s ∈ S | P(s) } where "P(s)" is a formula which variables
+are replaced by their values in state s.
+* S ≡ "states"
+* N ≡ "Next-state relation" ≡ { <s s'> | s' = Q(s) } where Q : S → S
+
+value :≡ an instance of a data type.
+
+range :≡ a set of values.
+
+reactive_computation :≡
+  - let f = λ_.f(_) be a reactive computation then whenever x:reactive
+    variable ∈ _ changes, f(_) is re-computed.
+  - build one: see http://docs.meteor.com/#/full/tracker_autorun
+
+reactive_variable :≡ a variable that signals host reactive computations that it
+has been updated, when it is updated.
+
+reactive_update(s :≡ {<reactive_variable, reactive_computation>}) :≡
+  ∀ <n, f> ∈ s, s'(n) = f(_);
+    return s';
+
+
+sub_sequence(s ∈ sequence) :≡ set of sequences that can be derived from s by
+deleting some elements without changing the order of the remaining elements.
+
+constructor :≡ {function}
+equality :≡ λx,y.f(x,y) where f : _ _ → boolean
+
+Defining a template is defining s, modifiers and next such as:
+    s ∈ S :≡ {   [e]
+               ∧ e ∈ name x set x computation x value
+               ∧ ∀ e ∈ [e]
+                   ∧ ∃ f :≡ computation(e), f :≡ λ_.f(_), _ ∈ sub_sequence of [e_0, ..., e]
+                   ∧ value(e) = f(_)
+                   ∧ value(e) ∈ set
+  ∧ init_states ⊆ S
+  ∧ modifiers ⊆ name x set x computation
+  ∧ next ⊆ S x name(modifiers) x value x S
+           ∧ <s n x s'> ∈ next ⇔ ∃ <n b λs,_.φ(s,_)> ∈ modifiers ∧ s' = φ(s,x ∈ b)
+                               ⇔ <s n x s'> = <s n x φ(s,x)>
+
+ Then, a "behaviour" is: i ∈ init_states, <i n x s'> → <s' n' x' s''> → <s'' n'' x'' s'''> → ...

@@ -1,0 +1,10 @@
+{
+    "meta": { "version": "0.0.0" }
+    , "summary": "Describe a protocol to exchange problem and solutions."
+    , "name": "state_the_problem_first"
+    , "uuid": "44058763-827e-4056-b473-9e9d01bb4074"
+    , "version": "0.0.0"
+    , "files": ["synthese.org"]
+    , "use": []
+    , "export": [("pb/sol protocol", "774c")]
+}

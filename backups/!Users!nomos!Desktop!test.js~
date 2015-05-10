@@ -1,0 +1,164 @@
+/**
+ * In Charge:
+ *   fullname: <Your full name>, contact: <your email>
+ *
+ *
+ * Author:
+ *   fullname: <Your full name>, contact: <your email>
+ *
+ *
+ * Contributors:
+ *   fullname: <Your full name>, contact: <your email>
+ *
+ *
+ ********************************************************************************
+ *
+ *
+ * - Informal specification
+ *   - NNotes_expects_ <SOME FEATURE TO BE IMPLEMENTED> _so that_ <SOMEONE GAINS SOMETHING>
+ *       - Ex: NNotes team _expects_ a library to implement common operations
+ *             _so that_ the code is kept DRY.
+ *
+ * - Formal specification
+ *   - (def d777) Return the GCD of m and n
+ *   - (def f60a) Return an a ordered copy of the input integers array
+ *
+ */
+
+
+/*global isoBrowser:true, R, utils*/
+
+math = null;
+
+(function () {
+    'use strict';
+
+
+
+    /** Class imports */
+
+    // M = path/to/file/with/def.org : definitions for the reader
+    // max = M.max
+    // ...
+
+    // var x = zzz.x; definitions for both the reader and the computer
+    var genericError = utils.genericError;
+    var contains = R.contains;
+
+
+
+    /** Class implementation */
+
+    /** (ref d777) m,n ∈ N/{0} ∧ ((m ≠ 0) ∨ (n ≠ 0)) ↦ GCD(m,n)
+     *
+     * Computaton gives what we want...
+     *
+     *     d | q :≡ d ∈ N/{0}, q ∈ N, ⊢ ∃ k ∈ N/{0}, q = d * k
+     *     divisors(m) :≡ {d ∈ N/{0}, d | q}
+     *     max : set ↦ choose m ∈ set, ∀ x ∈ set, m ≥ x
+     *     GCD(m, n) =
+     *         (def 5a2e) m,n ∈ N/{0} ∧ ((m ≠ 0) ∨ (n ≠ 0))
+     *         ⊢ max(divisors(m) ∩ divisors(n))
+     *     (def d034): GCD(0, n) = n, applying the definition
+     *     (def 9dec): GCD(m, n) = GCD(n, m), applying the definition
+     *     (def 292f): GCD(m, n) = GCD(rest(m | n), m)
+     *         (0 ≤ m < n), n = m * l + r, 0 ≤ r < m ⊢ GCD(m, n) ≤ GCD(r, m)
+     *             n = GCD(m, n) * k
+     *               = m * l + r, 0 ≤ r < m
+     *               = GCD(m, n) * d * l + r, ⊣ m = GCD(m, n) * d
+     *             r = GCD(m, n) * (k - d * l) ⊢ GCD(m, n) ∈ divisors(r)
+     *             by definition of GCD ⊢ ROOT
+     *         GCD(r, m) ∈ divisors(n) ∩ divisors(m) ⊢ GCD(r, m) ≤ GCD(m, n)
+     *         ⊢ ROOT
+     *
+     * ... in a finite amount of operations:
+     *
+     *    let r_i is the rest computed at the ith recursive GCD call, we have: 0
+     *    ≤ r_i < r_i-1 < ... < r_0 so that ∃ j where r_j = 0 and GCD(r_j, m) =
+     *    m
+     *
+     */
+    var gcd =
+            function (m,n) {
+                /** (ref 5a2e) */ checkType([m,n], 'natural') && ((m > 0) || (n > 0))
+                /** (ref d034) */ if (m === 0) return n;
+                /** (ref 9dec) */ if (m > n) return gcd(m,n);
+                /** (ref 292f) */ return gcd(n % m, m);
+            };
+
+
+
+    /** (ref f60a) a:[Integer] ↦ new a':[Integer] where a' is an ordered permutation of a.
+     *
+     * Computaton gives what we want...
+     *     (def 6f7a) a := [Integer]
+     *     (def 62c1) partition : a : [Integer]
+     *                            (lo, hi) ∈ indexOf(a) ∧ (lo ≤ hi)
+     *                            → {'pivot': Integer, 'array': [Integer]}
+     *                              where:
+     *                                r := pivot(a)
+     *                                lo ≤ r.pivot < hi
+     *                                ∀ i ∈ lo .. r.pivot, r.array(i) ≤ r.array(r.pivot)
+     *                                ∀ j ∈ r.pivot+1 .. hi, r.array(pivot+1) ≤ r.array(j) ≤ r.array(hi)
+     *     (def 4a5e) partitions : a : [Integer]
+     *                             (lo, hi) ∈ indexOf(a) ∧ (lo ≤ hi)
+     *                             lo ≤ p < hi
+     *                             ↦ { a':[Integer] where a' is a permutation of
+     *                                 a such that ∀ i ∈ lo .. p, a'(i) ≤ a'(p) ∧ ∀ j ∈ p+1 .. hi, a'(p+1) ≤ a'(j) }
+     *
+     *  (def 753e) init:
+     *                 U is a set of index ranges on which partition should be called.
+     *               ∧ A is an array of Integer of length N
+     *
+     *  next:
+     *      (def 5695) if U = {ø} return A
+     *      (def cea9) else ∃ (b,t) in U:
+     *        if (b ≠ t) then ∃ p in b .. t-1:
+     *            A' ∈ partitions(A,b,t,p)
+     *          ∧ U' = U\{(b,t)} ∪ {(b,p), (p+1,t)}
+     *        else:
+     *          A' = A
+     *          U' = U\{(b,t)}
+     */
+    var sortArray =
+            (function () {
+                var chooseRange = function(u) { return /* range */ };
+                var choosePivot = function(lo, hi) { return (lo !== hi) ? Math.floor((lo + hi-1)/2) : null; };
+                var nextA =
+                        (function(){
+                            var partition = function(a, lo, hi, p) { return (lo === hi) ? a : /* an array */; };
+                            return function(a, lo, hi, pivot) { return /* next array */; };
+                        }());
+                var nextU = function(u, range, pivot) { return /* next u*/; };
+
+                var rec =
+                        function(u,a) {
+
+                            /** (ref 5695) */
+                            if (u.length === 0) return a;
+
+                            /* (ref cea9) */
+                            var range = chooseRange(u);
+                            var lo = first(range);
+                            var hi = last(range);
+                            var pivot = choosePivot(lo, hi);
+                            return rec(nextU(u, range, pivot), nextA(a, lo, hi, pivot));
+                        };
+
+                return function (a) {
+                    checkType(a, arrayOf(Integer));
+                    return rec([[0, a.length - 1]], a);
+                };
+            }());
+
+
+
+    /** Class api */
+
+    math =
+        {
+            'gcd': gcd
+            , 'sortArray': sortArray
+        };
+
+}());

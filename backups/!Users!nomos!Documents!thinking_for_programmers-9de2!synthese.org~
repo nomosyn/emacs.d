@@ -1,0 +1,213 @@
+* [[7c69][Leslie lamport think]]
+
+  - Two useful tools to think about programs:
+      - functions and [[6750][states]]
+      - <<b65b>> a function is a set of ordered pairs [<0,0>, <1, 2>, ...] for f
+        that double its input.  A function says what it does not how it does it.
+        To tell a computer how it should implements a function, you have to
+        describe a [[a442][program]] that he can execute.
+
+  - <<a442>> program := is a set of [[4920][behaviours]]
+
+  - <<7149>> program execution := is a [[4920][behaviour]]
+
+  - <<4920>> behaviour := is a sequence of [[6750][state]]
+
+  - <<6750>> state := is an assignement of values to variables
+
+  - invariant := formula that is true in every state of every execution is
+    called an invariant.
+
+  - How to specify a program ? By specifying a "safety property" and a "liveness property".
+
+  - A safety property is :=
+
+      - Set of possible initial states
+
+      - A next-state relation describing all possible next states of any states.
+
+
+
+  - Examples:
+      - What is GCD?
+          - Given m,n ∈ N/{0} ∧ ((m ≠ 0) ∨ (n ≠ 0)) then GCD(m,n) the the
+            greatest common divisor of m and n.
+
+      - How to compute GCD?
+          - m,n ∈ N/{0} ∧ ((m ≠ 0) ∨ (n ≠ 0))
+          - GCD(m, n) ⇒
+              - (m = 0) ⇒ n
+              - (m > n) ⇒ GCD(n, m)
+              - ⇒ GCD(rest(m | n), m)
+
+      - Can you prove that how you compute gives what we want in a finite number
+        of operations?
+          - d | q :≡ d ∈ N/{0}, q ∈ N, ⊢ ∃ k ∈ N/{0}, q = d * k
+          - divisors(m) :≡ {d ∈ N/{0}, d | q}
+          - max : set ↦ choose m ∈ set, ∀ x ∈ set, m ≥ x
+          - GCD(m, n) = m,n ∈ N/{0} ∧ ((m ≠ 0) ∨ (n ≠ 0)) ⊢ max(divisors(m) ∩ divisors(n))
+          - PROOF: GCD(0, n) = n, applying the definition
+          - PROOF: GCD(m, n) = GCD(n, m), applying the definition
+          - PROOF: GCD(m, n) = GCD(rest(m | n), m)
+              - (0 ≤ m < n), n = m * l + r, 0 ≤ r < m ⊢ GCD(m, n) ≤ GCD(r, m)
+                  - n = GCD(m, n) * k
+                  -   = m * l + r, 0 ≤ r < m
+                  -   = GCD(m, n) * d * l + r, ⊣ m = GCD(m, n) * d
+                  - r = GCD(m, n) * (k - d * l) ⊢ GCD(m, n) ∈ divisors(r)
+                  - by definition of GCD ⊢ ROOT
+              - GCD(r, m) ∈ divisors(n) ∩ divisors(m) ⊢ GCD(r, m) ≤ GCD(m, n)
+              - ⊢ GCD(m, n) = GCD(r, m)
+
+          - PROOF: let r_i is the rest computed at the ith recursive GCD call,
+            we have: 0 ≤ r_i < r_i-1 < ... < r_0 so that ∃ j where r_j = 0 and
+            GCD(r_j, m) = m
+
+
+
+** Implementation in javascript
+
+  #+BEGIN_SRC javascript
+    /**
+     ,* In Charge:
+     ,*   fullname: <Your full name>, contact: <your email>
+     ,*
+     ,*
+     ,* Author:
+     ,*   fullname: <Your full name>, contact: <your email>
+     ,*
+     ,*
+     ,* Contributors:
+     ,*   fullname: <Your full name>, contact: <your email>
+     ,*
+     ,*
+     ,********************************************************************************
+     ,*
+     ,*
+     ,* - Informal specification
+     ,*   - NNotes_expects_ <SOME FEATURE TO BE IMPLEMENTED> _so that_ <SOMEONE GAINS SOMETHING>
+     ,*       - Ex: NNotes team _expects_ a library to implement common operations
+     ,*             _so that_ the code is kept DRY.
+     ,*
+     ,* - Formal specification
+     ,*   - (def d777) Return the GCD of m and n
+     ,*   - (def f60a) Return an ordered shallow copy of the input array
+     ,*
+     ,*/
+
+
+    /*global isoBrowser:true, R, utils*/
+
+    math = null;
+
+    (function () {
+        'use strict';
+
+
+
+        /** Class imports */
+
+        // M = path/to/file/with/def.org : definitions for the reader
+        // max = M.max
+        // ...
+
+        // var x = zzz.x; definitions for both the reader and the computer
+        var genericError = utils.genericError;
+        var contains = R.contains;
+
+
+
+        /** Class implementation */
+
+        /** (ref d777) m,n ∈ N/{0} ∧ ((m ≠ 0) ∨ (n ≠ 0)) ↦ GCD(m,n)
+         ,*
+         ,* Computaton gives what we want...
+         ,*
+         ,*     d | q :≡ d ∈ N/{0}, q ∈ N, ⊢ ∃ k ∈ N/{0}, q = d * k
+         ,*     divisors(m) :≡ {d ∈ N/{0}, d | q}
+         ,*     max : set ↦ choose m ∈ set, ∀ x ∈ set, m ≥ x
+         ,*     GCD(m, n) =
+         ,*         (def 5a2e) m,n ∈ N/{0} ∧ ((m ≠ 0) ∨ (n ≠ 0))
+         ,*         ⊢ max(divisors(m) ∩ divisors(n))
+         ,*     (def d034): GCD(0, n) = n, applying the definition
+         ,*     (def 9dec): GCD(m, n) = GCD(n, m), applying the definition
+         ,*     (def 292f): GCD(m, n) = GCD(rest(m | n), m)
+         ,*         (0 ≤ m < n), n = m * l + r, 0 ≤ r < m ⊢ GCD(m, n) ≤ GCD(r, m)
+         ,*             n = GCD(m, n) * k
+         ,*               = m * l + r, 0 ≤ r < m
+         ,*               = GCD(m, n) * d * l + r, ⊣ m = GCD(m, n) * d
+         ,*             r = GCD(m, n) * (k - d * l) ⊢ GCD(m, n) ∈ divisors(r)
+         ,*             by definition of GCD ⊢ ROOT
+         ,*         GCD(r, m) ∈ divisors(n) ∩ divisors(m) ⊢ GCD(r, m) ≤ GCD(m, n)
+         ,*         ⊢ ROOT
+         ,*
+         ,* ... in a finite amount of operations:
+         ,*
+         ,*    let r_i is the rest computed at the ith recursive GCD call, we have: 0
+         ,*    ≤ r_i < r_i-1 < ... < r_0 so that ∃ j where r_j = 0 and GCD(r_j, m) =
+         ,*    m
+         ,*
+         ,*/
+        var gcd =
+                function (m,n) {
+                    /** (ref 5a2e) */ checkType([m,n], "natural") && ((m > 0) || (n > 0))
+                    /** (ref d034) */ if (m === 0) return n;
+                    /** (ref 9dec) */ if (m > n) return gcd(m,n);
+                    /** (ref 292f) */ return gcd(n % m, m);
+                };
+
+
+
+        /** Class api */
+
+        math =
+            {
+                'gcd': selectFunction
+            };
+
+
+    }());
+
+  #+END_SRC
+
+
+
+      - Quicksort:
+          - init:
+              - Array(n : Nat ∪ {∞}, T) :=
+                  - { (i, t : T) | 0 ≤ i < n }
+                  - let a : ArrayOf(n, T), 0 ≤ i < n then a(i) := t where (i, t)
+                    ∈ a
+                  - a.length := n
+              - indexOf : Array → { 0, 1, ..., A.length }
+              - a : Array(n : Nat, Integer)
+              - partition : lo, hi ∈ indexOf(A) ∧ (lo ≤ hi) →
+              - SubPermutations(A) :≡ set of arrays result of all projections of A
+                or one of theirs permutations.
+              - Index(A) :≡ n : Natural | n < A.length
+              - IndexRanges(A) :≡ {(x, y) | (x,y : Index(A)) ∧ (x ≤ y)}
+              - partitions :
+                  - B : SubPermutations(A), lo, pivot, hi : Index(B) | lo ≤ pivot < hi
+
+                  - → { a : [Integer]
+                    | a is a permutation B[lo]...B[hi]
+                    | a[lo]...a[pivot] ≤ a[pivot + 1]...a[hi] }
+
+              - next :
+                  - A : [Integer], U : IndexRanges(A) → A' : [Integer], U' : IndexRanges(A')
+                      - if U = {} then A, U
+
+                      - else ∃ (b,t) ∈ U
+                          - if b = t then A, U \ {(b,t)}
+
+                          - else ∃ p ∈ b..(t - 1) return
+                              - A' ∈ partitions(A, b, p, t)
+                              - (U \ {(b,t)}) ∪ {(b,p), (p+1,t)}
+
+              - execution:
+                  - next([4, 2, 3], {(0, 2)}) →
+                  - next([3, 2, 4], {(0, 1), (2,2)}) →
+                  - next([3, 2, 4], {(0, 1)}) →
+                  - next([2, 3, 4], {(0, 0), (1,1)}) →
+                  - next([2, 3, 4], {(1,1)}) →
+                  - next([2, 3, 4], {}) →
+                  - [2, 3, 4], {}

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+
+
+function exist {
+    hash $1 2>/dev/null || { echo >&2 "Cannot find ${1}.  Aborting."; exit 1; }
+}
+
+
+
+input="${1}"; exist ${target};
+converter="pandoc"; exist ${converter};
+target_format="html5";
+current_dir="$(pwd)";
+templates_dir="./templates"; exist "${templates_dir}";
+template="bp";
+javascript="${templates_dir}/${template}.${target_format}.js"
+css="${templates_dir}/${template}.${target_format}.css";
+jquery_js="${javascript}/jquery-v2.1.3.js"
+bootstrap_css="${css}/bootstrap-v3.3.4.css"
+bootstrap_js="${javascript}/bootstrap-v3.3.4.js"
+customization_css="${css}/customization.css"
+init_js="${javascript}/init.js"
+output_dir="web_server/code/_includes/"
+output="${output_dir}/${input}.html";
+
+
+
+"${converter}" \
+    --from=markdown+header_attributes+yaml_metadata_block+pipe_tables \
+    --to="${target_format}" \
+    --number-sections \
+    --smart \
+    --normalize \
+    --table-of-content \
+    --data-dir="${current_dir}" \
+    --template="${template}" \
+    --self-contained \
+    --css="${bootstrap_css}" \
+    --css="${customization_css}" \
+    --include-after-body="${jquery_js}" \
+    --include-after-body="${bootstrap_js}" \
+    --include-after-body="${init_js}" \
+    --standalone \
+    --output "${output}" \
+    "${input}";

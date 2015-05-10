@@ -1,0 +1,10 @@
+{
+    "meta": { "version": "0.0.0" }
+    , "summary": "Describes how leslie lamport writes a program"
+    , "name": "build_programs_like_houses"
+    , "uuid": "ab855975-bb71-48d5-9875-9c1ad129d78f"
+    , "version": "0.0.0"
+    , "files": ["synthese.org"]
+    , "use": [ ]
+    , "export": [("specification", "32e3")]
+}

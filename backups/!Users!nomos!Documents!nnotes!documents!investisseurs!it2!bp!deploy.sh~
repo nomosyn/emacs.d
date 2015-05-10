@@ -1,0 +1,8 @@
+ROOT="$(pwd)"
+cd "$ROOT/deploy"
+git rm -r .
+cp -r ../code/_site/* .
+git add .
+git commit -am "update"
+git push heroku master
+cd "$ROOT"

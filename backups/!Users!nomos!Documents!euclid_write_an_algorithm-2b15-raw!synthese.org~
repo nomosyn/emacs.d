@@ -1,0 +1,40 @@
+* State machine
+
+  - <<d7ca>> A relation.  A,B : Set, ⊢ relation on A and B :≡ subset of A x B
+
+  - <<e719>> A variable. A variable :≡ (name, range) where range represents all
+    possible values associated to this name.
+
+  - <<3da7>> An instanciated variables.  An instanciated variable is (name,
+    value ∈ variable.range).
+
+  - <<a040>> A state.  A state is a set of instanciated variables.
+
+  - <<4a5d>> A computation.  A computation is an ordered sequence of states.
+
+  - <<7805>> A state machine.  A state machine is:
+
+      - A set of states S
+      - A set of initial states I, I ⊆ S
+      - A relation N on S x S
+      - S, I, N ⊢ { computations :≡ s1, s2, ..., sn
+                  , s1 ∈ I, 1 ≤ ∀ i ≤ n-1, (si, si+1) ∈ N }
+
+  - <<9c81>> An event state machine.  An event state machine is:
+
+      - A set of states S
+      - A set of initial states I, I ⊆ S
+      - A set of actions A ∪ {⊥} where ⊥ denotes the initial action.
+      - A relation N on S x A x S
+      - S, I, N ⊢ { computations :≡ s1, a2-s2, ..., an-sn
+                  , s1 ∈ I, 1 ≤ ∀ i ≤ n-1, (si, ai, si+1) ∈ N }
+
+  - Example:
+
+      - P, C ∈ atomic operations
+      - var pc ∈ {0, 1}
+      - Init :≡ (pc = 0)
+      - Next :≡   (pc = 0) ∧ P ∧ (pc' = 1)
+                ∨ (pc = 1) ∧ C ∧ (pc' = 0)
+      - State machine :≡ Init ∧ Next*
+      - Execution: (pc = 0, P), (pc = 1, C), (pc = 0, P), (pc = 1, C) ...

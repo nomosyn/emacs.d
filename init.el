@@ -1,8 +1,4 @@
 
-(add-hook 'after-save-hook
-          (lambda ()
-            (cond ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle)))))
-
 (add-hook 'after-init-hook (lambda ()
                              (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                                                       ("org-mode" . "http://orgmode.org/elpa/")
@@ -80,6 +76,10 @@
                              
                              ;; Capture
                              (global-set-key (kbd "C-c c") 'org-capture)
+                             
+                             
+                             ;; Multi cursors
+                             (global-set-key (kbd "C-c m c") 'mc/edit-lines)
                              (defun flatten (list-of-lists?)
                              
                                ;; Verify argument type: list-of-lists? : List(List)
@@ -173,8 +173,7 @@
                              (defconst user/elpa-dir (concat user/emacs-dir (file-name-as-directory "elpa")))
                              (defconst user/org-dir (concat user/documents-dir (file-name-as-directory "org")))
                              (defconst user/local-bin-dir "/usr/local/bin/")
-                             (defconst user/nnotes-tasks-file (concat user/org-dir "todo.org"))
-                             (defconst user/todo-file (concat user/org-dir "me.org"))
+                             (defconst user/tasks-file (concat user/documents-dir "tasks.org"))
                              (defconst user/libs (concat user/emacs-dir (file-name-as-directory "libs")))
                              (defconst user/org2asciidoc (concat user/libs (file-name-as-directory "org-asciidoc")))
                              
@@ -358,9 +357,9 @@
                              
                              
                              
-                             (setq org-agenda-files (list
-                                                     user/todo-file
-                                                     user/nnotes-tasks-file))
+                             (setq org-agenda-files (list user/tasks-file))
+                             
+                             
                              (setq org-agenda-span 'month)
                              (setq org-deadline-warning-days 1)
                              (setq org-agenda-skip-scheduled-if-done t)
@@ -375,14 +374,10 @@
                                    '(("p"
                                       "personal"
                                       entry
-                                      (file+headline user/todo-file "tasks")
-                                      "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)
-                             
-                                     ("n"
-                                      "nnotes"
-                                      entry
-                                      (file+headline user/nnotes-tasks-file "tasks")
+                                      (file+headline user/tasks-file "tasks")
                                       "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
+                             
+                             
                              
                              
                              (setq org-src-fontify-natively t)
@@ -422,14 +417,16 @@
                              
                              (setq org-enable-table-editor t)
                              
-                             (add-to-list 'org-export-backends 'taskjuggler)
-                             (require 'ox-taskjuggler)
+                              ;; (add-to-list 'org-export-backends 'taskjuggler)
+                              ;; (require 'ox-taskjuggler)
                              
-                             (add-to-list 'org-export-backends 'md)
-                             (require 'ox-md)
+                              ;; (add-to-list 'org-export-backends 'md)
+                              ;; (require 'ox-md)
                              
-                             (add-to-list 'org-export-backends 'asciidoc)
-                             (require 'ox-asciidoc)
+                              ;; (add-to-list 'org-export-backends 'asciidoc)
+                              ;; (require 'ox-asciidoc)
+                             
+                             (require 'org-habit)
                              (require 'sws-mode)
                              (require 'stylus-mode)
                              (require 'handlebars-sgml-mode)
@@ -468,12 +465,8 @@
                              
                              (add-hook 'js2-mode-hook 'prettify-js-symbols)
                              
-                             (add-hook 'after-save-hook
-                                       (lambda ()
-                                         (cond ((string= buffer-file-name "story-template-builder.org") (org-babel-tangle)))))
-                             
-                             (require 'context-coloring)
-                             (add-hook 'js2-mode-hook 'context-coloring-mode)
+                             ;; (require 'context-coloring)
+                             ;; (add-hook 'js2-mode-hook 'context-coloring-mode)
                              
                              (require 'tex)
                              (add-hook 'TeX-mode-hook (lambda ()
@@ -489,20 +482,6 @@
                              (TeX-global-PDF-mode t)
                              (setq LaTeX-indent-level 4)
                              (setq LaTeX-item-indent 0)
-                             
-                             
-                             (add-hook 'after-save-hook
-                                       (lambda ()
-                                         (let ((cur-file-name ""))
-                                           (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
-                                           (cond
-                                            ((string-match "^french-tech-programme.*\.tex$" cur-file-name) (shell-command "./build.sh programme"))
-                                            ((string-match "^french-tech-demandeur.*\.tex$" cur-file-name) (shell-command "./build.sh demandeur"))
-                                            ((string-match "^network_notes_prop-2015.*\.tex$" cur-file-name) (shell-command "./build.sh"))
-                                            ((string-match "slides-journee\.tex" cur-file-name) (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
-                                           )
-                                         )
-                                       )
                              (add-hook 'emacs-lisp-mode-hook (lambda ()
                                                                (rainbow-mode)
                                                                (rainbow-delimiters-mode)
@@ -510,4 +489,18 @@
                              ;; (load-file "libs/ProofGeneral-4.3pre150202/ProofGeneral/generic/proof-site.el")
                              ;; (setq proof-prog-name "hoqtop")
                              (setq geiser-racket-binary "/Applications/Racketv6.1.1/bin/racket")
+                             (add-hook 'after-save-hook
+                                       (lambda ()
+                                         (let ((cur-file-name ""))
+                                           (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+                                           (cond
+                                            ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle))
+                                            ((string-match "^bp.md$" cur-file-name) (shell-command "./markdown_to_html5.sh bp.md"))
+                                            ((string-match "^french-tech-programme.*\.tex$" cur-file-name) (shell-command "./build.sh programme"))
+                                            ((string-match "^french-tech-demandeur.*\.tex$" cur-file-name) (shell-command "./build.sh demandeur"))
+                                            ((string-match "^network_notes_prop-2015.*\.tex$" cur-file-name) (shell-command "./build.sh"))
+                                            ((string-match "slides-journee\.tex" cur-file-name) (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
+                                           )
+                                         )
+                                       )
                              ))

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function exist {
+    hash $1 2>/dev/null || { echo >&2 "Cannot find ${1}.  Aborting."; exit 1; }
+}
+
+input="${1}"; exist ${target};
+current_dir="$(pwd)";
+templates_dir="./templates"; exist "${templates_dir}";
+converter="pandoc"; exist ${converter};
+target_format="html5";
+template="bp";
+javascript="${templates_dir}/${template}.${target_format}.js"
+css="${templates_dir}/${template}.${target_format}.css";
+jquery="${javascript}/jquery-v2.1.3.js"
+bootstrap="${javascript}/bootstrap-v3.3.4.js"
+startup="${javascript}/startup.js"
+output=${input}.html;
+
+"${converter}" \
+    --from=markdown+header_attributes+yaml_metadata_block \
+    --to="${target_format}" \
+    --smart \
+    --normalize \
+    --table-of-content \
+    --data-dir="${current_dir}" \
+    --template="${template}" \
+    --self-contained \
+    --css="${css}" \
+    --include-after-body="${jquery}" \
+    --include-after-body="${bootstrap}" \
+    --include-after-body="${startup}" \
+    --standalone \
+    --output "${output}" \
+    "${input}";
+
+#open -a Google\ Chrome "${output}";

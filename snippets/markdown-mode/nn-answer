@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: nn-answer
+# key: nna
+# --
+~~~ answer
+$0
+~~~

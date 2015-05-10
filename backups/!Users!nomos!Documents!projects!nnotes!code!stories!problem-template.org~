@@ -1,0 +1,135 @@
+* Header
+
+  name: problem_template
+  uuid: 0fd24336-9391-4000-a9c9-7938745cb8d5
+  version: 6.0.0
+  contributors:
+      - full_name: Pierre-Henry Fröhring
+        email: pierrehenry.frohring@openmailbox.org
+
+
+
+* Definitions
+
+  <<FixPoint>>: x is a [[FixPoint]] of function f means that f(x) = x.
+
+  <<wikipedia>>: [[http://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal][wikipedia]]
+
+  <...>
+
+
+
+* NNotes _expects_ make problems to solve: clear, solvable and rankable
+
+  - Scene: Focus on the moment of frustration. What is going on? What is the
+    user about to attempt?
+
+  - Desired outcome: What is the user trying to accomplish?  Why is it important?
+
+  - Attempted approach: What the user actually do so that the problem is
+    considered solved for him?
+
+  - Interfering factors: What goes wrong? How and why does it goes wrong?
+
+  - Economical consequences: So what? What is the impact of the user failing to
+    accomplish the task productively?
+
+** Exemple:
+
+  - Scene: _NNotes team_ just got a negative feedback on the platform from a
+    user.  NNotes _is about to_ about to rank the corresponding problem among
+    all other problems.
+
+  - Desired outcome: Ideally, once the new problem has been included in the
+    problem list, NNotes focuses its energy on the most important problem to
+    solve.
+
+  - Attempted approach: NNotes gather into a meeting and discuss for houres
+    until everyone feal that there is actually a problem that is worth solving
+    and is important.
+
+  - Interfering factors: at the next meeting, a solution is proposed by a part
+    of the team to the other that addresses a problem that no one has.
+
+  - Economical consequences: discussions continue for hour adding to the week
+    that has been spent on the solution.  Conflicts arise and money is wasted
+    for nothing relevant to the user.
+
+
+
+
+* Sufficient conditions for a solution
+
+  - [ ] A text based template which structures make it clear:
+
+      - [ ] What cost/gain ratio to solve this problem is for both NNotes and
+        users.
+
+          - Why a template? problem = problem_template(feedback).  Then, common
+            structures among problems make all problems comparable and so rankable.
+
+          - Why text based? to make it fit the C4.1 protocol in order to maximize the
+            signal/noise ratio of exchanges among team members.
+
+      - [ ] The list of assertations that the proposed solution must make true
+        to be considered a solution.
+
+          - [ ] Why a list of assertions?  Because else, it's very difficult to
+            decide if a solution answers the problem or not.
+
+  - [ ] <SOMETHING THAT THE SOLUTION MAKES TRUE>
+
+  - [ ] <...>
+
+
+
+** Implementation
+
+   #+BEGIN_SRC org :tangle "./problem.org"
+     # This template is defined and tangled from the file: "problem-template-draft.org"
+     # See how to tangle document from an org file here: http://orgmode.org/org.html
+     # PROBLEM-TEMPLATE-VERSION: 6.0.0
+
+
+
+     ,* Header
+
+       name: problem_template
+       uuid: 0fd24336-9391-4000-a9c9-7938745cb8d5
+       version: 6.0.0
+       contributors:
+           - full_name: Pierre-Henry Fröhring
+             email: pierrehenry.frohring@openmailbox.org
+
+
+
+     ,* Definitions
+
+       - <<FixPoint>>: x is a [[FixPoint]] of function f means that f(x) = x.
+
+       - <<wikipedia>>: [[http://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal][wikipedia]]
+
+       - <...>
+
+
+
+     ,* <SOMEONE> _expects_ <SOMETHING TO BE TRUE>
+
+       - Scene: <scene>
+
+       - Attempted approach: <attempted approach>
+
+       - Interfering factors: <Interfering factors>
+
+       - Economical consequences: <Economical consequences>
+
+
+
+     ,* Sufficient solution's conditions
+
+       - [ ] <SOMETHING THAT THE SOLUTION MAKES TRUE>
+
+       - [ ] <SOMETHING THAT THE SOLUTION MAKES TRUE>
+
+       - [ ] ...
+   #+END_SRC

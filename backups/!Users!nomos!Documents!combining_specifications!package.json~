@@ -1,0 +1,10 @@
+{
+    "meta": { "version": "0.0.0" }
+    , "summary": "Argue if a spec should be typed or not."
+    , "name": "should_spec_be_typed"
+    , "uuid": "4f404abb-1086-4d0d-99e4-7f8bf6ab7f6d"
+    , "version": "0.0.0"
+    , "files": ["synthese.org"]
+    , "use": [("build_programs_like_houses", "ab855975-bb71-48d5-9875-9c1ad129d78f")]
+    , "export": []
+}

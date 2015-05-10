@@ -1,0 +1,12 @@
+{
+    "meta": { "version": "0.0.0" }
+    , "summary": "Describes how do we keep track of documents that change."
+    , "name": "web-of-names-uuids-hashes"
+    , "uuid": "db33a342-66b3-4bda-82c3-19d42cae0570"
+    , "version": "0.0.0"
+    , "files": ["synthese.org"]
+    , "use": ["http://en.wikipedia.org/wiki/Universally_unique_identifier"
+            , "http://en.wikipedia.org/wiki/Hash_function"
+            , "http://en.wikipedia.org/wiki/Secure_Hash_Algorithm"]
+    , "export": [("distributed document header", "492e")]
+}

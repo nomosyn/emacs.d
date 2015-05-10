@@ -1,0 +1,61 @@
+* [[7c69][Leslie lamport think]]
+
+  - <<1de4>> An algorithm is an abstract program saying what the [[a442][program]] should do, not
+    how to do it.
+      - <<a442>> A [[7149][program]] is a set of [[4920][behaviours]] ⇔ [[1de4][algorithm]] + how to build stuff
+
+      - <<7149>> A program execution is represented by a [[4920][behaviour]]
+
+      - <<4920>> A behaviour is a sequence of [[6750][state]] ⇔ all the stuff that have been/will be built
+
+      - <<6750>> A [[6750][state]] is an assignement of values to variables ⇔ a stuff
+
+  - How to describe a set of behaviours ?
+      - Set of possible initial [[6750][state]]
+
+      - Next [[6750][state]] relation describing all possible successor [[6750][states]] of any
+        [[6750][state]].
+
+      - Example 1:
+          - init: x,y : Nat
+
+          - next: Nat Nat → Nat Nat
+                  if x = y then x, y
+                  if x > y then next(x - y, y)
+                  if x < y then next(x, y - x)
+
+          - execution: next(12, 6) → next(6, 6) → (6, 6)
+
+      - Example 2:
+          - init:
+              - A : [Integer]
+              - SubPermutations(A) :≡ set of arrays result of all projections of A
+                or one of theirs permutations.
+              - Index(A) :≡ n : Natural | n < A.length
+              - IndexRanges(A) :≡ {(x, y) | (x,y : Index(A)) ∧ (x ≤ y)}
+              - partitions :
+                  - B : SubPermutations(A), lo, pivot, hi : Index(B) | lo ≤ pivot < hi
+
+                  - → { a : [Integer]
+                        | a is a permutation B[lo]...B[hi]
+                          | a[lo]...a[pivot] ≤ a[pivot + 1]...a[hi] }
+
+              - next :
+                  - A : [Integer], U : IndexRanges(A) → A' : [Integer], U' : IndexRanges(A')
+                      - if U = {} then A, U
+
+                      - else ∃ (b,t) ∈ U
+                          - if b = t then A, U \ {(b,t)}
+
+                          - else ∃ p ∈ b..(t - 1) return
+                              - A' ∈ partitions(A, b, p, t)
+                              - (U \ {(b,t)}) ∪ {(b,p), (p+1,t)}
+
+              - execution:
+                  - next([4, 2, 3], {(0, 2)}) →
+                  - next([3, 2, 4], {(0, 1), (2,2)}) →
+                  - next([3, 2, 4], {(0, 1)}) →
+                  - next([2, 3, 4], {(0, 0), (1,1)}) →
+                  - next([2, 3, 4], {(1,1)}) →
+                  - next([2, 3, 4], {}) →
+                  - [2, 3, 4], {}

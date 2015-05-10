@@ -1,0 +1,23 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Committer: Pierre-Henry Fröhring <nomos@Pierre-Henrys-MacBook-Pro.local>
+#
+# On branch master
+# Changes to be committed:
+#	deleted:    raw-2b15-euclid_write_an_algorithm/source.org
+#	deleted:    raw-2b15-euclid_write_an_algorithm/synthese.org
+#	modified:   stable-2848-state_the_problem_first/synthese.org
+#	modified:   stable-2cfe-building_software_like_house/synthese.org
+#
+# Untracked files:
+#	.DS_Store
+#	raw-1334-connecting_things_together/
+#	raw-1cf7-programming_for_the_expression_of_ideas/
+#	raw-2b15-euclid_write_an_algorithm/source.md
+#	raw-2b15-euclid_write_an_algorithm/synthese.md
+#	raw-333a-specifying_systems/
+#	raw-e8a3-always-bet-on-text/
+#	stable-9de2-thinking_for_programmers/.DS_Store
+#

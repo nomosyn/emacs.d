@@ -1,0 +1,335 @@
+/**
+ *
+ *  (def 41c7) Init
+ *    s :≡ [ <nbrClick natural identity(natural) 0>
+ *           <usrName string identity(string) ""> ]
+ *
+ *  (def 7104) Modifiers
+ *    { <incr natural λs,n:Natural.s' where s'.nbrClick' = s.nbrClick + n>
+ *      <setName string λs,str:string.s' where s'.userName' = str> }
+ *
+ *  (def c913) Next
+ *    next(k ∈ string x ∈ any):
+ *      if   ∃ <n X f> ∈ modifiers:
+ *         ∧ (k = n)
+ *         ∧ (x ∈ X)
+ *         ∧ (s' = ((t = f(s x)) ∧ reactive_update(t)))
+ */
+(function () {
+    'use strict';
+
+    if (Meteor.isClient) {
+
+
+
+        var error = function (code, reason, details) { throw new Meteor.Error(code, reason, details); };
+
+
+
+        var identity = function(set) { return function(e) { return set.member(e) ? e
+                                         : error(0, 'not a member of set: ' + set.name(), ''); }; };
+
+
+        var buildSet =
+                function (name, value, constructor, equality, member) {
+                    return {
+                        'name': function () { return name; }
+                        , 'choose': function () { return value; }
+                        , 'constructor': constructor
+                        , 'equality': equality
+                        , 'member': member
+                    };
+                };
+
+
+        var obj =
+                (function () {
+                    var member = function(s) { return typeof s === 'object'; };
+                    return buildSet('obj'
+                               , { }
+                               , identity({ 'member': member })
+                               , function (x,y) {
+                                   return member(x)
+                                       && member(y)
+                                       && x === y;
+                               }
+                               , member);
+                }());
+
+
+        var natural =
+                (function () {
+
+                    var member = function (n) { return typeof n === 'number'; };
+
+                    return buildSet('natural'
+                               , 0
+                               , identity({ 'member': member })
+                               , function (x,y) {
+                                   return member(x)
+                                       && member(y)
+                                       && x === y;
+                               }
+                               , member);
+                }());
+
+
+
+        var str =
+                (function () {
+                    var member = function(s) { return typeof s === 'string'; };
+                    return buildSet('str'
+                               , ''
+                               , identity({ 'member': member })
+                               , function (x,y) {
+                                   return member(x)
+                                       && member(y)
+                                       && x === y;
+                               }
+                               , member);
+                }());
+
+
+
+        var boundedAutorunVar =
+                function (lifeSpan) {
+                    return function (name, set, computation) {
+
+                        var rVar = new ReactiveVar(set.choose(), set.equality);
+
+                        lifeSpan.autorun(function () { rVar.set(computation()); });
+
+                        var res =
+                                {
+                                    'name': function () { return name; }
+                                    , 'get': function () { return rVar.get(); }
+                                    , 'set': function (args) {
+                                        set.member(args) && rVar.set(args);
+                                        return res;
+                                    }
+                                };
+
+                        return res;
+                    }
+                };
+
+
+
+        Template.main.onCreated(
+            function () {
+                var tptInstance = this;
+
+
+
+                var buildVar = boundedAutorunVar(tptInstance);
+
+
+
+                /** (begin (ref 41c7)) state */
+                tptInstance.state = { };
+                var nbrClick =
+                        tptInstance.state.nbrClick =
+                        buildVar('nbrClick'
+                                 , natural
+                                 , function () { return identity(natural)(nbrClick ? nbrClick.get() : 0); });
+
+                var usrName =
+                        tptInstance.state.usrName =
+                        buildVar('usrName'
+                                 , str
+                                 , function () { return identity(str)(usrName ? usrName.get() : 'lolilol'); });
+                /** (end (ref 41c7)) state */
+
+
+
+                /** (ref 7104) state modifiers */
+                var modifiers =
+                        [
+                            { 'name': 'incr', 'set': natural, 'func': function (s, n) { s.nbrClick.set(nbrClick.get() + n); return s; } }
+                            , { 'name': 'setName', 'set': str, 'func': function (s, n) { s.usrName.set(n); return s; } }
+                        ];
+
+
+                /** (ref 2a35) next */
+                tptInstance.next =
+                    function (name, value) {
+
+                        var modifier = modifiers.filter(function (m) { return m.name === name; })[0];
+                        if (modifier && modifier.set.member(value)) modifier.func(tptInstance.state, value);
+
+                        return this;
+                    };
+            });
+
+
+
+        Template.main.helpers(
+            {
+                'nbrClick': function () { return Template.instance().state.nbrClick.get(); }
+                , 'userName': function () { return Template.instance().state.usrName.get(); }
+                , 'instance': function () { return Template.instance(); }
+            });
+
+
+
+        Template.main.events(
+            {
+                'click button': function (evt, tpt) {
+                    tpt.next('incr', 1);
+                    return false;
+                }
+
+                , 'keyup input': function (evt, tpt) {
+                    tpt.next('setName', evt.target.value);
+                    return false;
+                }
+            });
+
+
+
+        /** Left Template
+         *
+         *  hostTemplates = set of objects with this pattern: { 'state': { 'nbrClick': { 'get': λ.n:natural }, 'usrName': { 'get': λ.s:string } }
+         *                                                    , 'next': (λname,value.ø where <name value> ∈ {<incr value ∈ natural> <setName value ∈ string> }) }
+         *
+         *  (def c615) Init
+         *    s :≡ [ <hostTemplate hostTemplates hostTemplates hostTemplate>
+         *          <usrName string usrName "">
+         *          <nbrClick natural nbrClick "">
+         *          <fullClick natural nbrClick + hostTemplate.nbrClick _>
+         *          <fullName string usrName + hostTemplate.usrName _>]
+         *
+         *  (def 85f0) Modifiers
+         *    modifiers :≡ [ <incr natural (s'.nbrClick' = s.nbrClick + n)>
+         *                   <setName string (s'.usrName' = str)>
+         *                   <incrParent natural (s.hostTemplate.next(incr, n); s)>
+         *                   <setNameParent string (s.hostTemplate.next(setName, str); s)> ]
+         *
+         *  (def c913) Next
+         *    next(k ∈ string x ∈ any):
+         *      if   ∃ <n X f> ∈ modifiers:
+         *         ∧ (k = n)
+         *         ∧ (x ∈ X)
+         *         ∧ (s' = ((t = f(s x)) ∧ reactive_update(t)))
+         */
+        Template.left.onCreated(
+            function () {
+                var tptInstance = this;
+                var buildVar = boundedAutorunVar(tptInstance);
+
+
+                var hostTemplates =
+                        (function () {
+                            var member =
+                                    function(e) { return typeof (e === 'object')
+                                           && (typeof e.next === 'function')
+                                           && (typeof e.state === 'object')
+                                           && (typeof e.state.nbrClick === 'object')
+                                           && (typeof e.state.nbrClick.get === 'function')
+                                           && (typeof e.state.usrName === 'object')
+                                           && (typeof e.state.usrName.get === 'function'); };
+
+                            return buildSet('hostTemplates'
+                                       , {
+                                           'next': function (s,value) { return s; }
+                                           , 'state': {
+                                               'nbrClick': { 'get': function () { return 0; } }
+                                               , 'usrName': { 'get': function () { return ''; } }
+                                           }
+                                       }
+                                       , identity({ 'member': member })
+                                       , function (x,y) { return member(x) && member(y) && (x === y); }
+                                       , member);
+                        }());
+
+
+
+                /** (begin (ref c615)) Init */
+                tptInstance.state = { };
+                var hostTemplate =
+                        tptInstance.state.hostTemplate =
+                        buildVar('hostTemplate', hostTemplates, function (s) { return tptInstance.data; });
+
+                var usrName =
+                        tptInstance.state.usrName =
+                        buildVar('usrName', str, function () { return identity(str)(usrName ? usrName.get() : 'userName'); });
+
+                var nbrClick =
+                        tptInstance.state.nbrClick =
+                        buildVar('nbrClick', natural, function () { return identity(natural)(nbrClick ? nbrClick.get() : 0); });
+
+                var fullName =
+                        tptInstance.state.fullName =
+                        buildVar('fullName', str, function () { return usrName.get() + ' ' + hostTemplate.get().state.usrName.get(); });
+
+                var fullClick =
+                        tptInstance.state.fullClick =
+                        buildVar('fullClick', natural, function () { return nbrClick.get() + hostTemplate.get().state.nbrClick.get(); });
+                /** (end (ref c615)) Init */
+
+
+
+                /** (ref 85f0) Modifier */
+                var modifiers =
+                        [
+                            { 'name': 'incr', 'set': natural, 'func': function (s, n) { s.nbrClick.set(nbrClick.get() + n); return s; } }
+                            , { 'name': 'setName', 'set': str, 'func': function (s, n) { s.usrName.set(n); return s; } }
+                            , { 'name': 'incrParent', 'set': natural, 'func': function (s, n) { hostTemplate.get().next('incr', n); return s; } }
+                            , { 'name': 'setNameParent', 'set': str, 'func': function (s, n) { hostTemplate.get().next('setName', n); return s; } }
+                        ];
+
+
+
+                /** (ref c913) Next */
+                tptInstance.next =
+                    function (name, value) {
+
+                        var modifier = modifiers.filter(function (m) { return m.name === name; })[0];
+                        if (modifier && modifier.set.member(value)) modifier.func(tptInstance.state, value);
+
+                        return this;
+                    };
+            });
+
+
+
+        Template.left.helpers({
+            'nbrClick': function () {
+                return Template.instance().state.fullClick.get();
+            }
+
+            , 'userName': function () {
+                return Template.instance().state.fullName.get();
+            }
+        });
+
+
+
+        Template.left.events({
+            'click #incr': function (evt, tpt) {
+                tpt.next('incr', 2);
+                return false;
+            }
+
+            , 'click #incr_parent': function (evt, tpt) {
+                tpt.next('incrParent', 2);
+                return false;
+            }
+
+
+            , 'keyup #myname': function (evt, tpt) {
+                tpt.next('setName', evt.target.value);
+                return false;
+            }
+
+            , 'keyup #setname_parent': function (evt, tpt) {
+                tpt.next('setNameParent', evt.target.value);
+                return false;
+            }
+
+        });
+
+
+    }
+
+}());

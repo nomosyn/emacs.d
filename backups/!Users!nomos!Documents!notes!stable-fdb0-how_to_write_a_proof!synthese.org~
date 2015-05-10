@@ -1,0 +1,60 @@
+* How to right a proof
+
+  - "The best way I know to eliminate errors is to imagine that there is a
+    curious child sitting next to us. Every time we write an assertion, the
+    child asks: Why?"
+
+  - Example:
+
+      - If f'(x) > 0 ∀ x ∈ interval I, then f is increasing on I.
+          1. It suffices to:
+               1. assume
+                    1. a and b are points in I 2.
+                    2. a < b
+               2. prove f (b) > f (a).
+                  Proof: By definition of an increasingfunction.
+
+          2. There is some x in (a, b) with f'(x) = .
+             Proof: By assumptions 1.1 and 1.2, the hypothesis that f is
+             differentiable on I , and the Mean Value Theorem.
+
+          3. f'(x) > 0 ∀ x ∈ (a,b)
+             Proof: By the hypothesis of the corollary and assumption 1.1.
+
+          4. (f(b) - f(a)) / (b - a) > 0
+             Proof: By 2 and 3.
+
+          5. Q.E.D.
+             Proof: Assumption 1.2 implies b −a > 0, so 4 implies f(b)−f(a) > 0,
+             which implies f (b) > f (a). By 1, this proves the corollary.
+
+  - Template:
+
+      - <Assertion to prove>
+
+          - <Sufficient condition that makes the assertion true>
+            <Proof>
+
+          - <Assertion>
+            <Proof>
+
+          - <Assertion>
+            <Proof>
+
+          - ...
+
+          - Q.E.D
+            <Proof>
+
+  - How much detail is necessary? It depends on the "sophistication of the reader"
+
+
+  - "If you are writing the proof for yourself to make sure that the theorem is
+    correct, then the answer is simple: if the truth of a statement is not
+    completely obvious, or if you suspect that there may be just the slightest
+    possibility that it is not correct, then more detail is needed. When you
+    write a proof, you believe the theorem to be true. The only way to avoid
+    errors is to be ruthlessly suspicious of everything you believe. Otherwise,
+    your natural desire to confirm what you already believe to be true will
+    cause you to miss gaps in the proof; and every gap could hide an error that
+    makes the entire result wrong."

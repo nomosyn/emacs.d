@@ -1,0 +1,7 @@
+* Should a spec be typed
+
+- 5. conclusion: "[...] A working formalism [for a spec] should be designed on
+  practical grounds.For types to be worth using, they must offer some
+  benefit.That benefit can lie only in the realm of computerized tools.Without
+  mechanical support, types have nothing to offer set theory’s greater
+  flexibility makes it better suited to writing hand proofs. [...]"
