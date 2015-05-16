@@ -1,6 +1,0 @@
----
-layout: default
-title:  'NNotes : apprendre les uns des autres'
----
-
-{% include nnotes-bp.html %}

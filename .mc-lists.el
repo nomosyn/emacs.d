@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        electric-newline-and-maybe-indent
         org-self-insert-command
         ))
 

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-pandoc --from=markdown --to=html5 --smart --normalize --standalone --output=test.html test.md; open test.html;

@@ -1,5 +1,0 @@
-$('body').scrollspy(
-    {
-        'target': '.bs-docs-sidebar'
-        , 'offset': Math.floor(Math.max(document.documentElement.clientHeight, window.innerHeight || 0) / 3)
-    });

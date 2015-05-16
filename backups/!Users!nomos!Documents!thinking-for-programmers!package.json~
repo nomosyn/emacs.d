@@ -1,9 +1,0 @@
-{
-    "summary": "Describes how to structure an implementation."
-    "name": "thinking-for-programmers"
-    "uuid": "6ea363c7-d07d-441f-ad21-316701266a23"
-    "version": "0.0.0"
-    "files": ["synthese.org"]
-    "use": [ ]
-    "export": [("contract", "c296"), ("pb/sol", "72d2"), ("sbom", "2bb5")]
-}

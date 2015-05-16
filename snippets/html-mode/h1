@@ -1,5 +1,5 @@
 # -*- mode: snippet; require-final-newline: nil -*-
-# name: math-subset
-# key: $subset
+# name: h1
+# key: h1
 # --
-⊂
+<h1>$0</h1>

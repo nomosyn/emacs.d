@@ -1,7 +1,0 @@
----
-package:
-  sha1:
-  urls:
-    - file://localhost/<local_path>/synthese.md
-    - https://...
----
