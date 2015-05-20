@@ -1,5 +1,5 @@
 # -*- mode: snippet; require-final-newline: nil -*-
-# name: span
-# key: span
+# name: nav
+# key: nav
 # --
-<span>$0</span>
+<nav class="$1">$0</nav>

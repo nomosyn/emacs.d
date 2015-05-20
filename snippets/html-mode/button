@@ -1,5 +1,5 @@
-# -*- mode: snippet -*-
+# -*- mode: snippet; require-final-newline: nil -*-
 # name: button
-# key: <button
+# key: button
 # --
-<button>$0</button>
+<button class="$1">$0</button>

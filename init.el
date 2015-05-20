@@ -50,6 +50,11 @@
                              
                              
                              
+                             ;; switch frame.
+                             (global-set-key (kbd "C-i") 'other-frame)
+                             
+                             
+                             
                              ;; search string :
                              ;;;; in buffer
                              (global-set-key (kbd "C-s") 'isearch-forward)

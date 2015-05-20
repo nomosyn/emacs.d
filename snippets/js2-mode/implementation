@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: implementation
+# key: <imp
+# --
+(imp `(downcase (nth 1 (split-string (org-id-new) "-")))`)$0
