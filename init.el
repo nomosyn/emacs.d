@@ -66,7 +66,7 @@
                              
                              
                              ;; search files/buffer among most probable candidates.
-                             (global-set-key (kbd "C-f") 'projectile-find-file)
+                             (global-set-key (kbd "C-:") 'projectile-find-file)
                              (global-set-key (kbd "C-ù") 'helm-mini)
                              
                              

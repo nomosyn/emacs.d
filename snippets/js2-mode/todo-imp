@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: todo-imp
+# key: <todoi
+# --
+(todo (imp `(downcase (nth 1 (split-string (org-id-new) "-")))`))$0

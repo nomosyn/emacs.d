@@ -1,1 +1,0 @@
-(define-package "context-coloring" "6.2.1" "Highlight by scope" '((emacs "24") (js2-mode "20150126")) :url "http://elpa.gnu.org/packages/context-coloring.html" :keywords '("convenience" "faces" "tools"))
