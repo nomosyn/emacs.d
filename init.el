@@ -60,14 +60,16 @@
                              (global-set-key (kbd "C-s") 'isearch-forward)
                              (global-set-key (kbd "C-r") 'isearch-backward)
                              
-                             ;;;; in project
-                             (global-set-key (kbd "C-^") 'projectile-ag)
+                             ;;;; in this directory
+                             (global-set-key (kbd "C-^") 'helm-ag)
                              
+                             ;;;; in the current project
+                             (global-set-key (kbd "C-)") 'helm-projectile-ag)
                              
                              
                              ;; search files/buffer among most probable candidates.
-                             (global-set-key (kbd "C-:") 'projectile-find-file)
-                             (global-set-key (kbd "C-ù") 'helm-mini)
+                             (global-set-key (kbd "C-:") 'helm-projectile-find-file)
+                             (global-set-key (kbd "C-ù") 'helm-recentf)
                              
                              
                              
