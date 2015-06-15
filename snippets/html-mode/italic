@@ -2,4 +2,4 @@
 # name: italic
 # key: i
 # --
-<i>$0</i>
+<i class="">$0</i>

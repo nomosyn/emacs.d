@@ -1,5 +1,5 @@
 # contributor: Jimmy Wu <frozenthrone88@gmail.com>
 # name: <input ... />
-# key: <in
+# key: input
 # --
 <input type="$1" $0/>

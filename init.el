@@ -91,6 +91,15 @@
                              
                              ;; Multi cursors
                              (global-set-key (kbd "C-c m c") 'mc/edit-lines)
+                             
+                             ;; Move forward one element
+                             (global-set-key (kbd "M-n") 'org-forward-element)
+                             
+                             ;; Move forward one element
+                             (global-set-key (kbd "M-p") 'org-backward-element)
+                             
+                             ;; backward one character
+                             (global-set-key (kbd "C-b") 'backward-char)
                              (defun flatten (list-of-lists?)
                              
                                ;; Verify argument type: list-of-lists? : List(List)
@@ -314,6 +323,7 @@
                              (global-set-key (kbd "C-c b") 'org-iswitchb)
                              (setq org-hide-leading-stars t)
                              (setq org-list-indent-offset 2)
+                             (setq org-modules '(org-bbdb org-bibtex org-docview org-gnus org-habit org-id org-info org-irc org-mhe org-rmail org-w3m))
                              
                              
                              (defun org-shortcuts ()
@@ -323,8 +333,8 @@
                                (local-set-key (kbd "C-c o") 'org-clock-out)
                                (local-set-key (kbd "C-c t") 'org-todo)
                                (local-set-key (kbd "C-c r") 'org-clock-report)
-                               (local-set-key (kbd "C-c .") 'org-time-stamp)
-                               (local-set-key (kbd "C-b") 'org-mark-ring-goto))
+                               (local-set-key (kbd "C-c .") 'org-time-stamp))
+                             
                              
                              (add-hook 'org-mode-hook 'org-shortcuts)
                              (add-hook 'org-agenda-mode-hook
@@ -386,7 +396,7 @@
                                       "personal"
                                       entry
                                       (file+headline user/tasks-file "tasks")
-                                      "* TODO \nDEADLINE: %t\n:PROPERTIES:\n:END:" :prepend t :clock-in t :clock-resume t)))
+                                      "* TODO \n:PROPERTIES:\n:END:\n %t\nSCHEDULED: %t\n DEADLINE: %t" :prepend t :clock-in t :clock-resume t)))
                              
                              
                              
@@ -427,19 +437,11 @@
                              
                              
                              (setq org-enable-table-editor t)
-                             
-                              ;; (add-to-list 'org-export-backends 'taskjuggler)
-                              ;; (require 'ox-taskjuggler)
-                             
-                              ;; (add-to-list 'org-export-backends 'md)
-                              ;; (require 'ox-md)
-                             
-                              ;; (add-to-list 'org-export-backends 'asciidoc)
-                              ;; (require 'ox-asciidoc)
-                             
-                             (require 'org-habit)
                              (require 'sws-mode)
                              (require 'stylus-mode)
+                             (require 'sws-mode)
+                             (require 'stylus-mode)
+                             (setq magit-diff-use-overlays nil)
                              (require 'handlebars-sgml-mode)
                              (handlebars-use-mode 'global)
                              (setq sgml-basic-offset 4)
@@ -457,7 +459,7 @@
                              
                              
                              (require 'js2-refactor)
-                             (js2r-add-keybindings-with-prefix "C-c C-m")
+                             (add-hook 'js2-mode-hook #'js2-refactor-mode)
                              
                              
                              (require 'flycheck)
