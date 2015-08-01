@@ -100,6 +100,9 @@
                              
                              ;; backward one character
                              (global-set-key (kbd "C-b") 'backward-char)
+                             
+                             ;; js2-refactor prefix
+                             (js2r-add-keybindings-with-prefix "C-c RET")
                              (defun flatten (list-of-lists?)
                              
                                ;; Verify argument type: list-of-lists? : List(List)
@@ -446,6 +449,7 @@
                              (handlebars-use-mode 'global)
                              (setq sgml-basic-offset 4)
                              (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+                             (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
                              (setq js2-allow-keywords-as-property-names nil)
                              (setq js2-mode-show-strict-warnings nil)
                              (setq js2-basic-offset 4)
@@ -463,8 +467,24 @@
                              
                              
                              (require 'flycheck)
-                             (add-hook 'js2-mode-hook
-                                       (lambda () (flycheck-mode t)))
+                             (add-hook 'js2-mode-hook (lambda () (flycheck-mode t)))
+                             
+                             (setq flycheck-eslintrc ".eslintrc")
+                             
+                             (setq flycheck-checkers '(ada-gnat asciidoc c/c++-clang
+                             c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee
+                             coffee-coffeelint coq css-csslint d-dmd emacs-lisp
+                             emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt
+                             go-golint go-vet go-build go-test go-errcheck haml handlebars
+                             haskell-ghc haskell-hlint html-tidy jade javascript-eslint
+                             json-jsonlint less luacheck lua perl perl-perlcritic php
+                             php-phpmd php-phpcs puppet-parser puppet-lint python-flake8
+                             python-pylint python-pycompile r-lintr racket rpm-rpmlint rst
+                             rst-sphinx ruby-rubocop ruby-rubylint ruby ruby-jruby rust sass
+                             scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash
+                             sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex
+                             tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint
+                             yaml-jsyaml yaml-ruby))
                              
                              
                              (defun prettify-js-symbols ()

@@ -1,2 +1,2 @@
-;; org-persist.el - Pierre-Henrys-MacBook-Pro.local at <2015-06-20 Sat 14:40>
-(setq stored-clock-history '(("/Users/nomos/Documents/tasks.org" . 216) ("/Users/nomos/Documents/tasks.org" . 9)))
+;; org-persist.el - pc24.home at <2015-08-01 Sat 10:26>
+(setq stored-clock-history '(("/Users/nomos/Documents/tasks.org" . 974) ("/Users/nomos/Documents/tasks.org" . 462) ("/Users/nomos/Documents/tasks.org" . 225) ("/Users/nomos/Documents/tasks.org" . 9)))

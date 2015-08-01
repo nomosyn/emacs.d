@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: anonymous-function
-# key: <af
+# key: af
 # --
 (function () {
   $0

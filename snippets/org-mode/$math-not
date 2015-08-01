@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: $math-not
+# key: $not
+# binding: direct-keybinding
+# --
+¬

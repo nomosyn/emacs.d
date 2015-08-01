@@ -256,6 +256,9 @@
 
      ;; backward one character
      (global-set-key (kbd "C-b") 'backward-char)
+
+     ;; js2-refactor prefix
+     (js2r-add-keybindings-with-prefix "C-c RET")
    #+END_SRC
 
 
@@ -576,6 +579,7 @@
      (require 'stylus-mode)
    #+END_SRC
 
+
 ** Html
 
    #+NAME: html
@@ -592,6 +596,7 @@
    #+NAME: javascript
    #+BEGIN_SRC elisp
      (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+     (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
      (setq js2-allow-keywords-as-property-names nil)
      (setq js2-mode-show-strict-warnings nil)
      (setq js2-basic-offset 4)
@@ -609,8 +614,24 @@
 
 
      (require 'flycheck)
-     (add-hook 'js2-mode-hook
-               (lambda () (flycheck-mode t)))
+     (add-hook 'js2-mode-hook (lambda () (flycheck-mode t)))
+
+     (setq flycheck-eslintrc ".eslintrc")
+
+     (setq flycheck-checkers '(ada-gnat asciidoc c/c++-clang
+     c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee
+     coffee-coffeelint coq css-csslint d-dmd emacs-lisp
+     emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt
+     go-golint go-vet go-build go-test go-errcheck haml handlebars
+     haskell-ghc haskell-hlint html-tidy jade javascript-eslint
+     json-jsonlint less luacheck lua perl perl-perlcritic php
+     php-phpmd php-phpcs puppet-parser puppet-lint python-flake8
+     python-pylint python-pycompile r-lintr racket rpm-rpmlint rst
+     rst-sphinx ruby-rubocop ruby-rubylint ruby ruby-jruby rust sass
+     scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash
+     sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex
+     tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint
+     yaml-jsyaml yaml-ruby))
 
 
      (defun prettify-js-symbols ()
@@ -627,6 +648,84 @@
      ;; (require 'context-coloring)
      ;; (add-hook 'js2-mode-hook 'context-coloring-mode)
    #+END_SRC
+
+
+   #+BEGIN_SRC js :tangle "~/.eslintrc"
+     {
+         "parser": "babel-eslint",
+         "env": {
+             "browser": true,
+             "es6": true,
+             "node": true
+         },
+         "ecmaFeatures": {
+             "arrowFunctions": true,
+             "blockBindings": true,
+             "classes": true,
+             "defaultParams": true,
+             "destructuring": true,
+             "forOf": true,
+             "generators": true,
+             "modules": true,
+             "spread": true,
+             "templateStrings": true,
+             "jsx": true,
+             "objectLiteralComputedProperties": true,
+             "restParams": true
+         },
+         "rules": {
+             "no-console": [1],
+             "no-constant-condition": [1],
+             "no-debugger": [1],
+             "no-dupe-args": [1],
+             "no-dupe-keys": [1],
+             "no-duplicate-case": [1],
+             "no-empty-character-class": [1],
+             "no-empty": [1],
+             "no-ex-assign": [1],
+             "no-extra-boolean-cast": [1],
+             "no-extra-parens": [1],
+             "no-extra-semi": [1],
+             "no-func-assign": [1],
+             "no-inner-declarations": [1],
+             "no-invalid-regexp": [1],
+             "no-irregular-whitespace": [1],
+             "no-negated-in-lhs": [1],
+             "no-regex-spaces": [1],
+             "no-reserved-keys": [1],
+             "no-sparse-arrays": [1],
+             "no-unreachable": [1],
+             "use-isnan": [1],
+             "valid-jsdoc": [0],
+             "valid-typeof": [2],
+             "no-unexpected-multiline": [1],
+             "no-unused-expressions": [0],
+             "curly": [1],
+             "default-case": [1],
+             "dot-notation": [2, {"allowKeywords": true, "allowPattern": ""}],
+             "dot-location": [2, "property"],
+             "eqeqeq": [1],
+             "no-caller": [1],
+             "no-div-regex": [1],
+             "no-eval": [1],
+             "no-extend-native": [2],
+             "strict": [1, "function"],
+             "no-extra-strict": [0],
+             "camelcase": [2, {"properties": "always"}],
+             "comma-style": [2, "first"],
+             "indent": [2, 4],
+             "linebreak-style": [2, "unix"],
+             "new-parens": [2],
+             "quotes": [1, "single", "avoid-escape"],
+             "new-cap": [0],
+             "no-underscore-dangle": [0],
+             "radix": [0],
+             "yoda": [0],
+             "no-shadow": [0]
+         }
+     }
+   #+END_SRC
+
 
 
 
@@ -741,4 +840,29 @@
      (require 'sws-mode)
      (require 'stylus-mode)
      (setq magit-diff-use-overlays nil)
+   #+END_SRC
+
+ * EditorConfig
+
+   #+BEGIN_SRC org :tangle "~/.editorconfig"
+     root = true
+
+     [*]
+     charset = utf-8
+     end_of_line = lf
+     insert_final_newline = true
+     trim_trailing_whitespace = true
+
+     [*.js]
+     indent_style = space
+     indent_size = 4
+     max_line_length = 100
+
+     [*.json]
+     indent_style = space
+     indent_size = 4
+
+     [*.md]
+     # Two trailing spaces => newline in GitHub-flavored markdown
+     trim_trailing_whitespace = false
    #+END_SRC

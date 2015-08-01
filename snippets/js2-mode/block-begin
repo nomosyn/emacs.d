@@ -1,5 +1,5 @@
 # -*- mode: snippet; require-final-newline: nil -*-
 # name: block-begin
-# key: <blockbegin
+# key: beginb
 # --
-/** (begin (ref ${1:uid})) */
+/** (begin (def `(downcase (nth 1 (split-string (org-id-new) "-")))`)) */
