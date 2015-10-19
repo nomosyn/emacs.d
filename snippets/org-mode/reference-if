@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: reference-if
+# key: ref
+# --
+(ref $0)

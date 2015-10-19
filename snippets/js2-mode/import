@@ -1,5 +1,5 @@
 # -*- mode: snippet; require-final-newline: nil -*-
 # name: import
-# key: imp
+# key: i
 # --
-var ${1:name} = ${2:namespace}.$1;$0
+const ${1:name} = ${2:namespace}.$1;$0

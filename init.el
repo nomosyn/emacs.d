@@ -1,4 +1,3 @@
-
 (add-hook 'after-init-hook (lambda ()
                              (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                                                       ("org-mode" . "http://orgmode.org/elpa/")
@@ -17,6 +16,27 @@
                              (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
                              (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 110 :weight 'normal)
                              (load-theme 'solarized-dark t)
+                             ;; Also works for `solarized-light', `solarized-dark',
+                             ;; `sanityinc-solarized-light' and `sanityinc-solarized-dark'.
+                             (custom-theme-set-faces
+                              'solarized-dark
+                              '(context-coloring-level-0-face  ((t :foreground "#839496")))
+                              '(context-coloring-level-1-face  ((t :foreground "#268bd2")))
+                              '(context-coloring-level-2-face  ((t :foreground "#2aa198")))
+                              '(context-coloring-level-3-face  ((t :foreground "#859900")))
+                              '(context-coloring-level-4-face  ((t :foreground "#b58900")))
+                              '(context-coloring-level-5-face  ((t :foreground "#cb4b16")))
+                              '(context-coloring-level-6-face  ((t :foreground "#dc322f")))
+                              '(context-coloring-level-7-face  ((t :foreground "#d33682")))
+                              '(context-coloring-level-8-face  ((t :foreground "#6c71c4")))
+                              '(context-coloring-level-9-face  ((t :foreground "#69b7f0")))
+                              '(context-coloring-level-10-face ((t :foreground "#69cabf")))
+                              '(context-coloring-level-11-face ((t :foreground "#b4c342")))
+                              '(context-coloring-level-12-face ((t :foreground "#deb542")))
+                              '(context-coloring-level-13-face ((t :foreground "#f2804f")))
+                              '(context-coloring-level-14-face ((t :foreground "#ff6e64")))
+                              '(context-coloring-level-15-face ((t :foreground "#f771ac")))
+                              '(context-coloring-level-16-face ((t :foreground "#9ea0e5"))))
                              (setq ns-command-modifier 'meta)
                              (setq ns-option-modifier  'super)
                              (setq ns-right-option-modifier  'nil)
@@ -239,7 +259,6 @@
                              (put 'downcase-region 'disabled nil)
                              (put 'set-goal-column 'disabled nil)
                              (put 'narrow-to-region 'disabled nil)
-                             (require 'grep)
                              
                              ;; (rainbow-mode)
                              ;; (rainbow-identifiers-mode)
@@ -251,6 +270,8 @@
                              (setq ag-highlight-search t)
                              (setq projectile-completion-system 'helm)
                              (projectile-global-mode)
+                             (require 'helm-projectile)
+                             (helm-projectile-on)
                              (setq-default ispell-program-name "aspell")
                              (setq ispell-list-command "list")
                              (setq ispell-extra-args '("--sug-mode=ultra"))
@@ -410,6 +431,7 @@
                               'org-babel-load-languages
                               '((emacs-lisp . t)
                                 (org . t)
+                                (dot . t)
                                 (latex . t)
                                 (ditaa . t)
                                 (js . t)))
@@ -417,7 +439,7 @@
                                                         ("elisp" . emacs-lisp)
                                                         ("ditaa" . artist)
                                                         ("asymptote" . asy)
-                                                        ("dot" . fundamental)
+                                                        ("dot" . graphviz-dot)
                                                         ("sqlite" . sql)
                                                         ("calc" . fundamental)
                                                         ("C" . c)
@@ -499,8 +521,8 @@
                              
                              (add-hook 'js2-mode-hook 'prettify-js-symbols)
                              
-                             ;; (require 'context-coloring)
-                             ;; (add-hook 'js2-mode-hook 'context-coloring-mode)
+                             (require 'context-coloring)
+                             (add-hook 'js2-mode-hook 'context-coloring-mode)
                              
                              (require 'tex)
                              (add-hook 'TeX-mode-hook (lambda ()
@@ -523,17 +545,32 @@
                              ;; (load-file "libs/ProofGeneral-4.3pre150202/ProofGeneral/generic/proof-site.el")
                              ;; (setq proof-prog-name "hoqtop")
                              (setq geiser-racket-binary "/Applications/Racketv6.1.1/bin/racket")
+                             (require 'epa-file)
+                             (epa-file-enable)
+                             (setq epa-file-select-keys nil)
+                             (defun should-update-metadata (abs-file-name)
+                               (or (string-match-p ".*solutions/.*\.org$" absolute-cur-file-name)
+                                   (string-match-p ".*problems/.*\.org$" absolute-cur-file-name)
+                                   (string-match-p ".*Documents/notes/.*\.org$" absolute-cur-file-name)
+                                   (string-match-p ".*problem\.org$" absolute-cur-file-name)
+                                   (string-match-p ".*solution\.org$" absolute-cur-file-name)))
+                             
+                             
                              (add-hook 'after-save-hook
                                        (lambda ()
-                                         (let ((cur-file-name ""))
-                                           (setq cur-file-name (file-name-nondirectory (buffer-file-name)))
+                                         (let ((cur-file-name "")
+                                               (absolute-cur-file-name))
+                                           (setq absolute-cur-file-name (buffer-file-name))
+                                           (setq cur-file-name (file-name-nondirectory absolute-cur-file-name))
                                            (cond
-                                            ((string= buffer-file-name user/emacs-conf-org) (org-babel-tangle))
-                                            ((string-match "^bp.md$" cur-file-name) (shell-command "./markdown_to_html5.sh bp.md"))
-                                            ((string-match "^french-tech-programme.*\.tex$" cur-file-name) (shell-command "./build.sh programme"))
-                                            ((string-match "^french-tech-demandeur.*\.tex$" cur-file-name) (shell-command "./build.sh demandeur"))
-                                            ((string-match "^network_notes_prop-2015.*\.tex$" cur-file-name) (shell-command "./build.sh"))
-                                            ((string-match "slides-journee\.tex" cur-file-name) (shell-command "xelatex slides-journee.tex; open slides-journee.pdf")))
+                             
+                                            ((should-update-metadata absolute-cur-file-name)
+                                             (shell-command (concat "pbsol-meta-update.js " absolute-cur-file-name)))
+                             
+                                            ((string= buffer-file-name user/emacs-conf-org)
+                                             (org-babel-tangle))
+                             
+                                            )
                                            )
                                          )
                                        )

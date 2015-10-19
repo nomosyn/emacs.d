@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: print
+# key: $p
+# --
+console.log('${1:valueName}: ' + JSON.stringify($1));

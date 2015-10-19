@@ -10,4 +10,5 @@
 (setq mc/cmds-to-run-once
       '(
         js2-mode-show-node
+        markdown-exdent-or-delete
         ))

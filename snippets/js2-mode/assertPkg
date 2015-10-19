@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: assertPkg
+# key: ap
+# --
+const assertPkg = Package['nnotes:utils'].utils.assertPkg;

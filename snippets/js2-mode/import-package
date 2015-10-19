@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: import-package
+# key: ip
+# --
+const $2 = assertPkg('${1:pkg name}', '${2:name}');
