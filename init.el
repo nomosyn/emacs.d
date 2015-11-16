@@ -218,6 +218,7 @@
                              (defconst user/local-bin-dir "/usr/local/bin/")
                              (defconst user/tasks-file (concat user/documents-dir "tasks.org"))
                              (defconst user/libs (concat user/emacs-dir (file-name-as-directory "libs")))
+                             (defconst user/plantuml.jar (concat user/libs "plantuml.jar"))
                              (defconst user/org2asciidoc (concat user/libs (file-name-as-directory "org-asciidoc")))
                              
                              (add-to-list 'load-path user/libs)
@@ -342,6 +343,9 @@
                                        ((smart-indent)))))
                              (global-set-key (kbd "TAB") 'smart-tab)
                              (require 'org)
+                             (require 'ob-plantuml)
+                             (setq org-plantuml-jar-path user/plantuml.jar)
+                             
                              (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
                              (global-set-key (kbd "C-c l") 'org-store-link)
                              (global-set-key (kbd "C-c a") 'org-agenda)
@@ -407,7 +411,7 @@
                              
                              
                              (setq org-agenda-span 'month)
-                             (setq org-deadline-warning-days 1)
+                             (setq org-deadline-warning-days 0)
                              (setq org-agenda-skip-scheduled-if-done t)
                              (setq org-log-done t)
                              
@@ -434,6 +438,7 @@
                                 (dot . t)
                                 (latex . t)
                                 (ditaa . t)
+                                (plantuml . t)
                                 (js . t)))
                              (setq org-src-lang-modes '(("ocaml" . tuareg)
                                                         ("elisp" . emacs-lisp)
@@ -471,58 +476,78 @@
                              (require 'handlebars-sgml-mode)
                              (handlebars-use-mode 'global)
                              (setq sgml-basic-offset 4)
+                             (require 'js2-refactor)
+                             (require 'flycheck)
+                             (require 'context-coloring)
+                             
                              (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
                              (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
-                             (setq js2-allow-keywords-as-property-names nil)
-                             (setq js2-mode-show-strict-warnings nil)
-                             (setq js2-basic-offset 4)
-                             (setq js2-bounce-indent-p nil)
-                             (setq js2-dynamic-idle-timer-adjust 10000)
-                             (setq js2-highlight-external-variables nil)
-                             (setq js2-idle-timer-delay 1)
-                             (setq js2-mode-show-parse-errors t)
-                             (setq js2-pretty-multiline-declarations t)
-                             (setq js2-highlight-level 3)
                              
+                             (custom-set-variables
+                              '(js2-bounce-indent-p t)
+                              '(js2-allow-keywords-as-property-names nil)
+                              '(js2-mode-show-strict-warnings nil)
+                              '(js2-basic-offset 4)
+                              '(js2-bounce-indent-p nil)
+                              '(js2-dynamic-idle-timer-adjust 10000)
+                              '(js2-highlight-external-variables nil)
+                              '(js2-idle-timer-delay 1)
+                              '(js2-mode-show-parse-errors t)
+                              '(js2-pretty-multiline-declarations nil)
+                              '(js2-highlight-level 3)
+                              '(js2-indent-switch-body nil)
+                              )
                              
-                             (require 'js2-refactor)
-                             (add-hook 'js2-mode-hook #'js2-refactor-mode)
+                             (custom-theme-set-faces
+                              'solarized-dark
+                              '(context-coloring-level-0-face  ((t :foreground "#839496")))
+                              '(context-coloring-level-1-face  ((t :foreground "#268bd2")))
+                              '(context-coloring-level-2-face  ((t :foreground "#2aa198")))
+                              '(context-coloring-level-3-face  ((t :foreground "#859900")))
+                              '(context-coloring-level-4-face  ((t :foreground "#b58900")))
+                              '(context-coloring-level-5-face  ((t :foreground "#cb4b16")))
+                              '(context-coloring-level-6-face  ((t :foreground "#dc322f")))
+                              '(context-coloring-level-7-face  ((t :foreground "#d33682")))
+                              '(context-coloring-level-8-face  ((t :foreground "#6c71c4")))
+                              '(context-coloring-level-9-face  ((t :foreground "#69b7f0")))
+                              '(context-coloring-level-10-face ((t :foreground "#69cabf")))
+                              '(context-coloring-level-11-face ((t :foreground "#b4c342")))
+                              '(context-coloring-level-12-face ((t :foreground "#deb542")))
+                              '(context-coloring-level-13-face ((t :foreground "#f2804f")))
+                              '(context-coloring-level-14-face ((t :foreground "#ff6e64")))
+                              '(context-coloring-level-15-face ((t :foreground "#f771ac")))
+                              '(context-coloring-level-16-face ((t :foreground "#9ea0e5"))))
                              
-                             
-                             (require 'flycheck)
-                             (add-hook 'js2-mode-hook (lambda () (flycheck-mode t)))
                              
                              (setq flycheck-eslintrc ".eslintrc")
                              
                              (setq flycheck-checkers '(ada-gnat asciidoc c/c++-clang
-                             c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee
-                             coffee-coffeelint coq css-csslint d-dmd emacs-lisp
-                             emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt
-                             go-golint go-vet go-build go-test go-errcheck haml handlebars
-                             haskell-ghc haskell-hlint html-tidy jade javascript-eslint
-                             json-jsonlint less luacheck lua perl perl-perlcritic php
-                             php-phpmd php-phpcs puppet-parser puppet-lint python-flake8
-                             python-pylint python-pycompile r-lintr racket rpm-rpmlint rst
-                             rst-sphinx ruby-rubocop ruby-rubylint ruby ruby-jruby rust sass
-                             scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash
-                             sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex
-                             tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint
-                             yaml-jsyaml yaml-ruby))
+                                                                c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee
+                                                                coffee-coffeelint coq css-csslint d-dmd emacs-lisp
+                                                                emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt
+                                                                go-golint go-vet go-build go-test go-errcheck haml handlebars
+                                                                haskell-ghc haskell-hlint html-tidy jade javascript-eslint
+                                                                json-jsonlint less luacheck lua perl perl-perlcritic php
+                                                                php-phpmd php-phpcs puppet-parser puppet-lint python-flake8
+                                                                python-pylint python-pycompile r-lintr racket rpm-rpmlint rst
+                                                                rst-sphinx ruby-rubocop ruby-rubylint ruby ruby-jruby rust sass
+                                                                scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash
+                                                                sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex
+                                                                tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint
+                                                                yaml-jsyaml yaml-ruby))
                              
-                             
-                             (defun prettify-js-symbols ()
-                               (push '("lambda" . ?λ) prettify-symbols-alist)
-                               (push '("function" . ?ƒ) prettify-symbols-alist)
-                               (push '("return" . ?⟼) prettify-symbols-alist)
-                               (push '("<=" . ?≤) prettify-symbols-alist)
-                               (push '(">=" . ?≥) prettify-symbols-alist)
-                               (push '("!==" . ?≠) prettify-symbols-alist)
-                               (prettify-symbols-mode))
-                             
-                             (add-hook 'js2-mode-hook 'prettify-js-symbols)
-                             
-                             (require 'context-coloring)
-                             (add-hook 'js2-mode-hook 'context-coloring-mode)
+                             (add-hook 'js2-mode-hook
+                                       (lambda ()
+                                         (js2-refactor-mode t)
+                                         (flycheck-mode t)
+                                         (context-coloring-mode t)
+                                         (push '("lambda" . ?λ) prettify-symbols-alist)
+                                         (push '("function" . ?ƒ) prettify-symbols-alist)
+                                         (push '("return" . ?⟼) prettify-symbols-alist)
+                                         (push '("<=" . ?≤) prettify-symbols-alist)
+                                         (push '(">=" . ?≥) prettify-symbols-alist)
+                                         (push '("!==" . ?≠) prettify-symbols-alist)
+                                         (prettify-symbols-mode)))
                              
                              (require 'tex)
                              (add-hook 'TeX-mode-hook (lambda ()
