@@ -25,6 +25,7 @@
                                    <<racket>>
                                    <<encryption>>
                                    <<after-save-hook>>
+                                   <<ediff>>
                                    ))
     #+END_SRC
 
@@ -191,6 +192,11 @@
        (interactive)
        (set-mark-command 1))
 
+     (defun unfill-paragraph (&optional region)
+       "Takes a multi-line paragraph and makes it into a single line of text."
+       (interactive (progn (barf-if-buffer-read-only) '(t)))
+       (let ((fill-column (point-max)))
+         (fill-paragraph nil region)))
    #+END_SRC
 
 
@@ -204,6 +210,10 @@
    #+BEGIN_SRC elisp
      ;; select semantic groups of characters (word, sentence, quotes, block, ...)
      (require 'expand-region)
+
+     (global-set-key (kbd "C-x C-f") 'helm-find-files)
+     (global-set-key (kbd "M-x") 'helm-M-x)
+
      (global-set-key (kbd "C-=") 'er/expand-region)
 
 
@@ -399,7 +409,7 @@
    #+BEGIN_SRC elisp
      (require 'recentf)
      (recentf-mode 1)
-     (setq recentf-max-menu-items 100)
+     (setq recentf-max-menu-items 1000)
 
      (global-company-mode)
 
@@ -565,6 +575,7 @@
       '((emacs-lisp . t)
         (org . t)
         (dot . t)
+        (plantuml . t)
         (latex . t)
         (ditaa . t)
         (plantuml . t)
@@ -940,4 +951,12 @@
      [*.md]
      # Two trailing spaces => newline in GitHub-flavored markdown
      trim_trailing_whitespace = false
+   #+END_SRC
+
+
+** ediff
+
+   #+NAME: ediff
+   #+BEGIN_SRC elisp
+     (setq ediff-diff-options "-w")
    #+END_SRC

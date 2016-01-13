@@ -46,6 +46,10 @@
                                (setq mouse-wheel-scroll-amount '(0.01)))
                              ;; select semantic groups of characters (word, sentence, quotes, block, ...)
                              (require 'expand-region)
+                             
+                             (global-set-key (kbd "C-x C-f") 'helm-find-files)
+                             (global-set-key (kbd "M-x") 'helm-M-x)
+                             
                              (global-set-key (kbd "C-=") 'er/expand-region)
                              
                              
@@ -205,6 +209,11 @@
                                (interactive)
                                (set-mark-command 1))
                              
+                             (defun unfill-paragraph (&optional region)
+                               "Takes a multi-line paragraph and makes it into a single line of text."
+                               (interactive (progn (barf-if-buffer-read-only) '(t)))
+                               (let ((fill-column (point-max)))
+                                 (fill-paragraph nil region)))
                              (defconst user/home-dir (file-name-as-directory (expand-file-name "~")))
                              (defconst user/documents-dir (concat user/home-dir (file-name-as-directory "Documents")))
                              (defconst user/emacs-dir (concat user/home-dir (file-name-as-directory ".emacs.d")))
@@ -278,7 +287,7 @@
                              (setq ispell-extra-args '("--sug-mode=ultra"))
                              (require 'recentf)
                              (recentf-mode 1)
-                             (setq recentf-max-menu-items 100)
+                             (setq recentf-max-menu-items 1000)
                              
                              (global-company-mode)
                              
@@ -436,6 +445,7 @@
                               '((emacs-lisp . t)
                                 (org . t)
                                 (dot . t)
+                                (plantuml . t)
                                 (latex . t)
                                 (ditaa . t)
                                 (plantuml . t)
@@ -599,4 +609,5 @@
                                            )
                                          )
                                        )
+                             (setq ediff-diff-options "-w")
                              ))

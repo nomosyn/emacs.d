@@ -9,6 +9,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        fill-paragraph
         js2-mode-show-node
         markdown-exdent-or-delete
         ))
