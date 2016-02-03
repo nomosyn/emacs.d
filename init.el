@@ -14,7 +14,9 @@
                              
                              ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
                              (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-                             (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 110 :weight 'normal)
+                             ;; (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 110 :weight 'normal)
+                             (add-to-list 'default-frame-alist
+                                          '(font . "FreeMono-16"))
                              (load-theme 'solarized-dark t)
                              ;; Also works for `solarized-light', `solarized-dark',
                              ;; `sanityinc-solarized-light' and `sanityinc-solarized-dark'.

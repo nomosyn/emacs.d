@@ -61,7 +61,9 @@
 ** Font
    #+NAME: font
    #+BEGIN_SRC elisp
-     (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 110 :weight 'normal)
+     ;; (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 110 :weight 'normal)
+     (add-to-list 'default-frame-alist
+                  '(font . "FreeMono-16"))
    #+END_SRC
 
 
