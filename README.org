@@ -1,6 +1,7 @@
 * Load configurations
 
-  - Activate export a configuration to the init.el file by adding/removing a noweb target bellow.
+  - Activate export a configuration to the init.el file by adding/removing a
+    noweb target bellow.
     #+BEGIN_SRC elisp :tangle "./init.el" :noweb yes
       (add-hook 'after-init-hook (lambda ()
                                    <<package-manager>>
@@ -532,6 +533,9 @@
                            ("doc" :foreground "cyan" :weight bold)
                            ("com" :foreground "cyan" :weight bold)))
 
+
+
+     (setq org-export-backends '(ascii beamer html icalendar latex))
 
 
      ;; Mobile
