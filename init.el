@@ -1,3 +1,10 @@
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (add-hook 'after-init-hook (lambda ()
                              (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                                                       ("org-mode" . "http://orgmode.org/elpa/")
@@ -11,7 +18,7 @@
                              (if (boundp 'buffer-file-coding-system)
                                  (setq-default buffer-file-coding-system 'utf-8)
                                (setq default-buffer-file-coding-system 'utf-8))
-
+                             
                              ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
                              (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
                              ;; (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 110 :weight 'normal)
@@ -48,96 +55,96 @@
                                (setq mouse-wheel-scroll-amount '(0.01)))
                              ;; select semantic groups of characters (word, sentence, quotes, block, ...)
                              (require 'expand-region)
-
+                             
                              (global-set-key (kbd "C-x C-f") 'helm-find-files)
                              (global-set-key (kbd "M-x") 'helm-M-x)
-
+                             
                              (global-set-key (kbd "C-=") 'er/expand-region)
-
-
+                             
+                             
                              ;; Mark a place in a buffer.
                              (global-set-key (kbd "C--") 'push-mark-no-activate)
-
+                             
                              ;; Go back to last mark in buffer.
                              (global-set-key (kbd "M--") 'jump-to-mark)
-
+                             
                              ;; indent working buffer.
                              (global-set-key (kbd "<f8>") 'iwb)
-
-
-
+                             
+                             
+                             
                              ;; log work into history.
                              (global-set-key (kbd "<f9>") 'magit-status)
-
-
-
+                             
+                             
+                             
                              ;; switch windows.
                              (global-set-key (kbd "C-o") 'other-window)
-
-
-
+                             
+                             
+                             
                              ;; switch frame.
                              (global-set-key (kbd "C-i") 'other-frame)
-
-
-
+                             
+                             
+                             
                              ;; search string :
                              ;;;; in buffer
                              (global-set-key (kbd "C-s") 'isearch-forward)
                              (global-set-key (kbd "C-r") 'isearch-backward)
-
+                             
                              ;;;; in this directory
                              (global-set-key (kbd "C-^") 'helm-ag)
-
+                             
                              ;;;; in the current project
                              (global-set-key (kbd "C-)") 'helm-projectile-ag)
-
-
+                             
+                             
                              ;; search files/buffer among most probable candidates.
                              (global-set-key (kbd "C-:") 'helm-projectile-find-file)
                              (global-set-key (kbd "C-ù") 'helm-recentf)
-
-
-
+                             
+                             
+                             
                              ;; narrow two regions of the same buffer in two windows.
                              (global-set-key (kbd "C-$") 'clone-indirect-buffer-other-window)
-
-
+                             
+                             
                              ;; move current line:
                              ;;;; up
                              (global-set-key [(meta shift up)]  'move-line-up)
-
+                             
                              ;;;; down
                              (global-set-key [(meta shift down)]  'move-line-down)
-
-
+                             
+                             
                              ;; Capture
                              (global-set-key (kbd "C-c c") 'org-capture)
-
-
+                             
+                             
                              ;; Multi cursors
                              (global-set-key (kbd "C-c m c") 'mc/edit-lines)
-
+                             
                              ;; Move forward one element
                              (global-set-key (kbd "M-n") 'org-forward-element)
-
+                             
                              ;; Move forward one element
                              (global-set-key (kbd "M-p") 'org-backward-element)
-
+                             
                              ;; backward one character
                              (global-set-key (kbd "C-b") 'backward-char)
-
+                             
                              ;; js2-refactor prefix
                              (js2r-add-keybindings-with-prefix "C-c RET")
                              (defun flatten (list-of-lists?)
-
+                             
                                ;; Verify argument type: list-of-lists? : List(List)
                                (let ((err-message "error: arg should be a list of lists"))
                                  (if (listp list-of-lists?)
                                      (dolist (list? list-of-lists?)
                                        (when (not (listp list?)) (error err-message)))
                                    (error err-message)))
-
+                             
                                ;; List(List) -> List
                                (let ((rev-res-list)
                                      (res-list))
@@ -146,17 +153,17 @@
                                      (setq rev-res-list (cons list-elem rev-res-list))))
                                  (dolist (elem rev-res-list res-list)
                                    (setq res-list (cons elem res-list)))))
-
-
-
+                             
+                             
+                             
                              (defun iwb ()
                                "Indent Whole Buffer"
                                (interactive)
                                (delete-trailing-whitespace)
                                (indent-region (point-min) (point-max) nil)
                                (untabify (point-min) (point-max)))
-
-
+                             
+                             
                              (defun lorem ()
                                (interactive)
                                (insert "Lorem ipsum dolor sit amet, consectetuer adipiscing
@@ -174,21 +181,21 @@
                                                                                      pellentesque augue. In eu magna. In pede turpis, feugiat
                                                                                      pulvinar, sodales eget, bibendum consectetuer,
                                                                                      magna. Pellentesque vitae augue."))
-
-
+                             
+                             
                              (defun dedicate-window ()
                                "To prevent modifying a window buffer, make the selected window dedicated to its buffer."
                                (interactive)
                                (set-window-dedicated-p (selected-window) (not current-prefix-arg)))
-
-
+                             
+                             
                              (defun move-line-up ()
                                "Move up the current line."
                                (interactive)
                                (transpose-lines 1)
                                (forward-line -2)
                                (indent-according-to-mode))
-
+                             
                              (defun move-line-down ()
                                "Move down the current line."
                                (interactive)
@@ -196,21 +203,21 @@
                                (transpose-lines 1)
                                (forward-line -1)
                                (indent-according-to-mode))
-
-
+                             
+                             
                              (defun push-mark-no-activate ()
                                "Pushes `point' to `mark-ring' and does not activate the region
                                      Equivalent to \\[set-mark-command] when \\[transient-mark-mode] is disabled"
                                (interactive)
                                (push-mark (point) t nil)
                                (message "Pushed mark to ring"))
-
+                             
                              (defun jump-to-mark ()
                                "Jumps to the local mark, respecting the `mark-ring' order.
                                This is the same as using \\[set-mark-command] with the prefix argument."
                                (interactive)
                                (set-mark-command 1))
-
+                             
                              (defun unfill-paragraph (&optional region)
                                "Takes a multi-line paragraph and makes it into a single line of text."
                                (interactive (progn (barf-if-buffer-read-only) '(t)))
@@ -231,7 +238,7 @@
                              (defconst user/libs (concat user/emacs-dir (file-name-as-directory "libs")))
                              (defconst user/plantuml.jar (concat user/libs "plantuml.jar"))
                              (defconst user/org2asciidoc (concat user/libs (file-name-as-directory "org-asciidoc")))
-
+                             
                              (add-to-list 'load-path user/libs)
                              (add-to-list 'load-path user/org2asciidoc)
                              (setq initial-scratch-message "")
@@ -254,7 +261,8 @@
                              (scroll-bar-mode -1)
                              (set-default 'indicate-empty-lines nil)
                              (set-fringe-mode 15)
-                             (setq visible-bell t)
+                             (setq ring-bell-function 'ignore)
+                             ;; (setq visible-bell t)
                              (setq backup-directory-alist (list (cons "." user/backups-dir)))
                              (setq delete-by-moving-to-trash t)
                              (server-start)
@@ -271,7 +279,7 @@
                              (put 'downcase-region 'disabled nil)
                              (put 'set-goal-column 'disabled nil)
                              (put 'narrow-to-region 'disabled nil)
-
+                             
                              ;; (rainbow-mode)
                              ;; (rainbow-identifiers-mode)
                              ;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -290,9 +298,9 @@
                              (require 'recentf)
                              (recentf-mode 1)
                              (setq recentf-max-menu-items 1000)
-
+                             
                              (global-company-mode)
-
+                             
                              (require 'helm-config)
                              (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
                                    helm-buffers-fuzzy-matching           t ; fuzzy matching buffer names when non--nil
@@ -301,10 +309,10 @@
                                    helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
                                    helm-ff-file-name-history-use-recentf t)
                              (helm-mode 1)
-
+                             
                              (require 'yasnippet)
                              (setq yas-snippet-dirs user/snippets-dir)
-
+                             
                              (setq hippie-expand-try-functions-list '(try-expand-dabbrev
                                                                       try-expand-dabbrev-all-buffers
                                                                       try-expand-dabbrev-from-kill
@@ -316,13 +324,13 @@
                                                                       try-complete-lisp-symbol-partially
                                                                       try-complete-lisp-symbol))
                              (yas-global-mode 1)
-
-
+                             
+                             
                              (defvar smart-tab-using-hippie-expand t
                                "turn this on if you want to use hippie-expand completion.")
-
-
-
+                             
+                             
+                             
                              (defun smart-indent ()
                                "Indents region if mark is active, or current line otherwise."
                                (interactive)
@@ -330,13 +338,13 @@
                                    (indent-region (region-beginning)
                                                   (region-end))
                                  (indent-for-tab-command)))
-
-
-
+                             
+                             
+                             
                              (defun smart-tab (prefix)
                                "Needs `transient-mark-mode' to be on. This smart tab is
                                             minibuffer compliant: it acts as usual in the minibuffer.
-
+                             
                                             In all other buffers: if PREFIX is \\[universal-argument], calls
                                             `smart-indent'. Else if point is at the end of a symbol,
                                             expands it. Else calls `smart-indent'."
@@ -356,7 +364,7 @@
                              (require 'org)
                              (require 'ob-plantuml)
                              (setq org-plantuml-jar-path user/plantuml.jar)
-
+                             
                              (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
                              (global-set-key (kbd "C-c l") 'org-store-link)
                              (global-set-key (kbd "C-c a") 'org-agenda)
@@ -364,8 +372,8 @@
                              (setq org-hide-leading-stars t)
                              (setq org-list-indent-offset 2)
                              (setq org-modules '(org-bbdb org-bibtex org-docview org-gnus org-habit org-id org-info org-irc org-mhe org-rmail org-w3m))
-
-
+                             
+                             
                              (defun org-shortcuts ()
                                (local-set-key (kbd "C-<up>") 'org-move-subtree-up)
                                (local-set-key (kbd "C-<down>") 'org-move-subtree-down)
@@ -374,14 +382,14 @@
                                (local-set-key (kbd "C-c t") 'org-todo)
                                (local-set-key (kbd "C-c r") 'org-clock-report)
                                (local-set-key (kbd "C-c .") 'org-time-stamp))
-
-
+                             
+                             
                              (add-hook 'org-mode-hook 'org-shortcuts)
                              (add-hook 'org-agenda-mode-hook
                                        (lambda ()
                                          (local-set-key (kbd "<tab>") 'org-agenda-goto)))
-
-
+                             
+                             
                              (setq org-todo-keywords '("TODO(t!)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELLED(c@)"))
                              (setq org-todo-keyword-faces
                                    '(("TODO" :foreground "red" :weight bold)
@@ -389,58 +397,61 @@
                                      ("DONE" :foreground "forest green" :weight bold)
                                      ("CANCELLED" :foreground "white" :weight bold)))
                              (setq org-enforce-todo-dependencies t)
-
-
+                             
+                             
                              (setq org-log-into-drawer t)
                              (setq org-clock-into-drawer t)
-
-
+                             
+                             
                              (setq org-tag-faces '(("ph" :foreground "cyan" :weight bold)
                                                    ("ad" :foreground "cyan" :weight bold)
                                                    ("bf" :foreground "cyan" :weight bold)
                                                    ("dev" :foreground "cyan" :weight bold)
                                                    ("doc" :foreground "cyan" :weight bold)
                                                    ("com" :foreground "cyan" :weight bold)))
-
-
-
+                             
+                             
+                             
+                             (setq org-export-backends '(ascii beamer html icalendar latex))
+                             
+                             
                              ;; Mobile
                              ;; (setq org-mobile-directory user/data-org-mobile-path)
                              ;; (setq org-mobile-inbox-for-pull user/org-mobile-inbox-for-pull-path)
-
-
-
+                             
+                             
+                             
                              ;; Push todo.org when saved
                              ;; (add-hook 'after-save-hook
                              ;;           (lambda ()
                              ;;             (if (string= buffer-file-name user/todo-file)
                              ;;                 (org-mobile-push))))
-
-
-
+                             
+                             
+                             
                              (setq org-agenda-files (list user/tasks-file))
-
-
+                             
+                             
                              (setq org-agenda-span 'month)
                              (setq org-deadline-warning-days 0)
                              (setq org-agenda-skip-scheduled-if-done t)
                              (setq org-log-done t)
-
-
+                             
+                             
                              (defun user/before-finalize-capture-hooks ()
                                (org-id-get-create))
                              (add-hook 'org-capture-before-finalize-hook 'user/before-finalize-capture-hooks)
-
+                             
                              (setq org-capture-templates
                                    '(("p"
                                       "personal"
                                       entry
                                       (file+headline user/tasks-file "tasks")
                                       "* TODO \n:PROPERTIES:\n:END:\n %t\nSCHEDULED: %t\n DEADLINE: %t" :prepend t :clock-in t :clock-resume t)))
-
-
-
-
+                             
+                             
+                             
+                             
                              (setq org-src-fontify-natively t)
                              (org-babel-do-load-languages
                               'org-babel-load-languages
@@ -464,21 +475,21 @@
                                                         ("cpp" . c++)
                                                         ("C++" . c++)
                                                         ("screen" . shell-script)))
-
-
+                             
+                             
                              (defun my-org-confirm-babel-evaluate (lang body)
                                (not (or
                                      (string= lang "org")
                                      (string= lang "ditaa")      ;; don't ask for ditaa
                                      (string= lang "emacs-lisp")))) ;; don't ask for elisp
                              (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
-
-
+                             
+                             
                              (setq org-clock-clocktable-default-properties '(:maxlevel 3 :scope file))
                              (setq org-clock-persist 'history)
                              (org-clock-persistence-insinuate)
-
-
+                             
+                             
                              (setq org-enable-table-editor t)
                              (require 'sws-mode)
                              (require 'stylus-mode)
@@ -491,10 +502,10 @@
                              (require 'js2-refactor)
                              (require 'flycheck)
                              (require 'context-coloring)
-
+                             
                              (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
                              (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
-
+                             
                              (custom-set-variables
                               '(js2-bounce-indent-p t)
                               '(js2-allow-keywords-as-property-names nil)
@@ -509,7 +520,7 @@
                               '(js2-highlight-level 3)
                               '(js2-indent-switch-body nil)
                               )
-
+                             
                              (custom-theme-set-faces
                               'solarized-dark
                               '(context-coloring-level-0-face  ((t :foreground "#839496")))
@@ -529,10 +540,10 @@
                               '(context-coloring-level-14-face ((t :foreground "#ff6e64")))
                               '(context-coloring-level-15-face ((t :foreground "#f771ac")))
                               '(context-coloring-level-16-face ((t :foreground "#9ea0e5"))))
-
-
+                             
+                             
                              (setq flycheck-eslintrc ".eslintrc")
-
+                             
                              (setq flycheck-checkers '(ada-gnat asciidoc c/c++-clang
                                                                 c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee
                                                                 coffee-coffeelint coq css-csslint d-dmd emacs-lisp
@@ -547,7 +558,7 @@
                                                                 sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex
                                                                 tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint
                                                                 yaml-jsyaml yaml-ruby))
-
+                             
                              (add-hook 'js2-mode-hook
                                        (lambda ()
                                          (js2-refactor-mode t)
@@ -560,7 +571,7 @@
                                          (push '(">=" . ?≥) prettify-symbols-alist)
                                          (push '("!==" . ?≠) prettify-symbols-alist)
                                          (prettify-symbols-mode)))
-
+                             
                              (require 'tex)
                              (add-hook 'TeX-mode-hook (lambda ()
                                                         (local-set-key (kbd "C-c h") 'TeX-fold-dwim)
@@ -591,8 +602,8 @@
                                    (string-match-p ".*Documents/notes/.*\.org$" absolute-cur-file-name)
                                    (string-match-p ".*problem\.org$" absolute-cur-file-name)
                                    (string-match-p ".*solution\.org$" absolute-cur-file-name)))
-
-
+                             
+                             
                              (add-hook 'after-save-hook
                                        (lambda ()
                                          (let ((cur-file-name "")
@@ -600,111 +611,16 @@
                                            (setq absolute-cur-file-name (buffer-file-name))
                                            (setq cur-file-name (file-name-nondirectory absolute-cur-file-name))
                                            (cond
-
+                             
                                             ((should-update-metadata absolute-cur-file-name)
                                              (shell-command (concat "pbsol-meta-update.js " absolute-cur-file-name)))
-
+                             
                                             ((string= buffer-file-name user/emacs-conf-org)
                                              (org-babel-tangle))
-
+                             
                                             )
                                            )
                                          )
                                        )
                              (setq ediff-diff-options "-w")
                              ))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
- '(compilation-message-face (quote default))
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#657b83")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
- '(custom-safe-themes
-   (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
- '(fci-rule-color "#eee8d5")
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(highlight-symbol-colors
-   (--map
-    (solarized-color-blend it "#fdf6e3" 0.25)
-    (quote
-     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
- '(highlight-symbol-foreground-color "#586e75")
- '(highlight-tail-colors
-   (quote
-    (("#eee8d5" . 0)
-     ("#B4C342" . 20)
-     ("#69CABF" . 30)
-     ("#69B7F0" . 50)
-     ("#DEB542" . 60)
-     ("#F2804F" . 70)
-     ("#F771AC" . 85)
-     ("#eee8d5" . 100))))
- '(hl-bg-colors
-   (quote
-    ("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342")))
- '(hl-fg-colors
-   (quote
-    ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
- '(js2-allow-keywords-as-property-names nil)
- '(js2-basic-offset 4)
- '(js2-bounce-indent-p nil)
- '(js2-dynamic-idle-timer-adjust 10000)
- '(js2-highlight-external-variables nil)
- '(js2-highlight-level 3)
- '(js2-idle-timer-delay 1)
- '(js2-indent-switch-body nil)
- '(js2-mode-show-parse-errors t)
- '(js2-mode-show-strict-warnings nil)
- '(js2-pretty-multiline-declarations nil)
- '(magit-diff-use-overlays nil t)
- '(nrepl-message-colors
-   (quote
-    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
- '(org-export-backends (quote (ascii beamer html icalendar latex)))
- '(pos-tip-background-color "#eee8d5")
- '(pos-tip-foreground-color "#586e75")
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
- '(term-default-bg-color "#fdf6e3")
- '(term-default-fg-color "#657b83")
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#dc322f")
-     (40 . "#c85d17")
-     (60 . "#be730b")
-     (80 . "#b58900")
-     (100 . "#a58e00")
-     (120 . "#9d9100")
-     (140 . "#959300")
-     (160 . "#8d9600")
-     (180 . "#859900")
-     (200 . "#669b32")
-     (220 . "#579d4c")
-     (240 . "#489e65")
-     (260 . "#399f7e")
-     (280 . "#2aa198")
-     (300 . "#2898af")
-     (320 . "#2793ba")
-     (340 . "#268fc6")
-     (360 . "#268bd2"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (quote
-    (unspecified "#fdf6e3" "#eee8d5" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#657b83" "#839496")))
- '(xterm-color-names
-   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
- '(xterm-color-names-bright
-   ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
